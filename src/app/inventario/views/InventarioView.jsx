@@ -1,7 +1,15 @@
-import React from 'react'
+
+
+import { Outlet } from 'react-router-dom';
+import { InventarioLayout } from '../layout/InventarioLayout';
 
 export const InventarioView = () => {
-  return (
-    <div>InventarioView</div>
-  )
+	return (
+		<InventarioLayout>
+
+
+			<Outlet />
+
+		</InventarioLayout>
+	)
 }

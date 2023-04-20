@@ -1,6 +1,6 @@
 import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { LoginView } from '../views/LoginView'
+import { LoginView } from '../views/LoginView.jsx'
 
 export const AuthRouter = () => {
   return (
