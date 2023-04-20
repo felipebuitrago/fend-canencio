@@ -55,20 +55,16 @@ export const SideBar = ({ drawerWidth = 240 }) => {
           </Toolbar>
           <Divider />
 
+           {/*boton inicio*/}
           <List>
             <ListItem disablePadding> {/*boton inicio*/}
               <ListItemButton>
                 <ListItemIcon>
                   <Home />
                 </ListItemIcon>
-                <Grid container direction={"column"}>
-                  <Grid item>
-                    <ListItemText primary={"Inicio"} />
-                  </Grid>{/*
-                  <Grid item>
-                    <ListItemText secondary={"Exercitation cillum."} />
-                  </Grid>*/}
-                </Grid>
+                <Link to=''>
+                    <ListItemText primary="Inicio" />
+                </Link>
               </ListItemButton>
             </ListItem>
 
@@ -193,7 +189,7 @@ export const SideBar = ({ drawerWidth = 240 }) => {
                   <ListItemIcon>
                     <AddCircle />
                   </ListItemIcon>
-                  <Link to='almacenes/:almacen'>
+                  <Link to='almacenes/canencio'>
                     <ListItemText primary="Administración por almacenes" />
                   </Link>
                 </ListItemButton>

@@ -1,8 +1,18 @@
 import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import {InventarioView} from '../views/InventarioView'
-import { RealizarTransaccionPage } from "../pages/Inventario/RealizarTransaccionPage";
-import { MovimientosPage } from "../pages/Inventario/MovimientosPage";
+import { InventarioView } from '../views/InventarioView'
+import { 
+  InicioPage,
+  MovimientosPage,
+  RealizarTransaccionPage,
+  AdminProducts,
+  AdminCategories, /*importando todas las pages en una sola linea con index.js*/
+  AdminProveedores,
+  AdminPacientes,
+  AdminStores,
+  AdminByStore,
+  AdminUsers } from "../pages";
+
 
 export const InventarioRouter = () => {
   return (
@@ -10,15 +20,23 @@ export const InventarioRouter = () => {
     <Routes>
 
         <Route path='/' element={ <InventarioView /> } >
+
+           <Route path='' element={ <InicioPage /> } /> 
+
            <Route path='movimientos' element={ <MovimientosPage /> } /> 
            <Route path='transaccion' element={ <RealizarTransaccionPage /> } /> 
-           <Route path='productos' element={ <RealizarTransaccionPage /> } /> 
-           <Route path='categorias' element={ <RealizarTransaccionPage /> } /> 
-           <Route path='proveedores' element={ <RealizarTransaccionPage /> } /> 
-           <Route path='pacientes' element={ <RealizarTransaccionPage /> } /> 
-           <Route path='almacenes' element={ <RealizarTransaccionPage /> } /> 
-           {/* <Route path='transaccion' element={ <RealizarTransaccionPage /> } />  ruta hija  */}
-           <Route path='usuarios' element={ <RealizarTransaccionPage /> } /> 
+           <Route path='productos' element={ <AdminProducts /> } /> 
+           <Route path='categorias' element={ <AdminCategories /> } /> 
+           <Route path='proveedores' element={ <AdminProveedores /> } /> 
+           <Route path='pacientes' element={ <AdminPacientes /> } /> 
+
+           <Route path='almacenes' element={ <AdminStores /> } > 
+              <Route path=':almacen' 
+                      element={ <AdminByStore /> } />
+           </Route>  
+
+           <Route path='usuarios' element={ <AdminUsers /> } /> 
+
         </Route>
 
         <Route path='/*' element={ <Navigate to="/inventario" /> } />
