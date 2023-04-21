@@ -252,8 +252,8 @@ export const SideBar = ({ drawerWidth = 240 }) => {
               <Button variant='contained' fullWidth color="success"
                     sx={{backgroundColor:'black',color:'white',  mt:2}} 
                     startIcon={<LogoutOutlined sx={{color:'white'}}/>}>
-            Cerrar sesión
-            </Button>
+                  Cerrar sesión
+              </Button>
               </ListItem>
             </ListItem>
 
