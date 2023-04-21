@@ -8,7 +8,7 @@ export const AdminProducts = () => {
       <div>AdminProducts 
       
           <Link to='crear'>
-            <Button variant='contained'>Crear</Button>
+            <Button variant='contained' color='success'>Crear</Button>
           </Link>
         
       

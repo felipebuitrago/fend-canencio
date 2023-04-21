@@ -6,3 +6,7 @@ a {
 div span{
     color: black;
 }
+
+div > svg{
+    color: black;
+}

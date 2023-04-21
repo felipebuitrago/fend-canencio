@@ -14,6 +14,7 @@ export const InventarioLayout = ({ children }) => {
 
         <SideBar drawerWidth={ drawerWidth } />
 
+
         <Box 
             component='main'
             sx={{ flexGrow: 1, p: 3 }}

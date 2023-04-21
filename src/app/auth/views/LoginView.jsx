@@ -30,7 +30,7 @@ export const LoginView = () => {
             
             <Grid container spacing={ 2 } sx={{ mb: 2, mt: 1 }}>
               <Grid item xs={ 12 } sm={ 12 } >
-                <Button variant='contained' fullWidth>
+                <Button variant='contained' color='success' fullWidth>
                   <Link to='/inventario' >
                      Iniciar Sesión
                   </Link>
