@@ -65,17 +65,18 @@ export const SideBar = ({ drawerWidth = 240 }) => {
            {/*boton inicio*/}
           <List>
             <Divider />
-
-            <ListItem disablePadding> {/*boton inicio*/}
-              <ListItemButton>
-                <ListItemIcon >
-                  <HomeOutlined/>
-                </ListItemIcon>
-                <Link to='' >
-                    <ListItemText primary="Inicio"/>
-                </Link>
-              </ListItemButton>
-            </ListItem>
+            
+            <Link to='' >
+              <ListItem disablePadding> {/*boton inicio*/}
+                <ListItemButton>
+                  <ListItemIcon >
+                    <HomeOutlined/>
+                  </ListItemIcon>
+                      <ListItemText primary="Inicio"/>
+                  
+                </ListItemButton>
+              </ListItem>
+            </Link>
 
           <Divider />
 
@@ -92,24 +93,24 @@ export const SideBar = ({ drawerWidth = 240 }) => {
             <Collapse in={openInventory} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 
+              <Link to='movimientos'>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <LibraryBooksOutlined  />
                   </ListItemIcon>
-                  <Link to='movimientos'>
                     <ListItemText primary="Movimientos de Inventario" />
-                  </Link>
                 </ListItemButton>
+              </Link>
 
+              <Link to='transaccion'>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <LibraryAddOutlined />
                   </ListItemIcon>
-                  <Link to='transaccion'>
                     <ListItemText primary="Realizar transacción" />
-                  </Link>
                 </ListItemButton>
-              </List>
+              </Link>
+            </List>
             
             <Divider />
 
@@ -129,23 +130,24 @@ export const SideBar = ({ drawerWidth = 240 }) => {
             <Collapse in={openProducts} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 
+              <Link to='productos'>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <AccountTreeOutlined  />
                   </ListItemIcon>
-                  <Link to='productos'>
                     <ListItemText primary="Administración de Productos" />
-                  </Link>
                 </ListItemButton>
+              </Link>
 
+              <Link to='categorias'>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <CategoryOutlined />
                   </ListItemIcon>
-                  <Link to='categorias'>
                     <ListItemText primary="Administración de categorías" />
-                  </Link>
                 </ListItemButton>
+              </Link>
+
               </List>
             <Divider />
 
@@ -163,24 +165,25 @@ export const SideBar = ({ drawerWidth = 240 }) => {
 
             <Collapse in={openTerceros} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                
+
+              <Link to='proveedores'>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <ConnectWithoutContactOutlined  />
                   </ListItemIcon>
-                  <Link to='proveedores'>
                     <ListItemText primary="Proveedores" />
-                  </Link>
                 </ListItemButton>
+              </Link>
 
+              <Link to='pacientes'>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <Diversity1Outlined />
                   </ListItemIcon>
-                  <Link to='pacientes'>
                     <ListItemText primary="Pacientes" />
-                  </Link>
                 </ListItemButton>
+              </Link>
+
               </List>
             <Divider />
 
@@ -198,25 +201,26 @@ export const SideBar = ({ drawerWidth = 240 }) => {
 
             <Collapse in={openAlmacenes} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                
+
+              <Link to='almacenes'>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <HolidayVillageOutlined  />
                   </ListItemIcon>
-                  <Link to='almacenes'>
                     <ListItemText primary="Administración de almacenes" />
-                  </Link>
                 </ListItemButton>
+              </Link>
 
+              <Link to='almacenes/canencio'>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <StorefrontOutlined />
                   </ListItemIcon>
-                  <Link to='almacenes/canencio'>
                     <ListItemText primary="Administración por almacenes" />
-                  </Link>
                 </ListItemButton>
-              </List>
+              </Link>
+
+            </List>
               <Divider />
             </Collapse>
 
@@ -233,17 +237,17 @@ export const SideBar = ({ drawerWidth = 240 }) => {
 
             <Collapse in={openUsuarios} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                
+
+              <Link to='usuarios'>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <PersonSearchOutlined  />
                   </ListItemIcon>
-                  <Link to='usuarios'>
                     <ListItemText primary="Administración de usuarios" />
-                  </Link>
                 </ListItemButton>
+              </Link>
 
-              </List>
+            </List>
             <Divider />
             </Collapse>
 
