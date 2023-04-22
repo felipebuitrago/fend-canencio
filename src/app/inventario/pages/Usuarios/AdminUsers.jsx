@@ -2,7 +2,7 @@ import { Button, Divider, FormControl, FormControlLabel, FormLabel, Grid, Radio,
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {Search} from '@mui/icons-material'
+import {Search, EditOutlined, DeleteForeverOutlined} from '@mui/icons-material'
 
 export const AdminUsers = () => {
 
@@ -51,12 +51,10 @@ export const AdminUsers = () => {
 
           {/* componentes de busqueda */}
           <Grid direction="column" display="flex">
-            <Grid container direction="row">
+            <Grid container direction="row" sx={{mt:3}}>
               <TextField label="Buscar" variant="outlined" sx={{transform:'scale(0.9)'}}></TextField>
               <Button variant='contained' size='small' color="success" sx={{transform:'scale(0.8)',ml:-2}}><Search/></Button>
             </Grid>
-            
-
             
           </Grid>
         </Grid>
@@ -141,8 +139,8 @@ export const AdminUsers = () => {
                               color="info"
                               sx={{ transform: "scale(0.9)" }}
                             >
-                              editar{" "}
-                              {/* quePoner ? texto : icono  ||| hacer ambos botones negros con el icono blanco sin texto y asi mantener en toda la pgina botones negros */}
+                              <EditOutlined/>
+                          
                             </Button>
                             <Button
                               size="small"
@@ -150,7 +148,7 @@ export const AdminUsers = () => {
                               color="error"
                               sx={{ transform: "scale(0.9)" }}
                             >
-                              borrar
+                              <DeleteForeverOutlined/>
                             </Button>
                           </TableCell>
                         </TableRow>
