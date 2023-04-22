@@ -3,7 +3,7 @@ import { Button, Divider, FormControl, FormControlLabel, FormLabel, Grid, Radio,
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {Search} from '@mui/icons-material'
+import {Search, EditOutlined, DeleteForeverOutlined} from '@mui/icons-material'
 
 export const AdminProducts = () => {
 
@@ -203,23 +203,22 @@ export const AdminProducts = () => {
                     <TableCell align="center">{row.fat}</TableCell>
                     <TableCell align="center">{row.carbs}</TableCell>
                     <TableCell align="center">
-                      <Button
-                        size="small"
-                        variant="contained"
-                        color="info"
-                        sx={{ transform: "scale(0.9)" }}
-                      >
-                        editar{" "}
-                        {/* quePoner ? texto : icono  ||| hacer ambos botones negros con el icono blanco sin texto y asi mantener en toda la pgina botones negros */}
-                      </Button>
-                      <Button
-                        size="small"
-                        variant="contained"
-                        color="error"
-                        sx={{ transform: "scale(0.9)" }}
-                      >
-                        borrar
-                      </Button>
+                    <Button
+                              size="small"
+                              variant="contained"
+                              color="info"
+                              sx={{ transform: "scale(0.9)" }}
+                            >
+                              <EditOutlined/>
+                            </Button>
+                            <Button
+                              size="small"
+                              variant="contained"
+                              color="error"
+                              sx={{ transform: "scale(0.9)" }}
+                            >
+                              <DeleteForeverOutlined/>
+                            </Button>
                     </TableCell>
                   </TableRow>
                 ))}
