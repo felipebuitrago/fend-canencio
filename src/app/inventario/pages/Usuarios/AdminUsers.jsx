@@ -57,32 +57,7 @@ export const AdminUsers = () => {
             </Grid>
             
 
-            <FormControl sx={{ mt: 1 }}>
-              <FormLabel id="filtros-busqueda-usuarios">Filtros</FormLabel>
-              <RadioGroup
-                row
-                aria-labelledby="filtros-busqueda-usuarios"
-                name="filtros-busqueda-usuarios"
-                value={value}
-                onChange={handleChange}
-              >
-                <FormControlLabel
-                  value="Todos"
-                  control={<Radio size="small" />}
-                  label="Todos"
-                />
-                <FormControlLabel
-                  value="Admin"
-                  control={<Radio size="small" />}
-                  label="Admin"
-                />
-                <FormControlLabel
-                  value="Usuario"
-                  control={<Radio size="small" />}
-                  label="Usuario"
-                />
-              </RadioGroup>
-            </FormControl>
+            
           </Grid>
         </Grid>
         {/* fin barra superior */}
