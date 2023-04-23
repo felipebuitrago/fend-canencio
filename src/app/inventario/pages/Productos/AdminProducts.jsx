@@ -4,7 +4,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {Search, EditOutlined, DeleteForeverOutlined} from '@mui/icons-material'
-
+//import { Breadcrumbs, Link as MuiLink } from '@mui/material';
 export const AdminProducts = () => {
 
   const [value, setValue] = React.useState('Todos');
@@ -13,7 +13,7 @@ export const AdminProducts = () => {
   
   const handleChange = (event) => {
     setValue(event.target.value);
-  };
+  };    
 
   const createData = (name, calories, fat, carbs, protein) => {
     return { name, calories, fat, carbs, protein };
@@ -38,7 +38,6 @@ export const AdminProducts = () => {
 
       {/* main grid */}
       <Grid container direction="column">
-       
         {/* barra superior, btn crear y busqueda */}
         <Grid container direction="row" justifyContent="space-between">
           {/* L. Titulo Pagina y btn crear */}
@@ -59,10 +58,20 @@ export const AdminProducts = () => {
           {/* R. componentes de busqueda */}
           <Grid direction="column" display="flex">
             <Grid container direction="row">
-              <TextField label="Buscar" variant="outlined" sx={{transform:'scale(0.9)'}}></TextField>
-              <Button variant='contained' size='small' color="success" sx={{transform:'scale(0.8)',ml:-2}}><Search/></Button>
+              <TextField
+                label="Buscar"
+                variant="outlined"
+                sx={{ transform: "scale(0.9)" }}
+              ></TextField>
+              <Button
+                variant="contained"
+                size="small"
+                color="success"
+                sx={{ transform: "scale(0.8)", ml: -2 }}
+              >
+                <Search />
+              </Button>
             </Grid>
-            
 
             <FormControl sx={{ mt: 1 }}>
               <FormLabel id="filtros-busqueda-productos">Filtros</FormLabel>
@@ -203,22 +212,22 @@ export const AdminProducts = () => {
                     <TableCell align="center">{row.fat}</TableCell>
                     <TableCell align="center">{row.carbs}</TableCell>
                     <TableCell align="center">
-                    <Button
-                              size="small"
-                              variant="contained"
-                              color="info"
-                              sx={{ transform: "scale(0.9)" }}
-                            >
-                              <EditOutlined/>
-                            </Button>
-                            <Button
-                              size="small"
-                              variant="contained"
-                              color="error"
-                              sx={{ transform: "scale(0.9)" }}
-                            >
-                              <DeleteForeverOutlined/>
-                            </Button>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="info"
+                        sx={{ transform: "scale(0.9)" }}
+                      >
+                        <EditOutlined />
+                      </Button>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="error"
+                        sx={{ transform: "scale(0.9)" }}
+                      >
+                        <DeleteForeverOutlined />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -227,7 +236,6 @@ export const AdminProducts = () => {
           </TableContainer>
         </Grid>
         {/* fin tabla display data */}
-
       </Grid>
     </>
   );
