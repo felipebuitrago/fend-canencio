@@ -5,28 +5,33 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {Search, EditOutlined, DeleteForeverOutlined} from '@mui/icons-material'
 //import { Breadcrumbs, Link as MuiLink } from '@mui/material';
+
+import { useProductosStore } from '../../../../hooks'
+
 export const AdminProducts = () => {
 
   const [value, setValue] = React.useState('Todos');
   
-  const dataInventario = useSelector((state) => state.inventario)
+  const {productos, 
+    startCreateProducto, 
+    startReadProductos, 
+    startUpdateProducto, 
+    startDeleteProducto} = useProductosStore()
   
+  {/* evento de busqueda por filtro radiobutton */}
   const handleChange = (event) => {
     setValue(event.target.value);
+    startCreateProducto();
+    startReadProductos();
+    startUpdateProducto();
+    startDeleteProducto();
   };    
 
   const createData = (name, calories, fat, carbs, protein) => {
     return { name, calories, fat, carbs, protein };
   }
   
-  const rows = [
-    createData('01', 'Faja gorda',0, 0, 0),
-    createData('02', 'inyeccion +100mana',0, 0, 0),
-    createData('03', '100 pts vida', 0, 0, 0),
-    createData('04', '+20 habilidad',0, 0, 0),
-    createData('05', '+20 vitalidad', 0, 0, 0),
-
-  ];
+  const rows = productos;
 
 
   return (
@@ -203,14 +208,14 @@ export const AdminProducts = () => {
 
               <TableBody>
                 {rows.map((row) => (
-                  <TableRow key={row.name}>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell align="center">{row.calories}</TableCell>
-                    <TableCell align="center">{row.fat}</TableCell>
-                    <TableCell align="center">{row.carbs}</TableCell>
-                    <TableCell align="center">{row.protein}</TableCell>
-                    <TableCell align="center">{row.fat}</TableCell>
-                    <TableCell align="center">{row.carbs}</TableCell>
+                  <TableRow key={row.idpersonalizado}>
+                    <TableCell>{row.idpersonalizado}</TableCell>
+                    <TableCell align="center">{row.nombre}</TableCell>
+                    <TableCell align="center">{row.presentacion}</TableCell>
+                    <TableCell align="center">{row.proveedor}</TableCell>
+                    <TableCell align="center">{row.categoria}</TableCell>
+                    <TableCell align="center">{row.almacen}</TableCell>
+                    <TableCell align="center">{row.stock}</TableCell>
                     <TableCell align="center">
                       <Button
                         size="small"
