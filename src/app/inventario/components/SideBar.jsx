@@ -9,14 +9,18 @@ import { HomeOutlined, LibraryBooksOutlined, ExpandLess, ExpandMore,
    ConnectWithoutContactOutlined,HolidayVillageOutlined, StorefrontOutlined, 
    SupervisorAccountOutlined, PersonSearchOutlined, LogoutOutlined } from '@mui/icons-material';
 
-export const SideBar = ({ drawerWidth = 240 }) => {
+import { useAuthStore } from '../../../hooks'
 
+export const SideBar = ({ drawerWidth = 240 }) => {
 
     const [openInventory, setOpenInventory] = React.useState(false);
     const [openProducts, setOpenProducts] = React.useState(false);
     const [openTerceros, setOpenTerceros] = React.useState(false);
     const [openAlmacenes, setOpenAlmacenes] = React.useState(false);
     const [openUsuarios, setOpenUsuarios] = React.useState(false);
+
+    const { startLogout } = useAuthStore();
+
 
     const handleClick = () => {
       setOpenInventory(!openInventory);
@@ -253,7 +257,9 @@ export const SideBar = ({ drawerWidth = 240 }) => {
 
             <ListItem disablePadding> {/*boton inicio*/}
               <ListItem>
-              <Button variant='contained' fullWidth color="success"
+              <Button 
+                    onClick={startLogout}
+                    variant='contained' fullWidth color="success"
                     sx={{backgroundColor:'black',color:'white',  mt:2}} 
                     startIcon={<LogoutOutlined sx={{color:'white'}}/>}>
                   Cerrar sesión

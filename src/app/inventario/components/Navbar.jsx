@@ -1,9 +1,11 @@
 import { AppBar, Button, Grid, Toolbar, Typography } from '@mui/material';
 import { LogoutOutlined } from '@mui/icons-material';
 import { useParams } from 'react-router-dom';
+import { useAuthStore } from '../../../hooks'
 
 export const NavBar = ({ drawerWidth = 240 }) => {
   const params = useParams();
+  const { startLogout } = useAuthStore();
 
   return (
     <AppBar
@@ -31,7 +33,7 @@ export const NavBar = ({ drawerWidth = 240 }) => {
             {`${params['*']}` ? `${params['*']}`.replace('/',' > ') : 'inicio'}
           </Typography>
 
-          <Button variant='outlined' color='success' 
+          <Button onClick={startLogout} variant='outlined' color='success' 
                     sx={{color:'white',borderColor:'white'}} 
                     startIcon={<LogoutOutlined sx={{color:'white'}}/>}>
             Cerrar sesión

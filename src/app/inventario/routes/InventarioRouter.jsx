@@ -114,7 +114,7 @@ export const InventarioRouter = () => {
 
         </Route>
 
-        <Route path='/*' element={ <Navigate to="/inventario" /> } />
+        <Route path='/*' element={ <Navigate to="/" /> } />
 
     </Routes>
 
