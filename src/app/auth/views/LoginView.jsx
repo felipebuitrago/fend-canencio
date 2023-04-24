@@ -35,7 +35,7 @@ export const LoginView = () => {
       <form onSubmit={ loginSubmit }>
           <Grid container>
             
-            <Grid item xs={ 12 } sx={{ mt: 2 }}>
+            <Grid item xs={ 12 } sx={{ mt: 2}}>
               <TextField 
                 label="Usuario" 
                 type="text" 

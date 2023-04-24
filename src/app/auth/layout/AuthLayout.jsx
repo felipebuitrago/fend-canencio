@@ -1,6 +1,5 @@
 import { Grid, Typography } from '@mui/material';
 
-
 export const AuthLayout = ({ children, title = '' }) => {
   return (
     
@@ -10,7 +9,7 @@ export const AuthLayout = ({ children, title = '' }) => {
       direction="column"
       alignItems="center"
       justifyContent="center" /*añadir theme, y en el main.jsx*/
-      sx={{ minHeight: '100vh', backgroundColor: 'black', padding: 4 }}
+      sx={{ minHeight: '97vh', backgroundColor: 'black'}}
     >
 
       <Grid item
@@ -20,7 +19,7 @@ export const AuthLayout = ({ children, title = '' }) => {
             width: { sm: 450 },
             backgroundColor: 'white', 
             padding: 3, 
-            borderRadius: 2 
+            borderRadius: 2 ,
         }}>
           
           <Typography align='center' 
