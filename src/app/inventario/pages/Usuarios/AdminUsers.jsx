@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useSelector } from "react-redux";
-import { Link as RouterLink } from "react-router-dom";
-import { Button, Divider, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, TablePagination, Dialog, DialogTitle, DialogContent, DialogActions,IconButton, Alert, Snackbar } from "@mui/material";
-import { Search, EditOutlined, DeleteForeverOutlined, Close as CloseIcon } from "@mui/icons-material";
-import CustomBreadcrumbs from "../../components/CustomBreadcrumbs.jsx";
-import TablePaginationActions from "../../components/TablePagination.jsx";
-
+import { Link } from 'react-router-dom'
+import { Button, Divider, Grid, Paper, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from "@mui/material";
+import { Close as CloseIcon } from "@mui/icons-material";
+import { CustomBreadcrumbs, TablePaginationActions, EditButton, DeleteButton, CustomTable, SearchBar, AlertSnackbar, DeleteConfirmDialog } from "../../pages/index.js";
+import { headerCellStyle } from "../../util/utils";
+// Componente principal de la página de administración de usuarios
 export const AdminUsers = () => {
+ 
+  // Estado local para el filtro de usuarios
   const [value, setValue] = React.useState("Todos");
-
   const dataUsuarios = useSelector((state) => state.usuarios);
-
   const handleChange = (event) => {
     setValue(event.target.value);
   };
@@ -32,48 +32,36 @@ export const AdminUsers = () => {
     createData("10", "Angela Martines", "angela@gmail.com", "Usuario"),
     createData("11", "Julian Martines", "julian@gmail.com", "Usuario"),
   ];
-  // Añade el estado para el modal de edición
+  // Estado para la búsqueda de usuarios
   const [search, setSearch] = React.useState("");
-
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
   };
- 
+  // Estados para la paginación de la tabla
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-  
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
+  // Filtra las filas de la tabla según la búsqueda por nombre
   const filteredRows = rows.filter((user) =>
     user.nombre.toLowerCase().includes(search.toLowerCase())
   );
-  
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, filteredRows.length - page * rowsPerPage);
-   // Añade el estado para el modal de confirmación
-  const headerCellStyle = {
-    backgroundColor: "black",
-    color: "white",
-    borderRightColor: "white",
-    borderRightWidth: 1,
-    borderRightStyle: "solid",
-  };
-  // Añade los nuevos estados para el modal de edición y el alert
+  // Calcula el número de filas vacías para rellenar la tabla
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredRows.length - page * rowsPerPage);
+  // Añade  estados para el modal de edición y el alert
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [editUser, setEditUser] = useState(null);
-
+  // Abre el modal de edición
   const handleOpenEditDialog = (user) => {
     setEditUser(user);
     setOpenEditDialog(true);
   };
-
+  // Cierra el modal de edición
   const handleCloseEditDialog = () => {
     setOpenEditDialog(false);
   };
@@ -82,157 +70,98 @@ export const AdminUsers = () => {
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
-
+  // Abre el modal de confirmación
   const handleOpenConfirmDialog = (user) => {
     setUserToDelete(user);
     setOpenConfirmDialog(true);
   };
-
+  // Cierra el modal de confirmación
   const handleCloseConfirmDialog = () => {
     setOpenConfirmDialog(false);
   };
-
+  // Confirma la eliminación del usuario
   const handleConfirmDelete = () => {
     // Aquí puedes realizar la acción de eliminar el usuario
     console.log("Usuario eliminado:", userToDelete);
-
     setOpenConfirmDialog(false);
     setOpenAlert(true);
   };
-
+  // Cierra el alert
   const handleCloseAlert = () => {
     setOpenAlert(false);
   };
+  // Columnas de la tabla
+  const columns = [
+    { id: "id", label: "ID", align: "left", style: headerCellStyle },
+    { id: "nombre", label: "Nombre", align: "center", style: headerCellStyle },
+    { id: "correo", label: "Correo", align: "center", style: headerCellStyle },
+    { id: "rol", label: "Rol", align: "center", style: headerCellStyle },
+    { id: "actions", label: "Acciones", align: "center", style: headerCellStyle,},
+  ];
+  // Acciones (botones) de la tabla
+  const actions = (user) => (
+    <>
+      <EditButton item={user} onClick={handleOpenEditDialog} />
+      <DeleteButton item={user} onClick={handleOpenConfirmDialog} />
+    </>
+  );
 
   return (
     <>
-          <Grid container justifyContent="center" alignItems="center" sx={{ mb: 3, width: '100%' }}>
-        <Paper elevation={1} sx={{ p: 1, borderRadius: 1, width: '100%' }}>
+      <Grid container justifyContent="center" alignItems="center"sx={{ mb: 3, width: "100%" }}>
+        <Paper elevation={1} sx={{ p: 1, borderRadius: 1, width: "100%" }}>
           <CustomBreadcrumbs currentPage="Usuarios" />
         </Paper>
       </Grid>
       {/* main grid */}
       <Grid container direction="column">
-          {/* barra superior, btn crear y busqueda */}
-    <Grid container direction="row" justifyContent="space-between">
-      {/* L. Titulo Pagina y btn crear */}
-      <Grid direction="column">
-        <Typography variant="h4" display="inline">Usuarios</Typography>
-        <Typography variant="subtitle1" display="inline" sx={{ ml: 0.9 }}>
-          {`${rows.length} total`}
-        </Typography>
+        {/* barra superior, btn crear y busqueda */}
+        <Grid container direction="row" justifyContent="space-between">
+          {/* L. Titulo Pagina y btn crear */}
+          <Grid direction="column">
+            <Typography variant="h4" display="inline">
+              Usuarios
+            </Typography>
+            <Typography variant="subtitle1" display="inline" sx={{ ml: 0.9 }}>
+              {`${rows.length} total`}
+            </Typography>
+            <Grid container sx={{ mt: 2 }} direction="column">
+              <Link to="crear" style={{ textDecoration: 'none' }}>
+                <Button
+                  variant="contained"
+                  color="success"
+                  size="medium"
+                  sx={{ backgroundColor: "black", color: "white" }}
 
-        <Grid container sx={{ mt: 2 }} direction="column">
-          <Button
-            variant="contained"
-            color="success"
-            size="medium"
-            sx={{ backgroundColor: "black", color: "white" }}
-          >
-            Crear usuario
-          </Button>
+                >
+                  Crear Usuario
+                </Button>
+              </Link>
+            </Grid>
+          </Grid>
+          {/* componentes de barra de busqueda */}
+          <SearchBar search={search} setSearch={setSearch} />
+        </Grid>
+        {/* fin barra superior */}
+        <Divider sx={{ mt: 2 }} />
+        {/* tabla display data */}
+        <Grid container direction="column" sx={{ mt: 2 }}>
+          <CustomTable
+            columns={columns}
+            rows={rows}
+            actions={actions}
+            filteredRows={filteredRows}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            emptyRows={emptyRows}
+            handleChangePage={handleChangePage}
+            handleChangeRowsPerPage={handleChangeRowsPerPage}
+            TablePaginationActions={TablePaginationActions}
+          />
         </Grid>
       </Grid>
-      {/* componentes de busqueda */}
-      <Grid direction="column" display="flex">
-        <Grid container direction="row" sx={{ mt: 3 }}>
-          <TextField
-            label="Buscar"
-            variant="outlined"
-            sx={{ transform: 'scale(0.9)' }}
-            value={search}
-            onChange={handleSearchChange}
-          ></TextField>
-          <Button
-            variant="contained"
-            size="small"
-            color="success"
-            sx={{ transform: 'scale(0.8)', ml: -2 }}
-          >
-            <Search />
-          </Button>
-        </Grid>
-      </Grid>
-    </Grid>
-    {/* fin barra superior */}
-    <Divider sx={{ mt: 2 }} />
-    {/* tabla display data */}
-      <Grid container direction="column">
-        <TableContainer component="div">
-          <Table aria-label="simple table" stickyHeader>
-            <TableHead>
-              <TableRow>
-                <TableCell sx={headerCellStyle}>ID</TableCell>
-                <TableCell sx={headerCellStyle} align="center">
-                  Nombre
-                </TableCell>
-                <TableCell sx={headerCellStyle} align="center">
-                  Correo
-                </TableCell>
-                <TableCell sx={headerCellStyle} align="center">
-                  Rol
-                </TableCell>
-                <TableCell sx={headerCellStyle} align="center">
-                  Acciones
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {(rowsPerPage > 0
-                ? filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                : filteredRows
-              ).map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>{user.id}</TableCell>
-                  <TableCell align="center">{user.nombre}</TableCell>
-                  <TableCell align="center">{user.correo}</TableCell>
-                  <TableCell align="center">{user.rol}</TableCell>
-                  <TableCell align="center">
-                    <Button
-                      size="small"
-                      variant="contained"
-                      color="info"
-                      sx={{ transform: "scale(0.9)" }} 
-                      onClick={() => handleOpenEditDialog(user)}
-                    >
-                      <EditOutlined />
-                    </Button>
-                    <Button
-                      size="small"
-                      variant="contained"
-                      color="error"
-                      sx={{ transform: "scale(0.9)" }}
-                      onClick={() => handleOpenConfirmDialog(user)}
-                    >
-                      <DeleteForeverOutlined />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {emptyRows > 0 && ( // si no hay filas, se rellena con filas vacias
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={5} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={filteredRows.length}
-          labelRowsPerPage="Filas por página"
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          ActionsComponent={TablePaginationActions}
-        />
-      </Grid>
-      {/* fin tabla display data */}
-    </Grid>   
-    {/* modal editar */}
-    <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
+      {/* modal editar */}
+      <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
         <DialogTitle>
           Editar Usuario
           <IconButton
@@ -279,29 +208,11 @@ export const AdminUsers = () => {
         </DialogActions>
       </Dialog>
       {/* modal eliminar */}
-      <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>
-        <DialogTitle>
-          ¿Estás seguro de que deseas eliminar este usuario?
-        </DialogTitle>
-        <DialogActions>
-          <Button onClick={handleCloseConfirmDialog} color="error">
-            Cancelar
-          </Button>
-          <Button onClick={handleConfirmDelete} color="success">
-            Confirmar
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Snackbar
-        open={openAlert}
-        autoHideDuration={4000}
-        onClose={handleCloseAlert}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}	
-      >
-        <Alert onClose={handleCloseAlert} severity="success" >
-          Acción realizada exitosamente
-        </Alert>
-      </Snackbar>
-    </>             
-  );  
-}
+      <DeleteConfirmDialog open={openConfirmDialog} onClose={handleCloseConfirmDialog} onConfirm={handleConfirmDelete}
+       title="¿Estás seguro de que deseas eliminar este usuario?"
+      />
+      {/* Material Alert */}
+      <AlertSnackbar open={openAlert} onClose={handleCloseAlert} message="Acción realizada exitosamente"/>
+    </>
+  );
+};

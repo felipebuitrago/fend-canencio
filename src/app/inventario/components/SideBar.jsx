@@ -135,8 +135,9 @@ export const SideBar = ({ drawerWidth = 240 }) => {
               <Button 
                     onClick={startLogout}
                     variant='contained' fullWidth color="success"
-                    sx={{backgroundColor:'black',color:'white',  mt:2}} 
-                    startIcon={<LogoutOutlined sx={{color:'white'}}/>}>
+                    sx={{backgroundColor:'black',color:'white',  mt:2, borderRadius: 20}} 
+                    startIcon={<LogoutOutlined sx={{color:'white'}}/>}
+                    >
                   Cerrar sesión
               </Button>
               </ListItem>

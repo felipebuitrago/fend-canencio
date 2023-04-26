@@ -28,11 +28,6 @@ export const NavBar = ({ drawerWidth = 240 }) => {
             Juan Canencio
           </Typography>
 
-          <Typography align='center' variant="h6" noWrap component="div">
-            <Typography align='center'>url:</Typography>
-            {`${params['*']}` ? `${params['*']}`.replace('/',' > ') : 'inicio'}
-          </Typography>
-
           <Button onClick={startLogout} variant='outlined' color='success' 
                     sx={{color:'white',borderColor:'white'}} 
                     startIcon={<LogoutOutlined sx={{color:'white'}}/>}>
