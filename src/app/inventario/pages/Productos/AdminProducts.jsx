@@ -1,4 +1,4 @@
-import { Button, Divider, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { Button, Divider, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 //import { DataGrid } from '@mui/x-data-grid';metodo para hacer otro tipo de table
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import {Search, EditOutlined, DeleteForeverOutlined} from '@mui/icons-material';
 
 import { useProductosStore } from '../../../../hooks'
-import { SearchBar, TablePaginationActions, CustomTableV2 } from '../../components';
+import { SearchBar, TablePaginationActions, CustomTableV2, CustomBreadcrumbs } from '../../components';
 
 export const AdminProducts = () => {
 
@@ -113,8 +113,18 @@ export const AdminProducts = () => {
     }
   };    
 
+  const pathList = [
+    { name: "Inventario", route: "/inventario"},
+    { name: "Productos" },
+  ];
+
   return (
     <>
+    <Grid container justifyContent="center" alignItems="center"sx={{ mb: 3, width: "100%" }}>
+        <Paper elevation={1} sx={{ p: 1, borderRadius: 1, width: "100%" }}>
+            <CustomBreadcrumbs pathList={pathList} />
+        </Paper>
+      </Grid>
       {/* main grid */}
       <Grid container direction="column">
         {/* barra superior, btn crear y busqueda */}
