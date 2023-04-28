@@ -1,17 +1,12 @@
-import { Button, Divider, FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
-//import { DataGrid } from '@mui/x-data-grid';metodo para hacer otro tipo de table
+import { Divider, Grid, Paper, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import {Search, EditOutlined, DeleteForeverOutlined} from '@mui/icons-material';
+import { AddShoppingCart } from '@mui/icons-material';
 
 import { useProductosStore } from '../../../../hooks'
-import { SearchBar, TablePaginationActions, CustomTableV2, CustomBreadcrumbs } from '../../components';
+import { SearchBar, TablePaginationActions, CustomTableV2, CustomBreadcrumbs, ButtonLink } from '../../components';
 
 export const AdminProducts = () => {
 
-    //radio button busqueda hook
-  const [value, setValue] = React.useState('Todos');
   // Estado para la búsqueda de usuarios
   const [search, setSearch] = React.useState("");
   // Estados para la paginación de la tabla
@@ -38,29 +33,7 @@ export const AdminProducts = () => {
     { id: "stock", label: "Stock", align: "center"},
     { id: "acciones", label: "Acciones", align: "center"},
   ];
-
   const rows = productos;
-  
-  // Filtra las filas de la tabla según la búsqueda por nombre
-  const filteredRows = rows.filter((user) =>
-    user.nombre.toLowerCase().includes(search.toLowerCase())
-  );
-  // Calcula el número de filas vacías para rellenar la tabla
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredRows.length - page * rowsPerPage);
-  
-  {/* evento de busqueda por filtro radiobutton */}
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  }; 
-  //handle paginacion
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-  //handle paginas por pagina
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
   
   {/* evento de editar cierto producto */}
   const handleUpdateClick = (event) => {
@@ -111,18 +84,34 @@ export const AdminProducts = () => {
     else{
       startDeleteProducto(event.target.farthestViewportElement.id);
     }
-  };    
-
-  const pathList = [
-    { name: "Inventario", route: "/inventario"},
-    { name: "Productos" },
-  ];
-
+  };   
+  
+  // Filtra las filas de la tabla según la búsqueda por nombre
+  const filteredRows = rows.filter((user) =>
+    user.nombre.toLowerCase().includes(search.toLowerCase())
+  );
+  // Calcula el número de filas vacías para rellenar la tabla
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredRows.length - page * rowsPerPage);
+  
+  //handle paginacion
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+  //handle paginas por pagina
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+  
   return (
     <>
-    <Grid container justifyContent="center" alignItems="center"sx={{ mb: 3, width: "100%" }}>
+      {/* CustomBreadcrumbs */}
+      <Grid container justifyContent="center" alignItems="center"sx={{ mb: 3, width: "100%" }}>
         <Paper elevation={1} sx={{ p: 1, borderRadius: 1, width: "100%" }}>
-            <CustomBreadcrumbs pathList={pathList} />
+            <CustomBreadcrumbs pathList={[
+              { name: "Inventario", route: "/inventario"},
+              { name: "Productos" },]} 
+            />
         </Paper>
       </Grid>
       {/* main grid */}
@@ -131,50 +120,37 @@ export const AdminProducts = () => {
         <Grid container direction="row" justifyContent="space-between">
           {/* L. Titulo Pagina y btn crear */}
           <Grid direction="column">
-            <Typography variant="h4">Productos</Typography>
-
-            <Button
+            <Typography variant="h4" display="inline">Productos</Typography>
+            <Typography variant="subtitle1" display="inline" sx={{ ml: 0.9 }}>
+              {`${rows.length} total`}
+            </Typography> 
+            <Grid container sx={{ mt: 2 }} direction="column">
+              {/* <Button
+                variant="contained"
+                fullWidth
+                color="success"
+                size="large"
+                sx={{ backgroundColor: "black", color: "white", mt: 3 }}
+                onClick={startCreateProducto}
+              >
+                Crear producto
+              </Button> */}
+              <ButtonLink
+              to="/productos/crear"
               variant="contained"
-              fullWidth
               color="success"
-              size="large"
-              sx={{ backgroundColor: "black", color: "white", mt: 3 }}
-              onClick={startCreateProducto}
-            >
-              Crear producto
-            </Button>
+              size="medium"
+              sx={{ backgroundColor: "black", color: "white", marginRight: 2 }}
+              startIcon={<AddShoppingCart sx={{ color: "white" }} />}
+              >
+                Crear Producto
+              </ButtonLink>
+            </Grid>
           </Grid>
 
           {/* R. componentes de busqueda */}
           <Grid direction="column" display="flex">
             <SearchBar search={search} setSearch={setSearch} setPage={setPage} />
-            {/* radios buttons group, filtros de busqueda */}
-            <FormControl sx={{ mt: 1 }}>
-              <FormLabel id="filtros-busqueda-productos">Filtros</FormLabel>
-              <RadioGroup
-                row
-                aria-labelledby="filtros-busqueda-productos"
-                name="filtros-busqueda-productos"
-                value={value}
-                onChange={handleChange}
-              >
-                <FormControlLabel
-                  value="Todos"
-                  control={<Radio size="small" />}
-                  label="Todos"
-                />
-                <FormControlLabel
-                  value="Insumos"
-                  control={<Radio size="small" />}
-                  label="Insumos"
-                />
-                <FormControlLabel
-                  value="Fajas"
-                  control={<Radio size="small" />}
-                  label="Fajas"
-                />
-              </RadioGroup>
-            </FormControl>
           </Grid>
         </Grid>
         {/* fin barra superior */}
@@ -182,9 +158,9 @@ export const AdminProducts = () => {
         <Divider sx={{ mt: 2 }} />
 
         {/* tabla display data */}
-        <Grid container direction="column" >
-         <>
-         {/* <TableContainer component="div">
+        <Grid container direction="column" sx={{ mt: 2 }}>
+          <>
+          {/* <TableContainer component="div">
             <Table aria-label="simple table">
               <TableHead sx={{ background: "black" }}>
                 <TableRow>
