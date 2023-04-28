@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Divider, Grid, Paper, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from "@mui/material";
-import { Close, PersonAdd } from "@mui/icons-material";
+import { Close, AddBusiness } from "@mui/icons-material";
 import { CustomBreadcrumbs, ButtonLink, TablePaginationActions, EditButton, DeleteButton, CustomTable, SearchBar, AlertSnackbar, DeleteConfirmDialog } from "../../components/index.js";
 import { headerCellStyle } from "../../util/utils";
 
@@ -115,7 +115,7 @@ export const AdminStores = () => {
                 color="success"
                 size="medium"
                 sx={{ backgroundColor: "black", color: "white", marginRight: 2 }}
-                startIcon={<PersonAdd sx={{ color: "white" }} />}
+                startIcon={<AddBusiness sx={{ color: "white" }} />}
               >
                 Crear Almacén
               </ButtonLink>

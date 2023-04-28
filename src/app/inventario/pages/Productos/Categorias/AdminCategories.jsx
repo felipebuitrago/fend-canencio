@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Divider, Grid, Paper, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from "@mui/material";
-import { Close, PersonAdd} from "@mui/icons-material";
+import { Close, BookmarkAdd} from "@mui/icons-material";
 import { CustomBreadcrumbs, ButtonLink, TablePaginationActions, EditButton, DeleteButton, CustomTable, SearchBar, AlertSnackbar, DeleteConfirmDialog } from "../../../components/index.js";
 import { headerCellStyle } from "../../../util/utils";
 
@@ -16,7 +16,7 @@ export const AdminCategories = () => {
     createData("03", "Categoría 3", "Descripción 3"),
     // ... Agrega más categorías aquí
   ];
-
+  
   const [search, setSearch] = React.useState("");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -114,7 +114,7 @@ export const AdminCategories = () => {
                   color="success"
                   size="medium"
                   sx={{ backgroundColor: "black", color: "white", marginRight: 2 }}
-                  startIcon={<PersonAdd sx={{ color: "white" }} />}
+                  startIcon={<BookmarkAdd sx={{ color: "white" }} />}
                 >
                   Crear Categoría
                 </ButtonLink>
