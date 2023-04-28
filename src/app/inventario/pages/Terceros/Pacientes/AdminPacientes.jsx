@@ -94,12 +94,7 @@ export const AdminPacientes = () => {
     
     return (
       <>
-        <Grid
-          container
-          justifyContent="center"
-          alignItems="center"
-          sx={{ mb: 3, width: "100%" }}
-        >
+        <Grid container justifyContent="center" alignItems="center" sx={{ mb: 3, width: "100%" }}>
           <Paper elevation={1} sx={{ p: 1, borderRadius: 1, width: "100%" }}>
             <CustomBreadcrumbs pathList={pathList} />
           </Paper>
