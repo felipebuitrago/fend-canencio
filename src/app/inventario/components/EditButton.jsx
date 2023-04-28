@@ -1,17 +1,18 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import { EditOutlined } from '@mui/icons-material';
 
 const EditButton = ({ item, onClick }) => (
-  <Button
-    size="small"
-    variant="contained"
-    color="info"
-    sx={{ transform: "scale(0.9)" }} 
-    onClick={() => onClick(item)}
-  >
-    <EditOutlined />
-  </Button>
+    <Tooltip title="Editar" arrow>
+        <IconButton
+            size="medium"
+            color="primary"
+            onClick={() => onClick(item)}
+            aria-label="edit"
+        >
+            <EditOutlined fontSize='medium' />
+        </IconButton>
+    </Tooltip>
 );
 
 export default EditButton;

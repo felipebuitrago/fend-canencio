@@ -1,9 +1,8 @@
 import React, { useState, useCallback } from "react";
 import { useSelector } from "react-redux";
-import { Link } from 'react-router-dom'
 import { Button, Divider, Grid, Paper, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from "@mui/material";
-import { Close as CloseIcon } from "@mui/icons-material";
-import { CustomBreadcrumbs, TablePaginationActions, EditButton, DeleteButton, CustomTable, SearchBar, AlertSnackbar, DeleteConfirmDialog } from "../../pages/index.js";
+import { Close, PersonAdd } from "@mui/icons-material";
+import { CustomBreadcrumbs, ButtonLink, TablePaginationActions, EditButton, DeleteButton, CustomTable, SearchBar, AlertSnackbar, DeleteConfirmDialog } from "../../components/index.js";
 import { headerCellStyle } from "../../util/utils";
 // Componente principal de la página de administración de usuarios
 export const AdminUsers = () => {
@@ -105,12 +104,15 @@ export const AdminUsers = () => {
       <DeleteButton item={user} onClick={handleOpenConfirmDialog} />
     </>
   );
-
+  const pathList = [
+    { name: "Inventario", route: "/inventario"},
+    { name: "Usuarios" },
+  ];
   return (
     <>
       <Grid container justifyContent="center" alignItems="center"sx={{ mb: 3, width: "100%" }}>
         <Paper elevation={1} sx={{ p: 1, borderRadius: 1, width: "100%" }}>
-          <CustomBreadcrumbs currentPage="Usuarios" />
+            <CustomBreadcrumbs pathList={pathList} />
         </Paper>
       </Grid>
       {/* main grid */}
@@ -126,17 +128,16 @@ export const AdminUsers = () => {
               {`${rows.length} total`}
             </Typography>
             <Grid container sx={{ mt: 2 }} direction="column">
-              <Link to="crear" style={{ textDecoration: 'none' }}>
-                <Button
-                  variant="contained"
-                  color="success"
-                  size="medium"
-                  sx={{ backgroundColor: "black", color: "white" }}
-
-                >
-                  Crear Usuario
-                </Button>
-              </Link>
+            <ButtonLink
+              to="/usuarios/crear"
+              variant="contained"
+              color="success"
+              size="medium"
+              sx={{ backgroundColor: "black", color: "white", marginRight: 2 }}
+              startIcon={<PersonAdd sx={{ color: "white" }} />}
+            >
+              Crear Usuario
+            </ButtonLink>
             </Grid>
           </Grid>
           {/* componentes de barra de busqueda */}
@@ -171,7 +172,7 @@ export const AdminUsers = () => {
             aria-label="close"
             sx={{ position: "absolute", right: 8, top: 8 }}
           >
-            <CloseIcon />
+            <Close/>
           </IconButton>
         </DialogTitle>
         <DialogContent>

@@ -2,9 +2,10 @@ import React from 'react';
 import { Button, Grid, TextField } from '@mui/material';
 import { Search } from '@mui/icons-material';
 
-const SearchBar = ({ search, setSearch }) => {
+const SearchBar = ({ search, setSearch, setPage }) => {
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
+    setPage(0);
   };
 
   return (

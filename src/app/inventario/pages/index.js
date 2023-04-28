@@ -37,15 +37,6 @@ export * from './Usuarios/EditUsuario'
 /*
     archivo de barril para importar todos los componente con una sola referencia 
     a este
-    Sisa pa' aquí van los componentes que se usan en varias partes de la app
 */
 
 
-export { default as CustomBreadcrumbs } from "../components/CustomBreadcrumbs.jsx";
-export { default as TablePaginationActions } from "../components/TablePagination.jsx";
-export { default as EditButton } from "../components/EditButton.jsx";
-export { default as DeleteButton } from "../components/DeleteButton.jsx";
-export { default as CustomTable } from "../components/CustomTable.jsx";
-export { default as SearchBar } from "../components/SearchBar.jsx";
-export { default as AlertSnackbar } from "../components/AlertSnackbar.jsx";
-export { default as DeleteConfirmDialog } from "../components/DeleteConfirmDialog.jsx";
