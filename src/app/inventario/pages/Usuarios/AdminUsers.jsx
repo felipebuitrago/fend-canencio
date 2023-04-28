@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { useSelector } from "react-redux";
-import { Button, Divider, Grid, Paper, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from "@mui/material";
+import { Button,Checkbox , Divider, FormControlLabel, Grid, Paper, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from "@mui/material";
 import { Close, PersonAdd } from "@mui/icons-material";
 import { CustomBreadcrumbs, ButtonLink, TablePaginationActions, EditButton, DeleteButton, CustomTable, SearchBar, AlertSnackbar, DeleteConfirmDialog } from "../../components/index.js";
 import { headerCellStyle } from "../../util/utils";
@@ -60,11 +60,21 @@ export const AdminUsers = () => {
     setEditUser(user);
     setOpenEditDialog(true);
   };
+
+  const [editPassword, setEditPassword] = useState(false);
+const [password, setPassword] = useState("");
+  
   // Cierra el modal de edición
   const handleCloseEditDialog = () => {
     setOpenEditDialog(false);
   };
-
+  const handleCheckboxChange = (event) => {
+    setEditPassword(event.target.checked);
+  };
+  
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
   // Añade los nuevos estados para el modal de confirmación y el alert
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
@@ -191,13 +201,25 @@ export const AdminUsers = () => {
             variant="outlined"
             defaultValue={editUser && editUser.correo}
           />
-          <TextField
-            margin="dense"
-            label="Clave"
-            fullWidth
-            variant="outlined"
-            type="password"
-          />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={editPassword}
+              onChange={handleCheckboxChange}
+            />
+          }
+          label="Editar Contraseña"
+        />
+        <TextField
+          margin="dense"
+          label="Clave"
+          fullWidth
+          variant="outlined"
+          type="password"
+          value={password}
+          onChange={handlePasswordChange}
+          disabled={!editPassword}
+        />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseEditDialog} color="error">
@@ -210,7 +232,7 @@ export const AdminUsers = () => {
       </Dialog>
       {/* modal eliminar */}
       <DeleteConfirmDialog open={openConfirmDialog} onClose={handleCloseConfirmDialog} onConfirm={handleConfirmDelete}
-       title="¿Estás seguro de que deseas eliminar este usuario?"
+       title={`¿Estás seguro de que deseas eliminar a ${userToDelete ? userToDelete.nombre : ""}?`}
       />
       {/* Material Alert */}
       <AlertSnackbar open={openAlert} onClose={handleCloseAlert} message="Acción realizada exitosamente"/>
