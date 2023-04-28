@@ -3,11 +3,10 @@ import { Button, Divider, FormControl, FormControlLabel, FormLabel, Grid, Radio,
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {Search, EditOutlined, DeleteForeverOutlined} from '@mui/icons-material'
-//import { Breadcrumbs, Link as MuiLink } from '@mui/material';
+import {Search, EditOutlined, DeleteForeverOutlined} from '@mui/icons-material';
 
 import { useProductosStore } from '../../../../hooks'
-import SearchBar from '../../components/SearchBar';
+import { SearchBar, TablePaginationActions, CustomTableV2 } from '../../components';
 
 export const AdminProducts = () => {
 
@@ -28,6 +27,17 @@ export const AdminProducts = () => {
   useEffect(()=>{
     startReadProductos();
   },[])
+
+  const columns = [
+    { id: "idpersonalizado", label: "ID", align: "left"},
+    { id: "nombre", label: "Nombre", align: "center"},
+    { id: "presentacion", label: "Presentación/Talla", align: "center"},
+    { id: "proveedor", label: "Proveedor", align: "center"},
+    { id: "categoria", label: "Categoría", align: "center"},
+    { id: "almacen", label: "Almacen", align: "center"},
+    { id: "stock", label: "Stock", align: "center"},
+    { id: "acciones", label: "Acciones", align: "center"},
+  ];
 
   const rows = productos;
   
@@ -105,11 +115,6 @@ export const AdminProducts = () => {
 
   return (
     <>
-      {/* <Link to='editar'>
-            <Button variant='contained'>Editar</Button>
-          </Link>
-          {console.log(dataInventario.productos)}*/}
-
       {/* main grid */}
       <Grid container direction="column">
         {/* barra superior, btn crear y busqueda */}
@@ -132,8 +137,8 @@ export const AdminProducts = () => {
 
           {/* R. componentes de busqueda */}
           <Grid direction="column" display="flex">
-            <SearchBar search={search} setSearch={setSearch} />
-
+            <SearchBar search={search} setSearch={setSearch} setPage={setPage} />
+            {/* radios buttons group, filtros de busqueda */}
             <FormControl sx={{ mt: 1 }}>
               <FormLabel id="filtros-busqueda-productos">Filtros</FormLabel>
               <RadioGroup
@@ -167,8 +172,9 @@ export const AdminProducts = () => {
         <Divider sx={{ mt: 2 }} />
 
         {/* tabla display data */}
-        <Grid container direction="column">
-          <TableContainer component="div">
+        <Grid container direction="column" >
+         <>
+         {/* <TableContainer component="div">
             <Table aria-label="simple table">
               <TableHead sx={{ background: "black" }}>
                 <TableRow>
@@ -310,7 +316,20 @@ export const AdminProducts = () => {
                 )}
               </TableBody>
             </Table>
-          </TableContainer>
+          </TableContainer>  */}
+          </>
+           <CustomTableV2
+            columns={columns}
+            filteredRows={filteredRows}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            emptyRows={emptyRows}
+            handleChangePage={handleChangePage}
+            handleChangeRowsPerPage={handleChangeRowsPerPage}
+            TablePaginationActions={TablePaginationActions}
+            updateHandleClick={handleUpdateClick}
+            deleteHandleClick={handleDeleteClick}
+          /> 
         </Grid>
         {/* fin tabla display data */}
       </Grid>
