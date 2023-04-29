@@ -44,7 +44,6 @@ export const InventarioRouter = () => {
   return (
     
     <Routes>
-
         <Route path='/' element={ <InventarioView /> } >
 
            <Route path='' element={ <InicioPage /> } /> 

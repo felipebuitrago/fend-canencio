@@ -1,37 +1,48 @@
-import React from 'react';
-import { Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Button } from '@mui/material';
-import { DeleteForeverOutlined, EditOutlined } from '@mui/icons-material';
+import React from "react";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Button, Paper } from "@mui/material"; 
+import { DeleteForeverOutlined, EditOutlined } from "@mui/icons-material";
 
-const CustomTableV2 = ({ columns, filteredRows, page, rowsPerPage, handleChangePage, handleChangeRowsPerPage, TablePaginationActions, updateHandleClick, deleteHandleClick }) => {
-                        
-    return (
-    <Grid container direction="column">
-      <TableContainer component="div">
-        <Table aria-label="simple table" stickyHeader>
-          <TableHead>
-            <TableRow>
-              {columns.map((column, index) => (
-                <TableCell key={index} align={column.align} sx={{backgroundColor: "black",
-                color: "white",
-                borderRightColor: "white",
-                borderRightWidth: 1,
-                borderRightStyle: "solid"}}>
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {(rowsPerPage > 0
-              ? filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : filteredRows
-            ).map((row,i) => (
-              <TableRow key={row._id}>
-
+const CustomTableV2 = ({
+  columns,
+  filteredRows,
+  page,
+  rowsPerPage,
+  handleChangePage,
+  handleChangeRowsPerPage,
+  TablePaginationActions,
+  updateHandleClick,
+  deleteHandleClick,
+}) => {
+  
+  return (
+    <Paper sx={{ width: "100%", overflow: "hidden" }}>
+        <TableContainer component="div" sx={{ maxHeight: 440 }}>
+          <Table aria-label="simple table" stickyHeader>
+            <TableHead>
+              <TableRow>
                 {columns.map((column, index) => (
-
-                  <TableCell key={index} align={column.align}>
-                    
+                  <TableCell key={index} align={column.align} style={{ minWidth: column.minWidth }}
+                    sx={{
+                      backgroundColor: "black",
+                      color: "white",
+                      borderRightColor: "white",
+                      borderRightWidth: 1,
+                      borderRightStyle: "solid",
+                    }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {(rowsPerPage > 0
+                ? filteredRows.slice( page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                : filteredRows
+              ).map((row, i) => (
+                <TableRow key={row._id}>
+                  {columns.map((column, index) => (
+                    <TableCell key={index} align={column.align}>
                     {(typeof row[column.id] !== "object")?row[column.id]:""}
 
                     {(column.id === "id" && i === 0 && page === 0)?i+1:""}
@@ -70,36 +81,33 @@ const CustomTableV2 = ({ columns, filteredRows, page, rowsPerPage, handleChangeP
                             onClick={deleteHandleClick}
                         >
                             <DeleteForeverOutlined id={row._id}/>
-                        </Button>
+                        </Button>   
                         </>
                     ):""}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-
-
-
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
             {/* {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
                 <TableCell colSpan={columns.length} />
               </TableRow>
             )} */}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={filteredRows.length}
-        labelRowsPerPage="Filas por página"
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        ActionsComponent={TablePaginationActions}
-      />
-    </Grid>
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={filteredRows.length}
+          labelRowsPerPage="Filas por página"
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          ActionsComponent={TablePaginationActions}
+        />
+    </Paper>
   );
 };
 

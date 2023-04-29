@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Grid, InputAdornment, Paper, TextField, Typography } from "@mui/material";
-import { PersonOutline, PermPhoneMsg } from "@mui/icons-material";
+import { PersonOutline, PermPhoneMsgOutlined } from "@mui/icons-material";
 import { CustomBreadcrumbs } from "../../../components/index.js";
 import { useForm, Controller } from "react-hook-form";
 
@@ -88,7 +88,7 @@ export const CreateProveedor = () => {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <PermPhoneMsg />
+                          <PermPhoneMsgOutlined />
                         </InputAdornment>
                       ),
                     }}
