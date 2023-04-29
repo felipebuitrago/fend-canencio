@@ -1,42 +1,79 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Divider, Grid, Paper, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from "@mui/material";
 import { Close, AddBusiness } from "@mui/icons-material";
-import { CustomBreadcrumbs, ButtonLink, TablePaginationActions, EditButton, DeleteButton, CustomTable, SearchBar, AlertSnackbar, DeleteConfirmDialog } from "../../components/index.js";
-import { headerCellStyle } from "../../util/utils";
+import { CustomBreadcrumbs, ButtonLink, TablePaginationActions, SearchBar, AlertSnackbar, DeleteConfirmDialog, CustomTableV2 } from "../../components";
+import { useAlmacenesStore } from "../../../../hooks";
 
 export const AdminStores = () => {
 
-  const createData = (id, almacen, ubicacion) => {
-    return { id, almacen, ubicacion };
-  };
-
-  const rows = [
-    createData("01", "Juan Canencio", "Neiva"),
-    createData("02", "Elemental", "Neiva"),
-   
-    // Agrega más almacenes aquí...
-  ];
-
+  // Estado para la búsqueda de usuarios
   const [search, setSearch] = React.useState("");
-  const handleSearchChange = (event) => {
-    setSearch(event.target.value);
-  };
-
+  // Estados para la paginación de la tabla
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const {almacenes, 
+    startCreateAlmacen, 
+    startReadAlmacenes, 
+    startUpdateAlmacen, 
+    startDeleteAlmacen} = useAlmacenesStore();
+
+  useEffect(()=>{
+    startReadAlmacenes();
+  },[])
+
+  const columns = [
+    { id: "_id", label: "ID", align: "left"},
+    { id: "name", label: "Almacén", align: "center"},
+    { id: "location", label: "Ubicación", align: "center"},
+    { id: "acciones", label: "Acciones", align: "center"},
+  ];
+  const rows = almacenes;
+
+  {/* evento de editar cierto almacen */}
+  const handleUpdateClick = (event) => {
+    const almacenSample = {
+      "_id"    : "50ec99xxx9c5bb44822945",
+      "name" : "420Store",
+      "location": "Palermo"
+    }
+    if(event.target.id!==""){
+
+      
+      startUpdateAlmacen(event.target.id,almacenSample);
+    }
+    else{
+      startUpdateAlmacen(event.target.farthestViewportElement.id,almacenSample);
+    }
+  };   
+
+  {/* evento de eliminar cierto almacen */}
+  const handleDeleteClick = (event) => {
+
+    if(event.target.id!==""){
+      startDeleteAlmacen(event.target.id);
+    }
+    else{
+      startDeleteAlmacen(event.target.farthestViewportElement.id);
+    }
+  };   
+
+  // Filtra las filas de la tabla según la búsqueda por nombre
+  const filteredRows = rows.filter((almacen) =>
+    almacen.name.toLowerCase().includes(search.toLowerCase())
+  );
+  // Calcula el número de filas vacías para rellenar la tabla
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredRows.length - page * rowsPerPage);
+
+  //handle paginacion
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
+  //handle paginas por pagina
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
-  const filteredRows = rows.filter((store) =>
-    store.almacen.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredRows.length - page * rowsPerPage);
 
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [editStore, setEditStore] = useState(null);
@@ -73,30 +110,14 @@ export const AdminStores = () => {
     setOpenAlert(false);
   };
 
-  const columns = [
-    { id: "id", label: "ID", align: "left", style: headerCellStyle },
-    { id: "almacen", label: "Almacén", align: "center", style: headerCellStyle },
-    { id: "ubicacion", label: "Ubicación", align: "center", style: headerCellStyle },
-    { id: "actions", label: "Acciones", align: "center", style: headerCellStyle },
-  ];
-
-  const actions = (store) => (
-    <>
-      <EditButton item={store} onClick={handleOpenEditDialog} />
-      <DeleteButton item={store} onClick={handleOpenConfirmDialog} />
-    </>
-  );
-
-  const pathList = [
-    { name: "Inventario", route: "/inventario" },
-    { name: "Almacenes" },
-  ];
-
   return (
     <>
       <Grid container justifyContent="center" alignItems="center" sx={{ mb: 3, width: "100%" }}>
         <Paper elevation={1} sx={{ p: 1, borderRadius: 1, width: "100%" }}>
-          <CustomBreadcrumbs pathList={pathList} />
+          <CustomBreadcrumbs pathList={[
+            { name: "Inventario", route: "/inventario" },
+            { name: "Almacenes" },
+          ]} />
         </Paper>
       </Grid>
       <Grid container direction="column">
@@ -109,6 +130,16 @@ export const AdminStores = () => {
               {`${rows.length} total`}
             </Typography>
             <Grid container sx={{ mt: 2 }} direction="column">
+              {/* <Button
+                variant="contained"
+                fullWidth
+                color="success"
+                size="large"
+                sx={{ backgroundColor: "black", color: "white", mt: 3 }}
+                onClick={startCreateAlmacen}
+              >
+                Crear almacen
+              </Button> */}
               <ButtonLink
                 to="/almacenes/crear"
                 variant="contained"
@@ -121,14 +152,14 @@ export const AdminStores = () => {
               </ButtonLink>
             </Grid>
           </Grid>
-          <SearchBar search={search} setSearch={setSearch} />
+          <SearchBar search={search} setSearch={setSearch} setPage={setPage}/>
         </Grid>
+
         <Divider sx={{ mt: 2 }} />
+
         <Grid container direction="column" sx={{ mt: 2 }}>
-          <CustomTable
+          <CustomTableV2
             columns={columns}
-            rows={rows}
-            actions={actions}
             filteredRows={filteredRows}
             page={page}
             rowsPerPage={rowsPerPage}
@@ -136,6 +167,8 @@ export const AdminStores = () => {
             handleChangePage={handleChangePage}
             handleChangeRowsPerPage={handleChangeRowsPerPage}
             TablePaginationActions={TablePaginationActions}
+            updateHandleClick={handleUpdateClick}
+            deleteHandleClick={handleDeleteClick}
           />
         </Grid>
       </Grid>

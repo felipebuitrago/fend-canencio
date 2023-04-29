@@ -15,7 +15,7 @@ export const proveedoresSlice = createSlice({
   initialState,
   reducers: {
     createProveedorStore : (state,{payload}) => {
-      state.proveedores.unshift(proveedorSample)
+      state.proveedores.unshift(proveedorSample);
     },
     addProveedoresStore : (state,{payload}) => {
       state.proveedores = payload;
