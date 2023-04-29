@@ -1,6 +1,6 @@
 import { Divider, Grid, Paper, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
-import { AddShoppingCart } from '@mui/icons-material';
+import { LibraryAddOutlined } from '@mui/icons-material';
 
 import { useProductosStore } from '../../../../hooks'
 import { SearchBar, TablePaginationActions, CustomTableV2, CustomBreadcrumbs, ButtonLink } from '../../components';
@@ -141,7 +141,7 @@ export const AdminProducts = () => {
               color="success"
               size="medium"
               sx={{ backgroundColor: "black", color: "white", marginRight: 2 }}
-              startIcon={<AddShoppingCart sx={{ color: "white" }} />}
+              startIcon={<LibraryAddOutlined sx={{ color: "white" }} />}
               >
                 Crear Producto
               </ButtonLink>

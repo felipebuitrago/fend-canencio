@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Grid, InputAdornment, Paper, TextField, Typography } from "@mui/material";
-import { Store, LocationOn } from "@mui/icons-material";
+import { StoreMallDirectoryOutlined, PinDropOutlined } from "@mui/icons-material";
 import { CustomBreadcrumbs } from "../../components/index.js";
 import { useForm, Controller } from "react-hook-form";
 
@@ -59,7 +59,7 @@ export const CreateStore = () => {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <Store />
+                          <StoreMallDirectoryOutlined />
                         </InputAdornment>
                       ),
                     }}
@@ -88,7 +88,7 @@ export const CreateStore = () => {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <LocationOn />
+                          <PinDropOutlined />
                         </InputAdornment>
                       ),
                     }}
