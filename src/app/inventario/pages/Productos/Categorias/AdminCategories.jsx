@@ -1,41 +1,81 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Divider, Grid, Paper, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from "@mui/material";
 import { Close, BookmarkAdd} from "@mui/icons-material";
-import { CustomBreadcrumbs, ButtonLink, TablePaginationActions, EditButton, DeleteButton, CustomTable, SearchBar, AlertSnackbar, DeleteConfirmDialog } from "../../../components/index.js";
-import { headerCellStyle } from "../../../util/utils";
+
+import { CustomBreadcrumbs, ButtonLink, TablePaginationActions, SearchBar, AlertSnackbar, DeleteConfirmDialog, CustomTableV2 } from "../../../components";
+import { useCategoriasStore } from "../../../../../hooks";
 
 export const AdminCategories = () => {
 
-  const createData = (id, nombre, descripcion) => {
-    return { id, nombre, descripcion };
-  };
-
-  const rows = [
-    createData("01", "Categoría 1", "Descripción 1"),
-    createData("02", "Categoría 2", "Descripción 2"),
-    createData("03", "Categoría 3", "Descripción 3"),
-    // ... Agrega más categorías aquí
-  ];
-  
+  // Estado para la búsqueda de usuarios
   const [search, setSearch] = React.useState("");
+  // Estados para la paginación de la tabla
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  const {categorias,
+        startCreateCategoria,
+        startReadCategorias,
+        startUpdateCategoria,
+        startDeleteCategoria} = useCategoriasStore();
+
+  useEffect(()=>{
+    startReadCategorias();
+  },[])
+
+  const columns = [
+    { id: "_id", label: "ID", align: "left" },
+    { id: "name", label: "Nombre", align: "center" },
+    { id: "description", label: "Descripción", align: "center" },
+    { id: "acciones", label: "Acciones", align: "center" },
+  ];
+  const rows = categorias;
+
+  {/* evento de editar cierta categoria */}
+  const handleUpdateClick = (event) => {
+    const categoriaSample = {
+      "_id"    : "50ec999c5bb44822945",
+      "name" : "Crononicaca",
+      "description": "la mera caca"
+    }
+    if(event.target.id!==""){
+
+      
+      startUpdateCategoria(event.target.id,categoriaSample);
+    }
+    else{
+      startUpdateCategoria(event.target.farthestViewportElement.id,categoriaSample);
+    }
+  };   
+
+  {/* evento de eliminar cierta categoria */}
+  const handleDeleteClick = (event) => {
+
+    if(event.target.id!==""){
+      startDeleteCategoria(event.target.id);
+    }
+    else{
+      startDeleteCategoria(event.target.farthestViewportElement.id);
+    }
+  };   
+
+  // Filtra las filas de la tabla según la búsqueda por nombre
+  const filteredRows = rows.filter((categoria) =>
+    categoria.name.toLowerCase().includes(search.toLowerCase())
+  );
+  // Calcula el número de filas vacías para rellenar la tabla
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredRows.length - page * rowsPerPage);
+
+  //handle paginacion
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
+  //handle paginas por pagina
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
-  const filteredRows = rows.filter((category) =>
-    category.nombre.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredRows.length - page * rowsPerPage);
-
+  
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [editCategory, setEditCategory] = useState(null);
 
@@ -71,31 +111,15 @@ export const AdminCategories = () => {
     setOpenAlert(false);
   };
 
-  const columns = [
-    { id: "id", label: "ID", align: "left", style: headerCellStyle },
-    { id: "nombre", label: "Nombre", align: "center", style: headerCellStyle },
-    { id: "descripcion", label: "Descripción", align: "center", style: headerCellStyle },
-    { id: "actions", label: "Acciones", align: "center", style: headerCellStyle },
-  ];
-
-  const actions = (category) => (
-    <>
-      <EditButton item={category} onClick={handleOpenEditDialog} />
-      <DeleteButton item={category} onClick={handleOpenConfirmDialog} />
-    </>
-  );
-
-  const pathList = [
-    { name: "Inventario", to: "/inventario" },
-    { name: "Categorías", to: "/inventario/categorias" },
-  ];
-
     
   return (
     <>
       <Grid container justifyContent="center" alignItems="center" sx={{ mb: 3, width: "100%" }}>
           <Paper elevation={1} sx={{ p: 1, borderRadius: 1, width: "100%" }}>
-            <CustomBreadcrumbs pathList={pathList} />
+            <CustomBreadcrumbs pathList={[
+              { name: "Inventario", route: "/inventario" },
+              { name: "Categorías"},
+            ]} />
           </Paper>
         </Grid>
         <Grid container direction="column">
@@ -108,6 +132,16 @@ export const AdminCategories = () => {
                 {`${rows.length} total`}
               </Typography>
               <Grid container sx={{ mt: 2 }} direction="column">
+                {/* <Button
+                variant="contained"
+                fullWidth
+                color="success"
+                size="large"
+                sx={{ backgroundColor: "black", color: "white", mt: 3 }}
+                onClick={startCreateCategoria}
+                >
+                  Crear categoria
+                </Button> */}
                 <ButtonLink
                   to="/categorias/crear"
                   variant="contained"
@@ -120,14 +154,15 @@ export const AdminCategories = () => {
                 </ButtonLink>
               </Grid>
             </Grid>
-            <SearchBar search={search} setSearch={setSearch} />
+
+            <SearchBar search={search} setSearch={setSearch} setPage={setPage}/>
           </Grid>
+
           <Divider sx={{ mt: 2 }} />
+
           <Grid container direction="column" sx={{ mt: 2 }}>
-            <CustomTable
+            <CustomTableV2
               columns={columns}
-              rows={rows}
-              actions={actions}
               filteredRows={filteredRows}
               page={page}
               rowsPerPage={rowsPerPage}
@@ -135,6 +170,8 @@ export const AdminCategories = () => {
               handleChangePage={handleChangePage}
               handleChangeRowsPerPage={handleChangeRowsPerPage}
               TablePaginationActions={TablePaginationActions}
+              updateHandleClick={handleUpdateClick}
+              deleteHandleClick={handleDeleteClick}
             />
           </Grid>
         </Grid>
