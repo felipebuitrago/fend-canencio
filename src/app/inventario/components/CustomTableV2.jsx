@@ -34,10 +34,15 @@ const CustomTableV2 = ({ columns, filteredRows, page, rowsPerPage, handleChangeP
                     
                     {(typeof row[column.id] !== "object")?row[column.id]:""}
 
+                    {(column.id === "id" && i === 0 && page === 0)?i+1:""}
+                    {(column.id === "id" && i === 0 && page !== 0)?(i+1)*(rowsPerPage*page+1):""}
+                    {(column.id === "id" && i !== 0 && page === 0)?(i+1)*(page+1):""}
+                    {(column.id === "id" && i !== 0 && page !== 0)?(rowsPerPage*page+1)+i:""}
+
                     {(column.id === "proveedor")?row[column.id].nombre:""}
 
                     {(column.id === "categoria")?(row[column.id].length>0)?(
-                        row[column.id].map(categoria => <span>{categoria.name}</span>)
+                        row[column.id].map((categoria,index) => <span>{index+1}{ ") " + categoria.name}<br/> </span>)
                         ):<span>no categoria</span>:""}
 
                     {(column.id === "almacen")?(row[column.id].length>0)?(

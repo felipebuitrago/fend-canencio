@@ -15,20 +15,35 @@ export const usuariosSlice = createSlice({
   name: 'usuarios',
   initialState,
   reducers: {
-    createUsuarioStore : () => {
-      
+    createUsuarioStore : (state,{payload}) => {
+      state.usuarios.unshift(userSample);
     },
-    addUsuariosStore : () => {
-      
+    addUsuariosStore : (state,{payload}) => {
+      state.usuarios = payload;
     },
-    updateUsuarioStore : () => {
-      
+    updateUsuarioStore : (state,{payload}) => {
+      let position;
+      state.usuarios.map((user,index) => {
+        if(user._id === payload.id){
+          position = index;
+        }
+      })
+      state.usuarios[position]=payload.data;
     },
-    deleteUsuarioStore : () => {
-      
+    deleteUsuarioStore : (state,{payload}) => {
+
+      let position;
+      state.usuarios.map((user,index) => {
+        if(user._id === payload.id){
+          position = index;
+        }
+      })
+      let first  = state.usuarios.slice(0,position);
+      let second = state.usuarios.slice(position+1,state.usuarios.length);
+      state.usuarios = first.concat(second);
     },
-    resetUsuariosStore : () => {
-      
+    resetUsuariosStore : (state) => {
+      state.usuarios = [];
     },
   },
 })

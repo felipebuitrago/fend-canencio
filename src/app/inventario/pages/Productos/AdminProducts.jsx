@@ -24,11 +24,11 @@ export const AdminProducts = () => {
   },[])
 
   const columns = [
-    { id: "idpersonalizado", label: "ID", align: "left"},
+    { id: "id", label: "ID", align: "left"},
     { id: "nombre", label: "Nombre", align: "center"},
     { id: "presentacion", label: "Presentación/Talla", align: "center"},
     { id: "proveedor", label: "Proveedor", align: "center"},
-    { id: "categoria", label: "Categoría", align: "center"},
+    { id: "categoria", label: "Categorías", align: "center"},
     { id: "almacen", label: "Almacen", align: "center"},
     { id: "stock", label: "Stock", align: "center"},
     { id: "acciones", label: "Acciones", align: "center"},

@@ -23,7 +23,7 @@ export const AdminStores = () => {
   },[])
 
   const columns = [
-    { id: "_id", label: "ID", align: "left"},
+    { id: "id", label: "ID", align: "left"},
     { id: "name", label: "Almacén", align: "center"},
     { id: "location", label: "Ubicación", align: "center"},
     { id: "acciones", label: "Acciones", align: "center"},

@@ -23,7 +23,7 @@ export const AdminPacientes = () => {
   },[])
 
   const columns = [
-    { id: "_id", label: "ID", align: "left"},
+    { id: "id", label: "ID", align: "left"},
     { id: "name", label: "Nombre", align: "center"},
     { id: "contact", label: "Contacto", align: "center"},
     { id: "acciones", label: "Acciones", align: "center"},

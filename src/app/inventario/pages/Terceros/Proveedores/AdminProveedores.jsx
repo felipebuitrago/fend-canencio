@@ -23,7 +23,7 @@ export const AdminProveedores = () => {
   },[])
 
   const columns = [
-    { id: "_id", label: "ID", align: "left" },
+    { id: "id", label: "ID", align: "left" },
     { id: "nombre", label: "Nombre", align: "center" },
     { id: "contacto", label: "Contacto", align: "center" },
     { id: "acciones", label: "Acciones", align: "center" },

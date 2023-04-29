@@ -24,7 +24,7 @@ export const AdminCategories = () => {
   },[])
 
   const columns = [
-    { id: "_id", label: "ID", align: "left" },
+    { id: "id", label: "ID", align: "left" },
     { id: "name", label: "Nombre", align: "center" },
     { id: "description", label: "Descripción", align: "center" },
     { id: "acciones", label: "Acciones", align: "center" },

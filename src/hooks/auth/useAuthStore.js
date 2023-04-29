@@ -2,7 +2,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { canencioApi } from '../../api'
 import { checking, login, logout, clearErrorMessage,
      resetProductosStore, 
-     resetCategoriasStore} from '../../store/slices';
+     resetCategoriasStore,
+     resetAlmacenesStore,
+     resetPacientesStore,
+     resetProveedoresStore,
+     resetUsuariosStore} from '../../store/slices';
 
 export const useAuthStore = () => {
   
@@ -43,8 +47,13 @@ export const useAuthStore = () => {
 
     const startLogout = () => {
         localStorage.clear();
-        dispatch(resetProductosStore());
+
+        dispatch(resetAlmacenesStore());
         dispatch(resetCategoriasStore());
+        dispatch(resetPacientesStore());
+        dispatch(resetProductosStore());
+        dispatch(resetProveedoresStore());
+        dispatch(resetUsuariosStore());
         dispatch(logout());
     }
 
