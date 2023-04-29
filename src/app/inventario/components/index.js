@@ -8,3 +8,4 @@ export { default as SearchBar } from "../components/SearchBar.jsx";
 export { default as AlertSnackbar } from "../components/AlertSnackbar.jsx";
 export { default as DeleteConfirmDialog } from "../components/DeleteConfirmDialog.jsx";
 export {default  as ButtonLink } from "../components/ButtonLink.jsx";
+export {default as  CustomTableMoves} from "../components/CustomTableMoves.jsx";
