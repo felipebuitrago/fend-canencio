@@ -27,14 +27,14 @@ export const CustomCollapseButton = ({titulo,opciones,iconos}) => {
         <List component="div" disablePadding>
             {
                 opciones.map((opcion,index)=>
-                    <Link to={opcion.link}>
-                        <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemIcon>
-                            {iconos[index+1]}
-                        </ListItemIcon>
-                        <ListItemText primary={opcion.prompt} />
-                        </ListItemButton>
-                    </Link>
+                  <Link key={opcion.link} to={opcion.link}>
+                    <ListItemButton sx={{ pl: 4 }}>
+                      <ListItemIcon>
+                        {iconos[index+1]}
+                      </ListItemIcon>
+                      <ListItemText primary={opcion.prompt} />
+                    </ListItemButton>
+                  </Link>
                 )
             }
         </List>

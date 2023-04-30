@@ -11,7 +11,6 @@ export const AuthLayout = ({ children, title = '' }) => {
       justifyContent="center" /*añadir theme, y en el main.jsx*/
       sx={{ minHeight: '97vh', backgroundColor: 'black'}}
     >
-
       <Grid item
        className='box-shadow'
        xs={ 3 }
@@ -21,21 +20,13 @@ export const AuthLayout = ({ children, title = '' }) => {
             padding: 3, 
             borderRadius: 2 ,
         }}>
-          
           <Typography align='center' 
                 variant='h5' 
                 sx={{ mb: 1 }}>
-            
-            { title }
-            
+                { title }
           </Typography>
-
-            
             { children }
-
         </Grid>
-
     </Grid>
-
   )
 }

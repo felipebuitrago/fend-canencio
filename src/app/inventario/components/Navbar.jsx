@@ -1,38 +1,38 @@
-import { AppBar, Button, Grid, Toolbar, Typography } from '@mui/material';
-import { LogoutOutlined } from '@mui/icons-material';
-import { useParams } from 'react-router-dom';
-import { useAuthStore } from '../../../hooks'
+import { AppBar, Button, Grid, Toolbar } from "@mui/material";
+import { LogoutOutlined } from "@mui/icons-material";
+import { useParams } from "react-router-dom";
+import { useAuthStore } from "../../../hooks";
+import AccountMenu from "./AccountMenu";
 
 export const NavBar = ({ drawerWidth = 240 }) => {
   const params = useParams();
   const { startLogout } = useAuthStore();
 
   return (
-    <AppBar
-      position="fixed"
-      // sx={{
-      //   width: { sm: `calc(100% - ${drawerWidth}px)` },
-      //   ml: { sm: `${drawerWidth}px` },
-      // }}
-      sx={{backgroundColor:'black'}}
-    >
+    <AppBar position="fixed" sx={{ backgroundColor: "black" }}>
       <Toolbar>
-
         <Grid
           container
           direction="row"
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography variant="h6" noWrap component="div">
-            Juan Canencio
-          </Typography>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <img
+              src="/elemental-logo.png"
+              alt="Elemental"
+              style={{ height: "62px", width: "75px" }}
+            />
+            <img
+              src="/juanCanencio-logo.svg"
+              alt="Juan Canencio"
+              style={{ height: "40px", alignContent: "center" }}
+            />
+          </div>
 
-          <Button onClick={startLogout} variant='outlined' color='success' 
-                    sx={{color:'white',borderColor:'white'}} 
-                    startIcon={<LogoutOutlined sx={{color:'white'}}/>}>
-            Cerrar sesión
-          </Button>
+          <div>
+            <AccountMenu startLogout={startLogout} />
+          </div>
         </Grid>
       </Toolbar>
     </AppBar>
