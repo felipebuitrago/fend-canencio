@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Avatar, Box, Divider, IconButton, Typography, Tooltip, Menu, MenuItem, ListItemIcon } from '@mui/material';
-import {Logout, AccountCircleOutlined} from '@mui/icons-material';
+import {Logout } from '@mui/icons-material';
 import { useSelector } from 'react-redux';
 
 const AccountMenu = ({ startLogout }) => {
