@@ -5,7 +5,7 @@ import { InventarioRouter } from "../app/inventario/routes/InventarioRouter";
 import { useAuthStore } from "../hooks";
 import { CircularProgress } from '@mui/material';
 
-const AppRouter = () => {
+export const AppRouter = () => {
     
   const { status, checkAuthToken } = useAuthStore();
   useEffect(() => { checkAuthToken();}, []);
