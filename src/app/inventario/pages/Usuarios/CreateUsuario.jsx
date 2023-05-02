@@ -1,25 +1,54 @@
 import React, { useState, useEffect } from "react";
+import { useForm, Controller } from "react-hook-form"; //npm install react-hook-form
 import { Link } from "react-router-dom";
 import { Button, FormControl, FormControlLabel, FormLabel, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, Paper, Radio, RadioGroup, TextField, Typography, FormHelperText } from "@mui/material";
 import { Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon, MailOutline as MailOutlineIcon, PersonOutline as PersonOutlineIcon } from "@mui/icons-material";
-import { CustomBreadcrumbs } from "../../components/index.js";
-import { useForm, Controller } from "react-hook-form"; //npm install react-hook-form
+import { AlertSnackbar, CustomBreadcrumbs } from "../../components";
+import { useUsuariosStore } from "../../../../hooks";
 
 export const CreateUsuario = () => {
+
+  const { startCreateUsuario } = useUsuariosStore();
+  //alert confirmation
+  const [ openAlert, setOpenAlert ] = useState(false);
+  //cierra alert
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  };
+
   // inicialización estado del formulario react-hook-form
-  const { control, handleSubmit, formState: { errors }, setValue, getValues, } = useForm({ defaultValues: 
-    { nombre: "", correo: "", contraseña: "", rol: "", },
+  const { control, 
+    handleSubmit, 
+    formState: { errors }, 
+    getValues,
+    setValue, 
+    reset, 
+  } = useForm(
+    { defaultValues: { nombre: "", correo: "", contraseña: "", rol: "", },
   });
+
   //useEffect hook llama funcion setValue del hook useForm para limpiar rol
-  useEffect(() => { setValue("rol", ""); }, [setValue]);
+  useEffect(() => { 
+    setValue("rol", ""); 
+  }, [setValue]);
+
   // estado para mostrar contraseña
   const [showPassword, setShowPassword] = useState(false);
   // función para mostrar contraseña
   const handleClickShowPassword = () => { setShowPassword(!showPassword); };
 
-  const onSubmit = (data) => {
+  const onSubmit = () => {
     // Validación y creación del usuario
+    let name     = document.getElementById("name").value;
+    let email    = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+    
+    startCreateUsuario(name, email, password, getValues("rol"));
+    
+    reset({ nombre: "", correo: "", contraseña: "", rol: "", });
+    setOpenAlert(true);
   };
+
   const pathList = [
     { name: "Inventario", route: "/" },
     { name: "Usuarios", route: "/usuarios" },
@@ -56,6 +85,7 @@ export const CreateUsuario = () => {
                     fullWidth
                     variant="outlined"
                     label="Nombre"
+                    id="name"
                     error={!!errors.nombre}
                     helperText={errors.nombre?.message}
                     InputProps={{
@@ -85,6 +115,7 @@ export const CreateUsuario = () => {
                     fullWidth
                     variant="outlined"
                     label="Correo"
+                    id="email"
                     error={!!errors.correo}
                     helperText={errors.correo?.message}
                     InputProps={{
@@ -111,12 +142,12 @@ export const CreateUsuario = () => {
                   }}
                   render={({ field }) => (
                     <FormControl fullWidth variant="outlined">
-                      <InputLabel htmlFor="contraseña">Contraseña</InputLabel>
+                      <InputLabel htmlFor="password">Contraseña</InputLabel>
                       <OutlinedInput
                         {...field}
-                        id="contraseña"
                         type={showPassword ? "text" : "password"}
                         label="Contraseña"
+                        id="password"
                         error={!!errors.contraseña}
                         startAdornment={
                           <InputAdornment position="start">
@@ -153,14 +184,14 @@ export const CreateUsuario = () => {
                 render={({ field }) => (
                   <FormControl component="fieldset" error={!!errors.rol}>
                     <FormLabel component="legend">Rol</FormLabel>
-                    <RadioGroup {...field} row aria-label="rol" name="rol">
+                    <RadioGroup {...field} row aria-label="rol" name="rol" id="rol">
                       <FormControlLabel
-                        value="administrador"
+                        value="Administrador"
                         control={<Radio />}
                         label="Administrador"
                       />
                       <FormControlLabel
-                        value="colaborador"
+                        value="Colaborador"
                         control={<Radio />}
                         label="Colaborador"
                       />
@@ -197,6 +228,10 @@ export const CreateUsuario = () => {
           </Grid>
         </Grid>
       </Grid>
+
+      {/* Material Alert */}
+      <AlertSnackbar open={openAlert} onClose={handleCloseAlert} message="Acción realizada exitosamente"/>
+  
     </>
   );
 };

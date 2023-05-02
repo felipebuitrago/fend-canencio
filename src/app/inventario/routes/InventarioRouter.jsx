@@ -35,75 +35,98 @@ import {
 
 } from "../pages";
 
+import { useAuthStore } from '../../../hooks';
 
 export const InventarioRouter = () => {
-  return (
-    
-    <Routes>
-        <Route path='/' element={ <InventarioView /> } >
 
-           <Route path='' element={ <InicioPage /> } /> 
+	const { user } = useAuthStore();
 
-           <Route path='movimientos' element={ <MovimientosPage /> } /> 
-           <Route path='transaccion' element={ <RealizarTransaccionPage /> } /> 
-           
-           {/* Rutas para el modulo "productos" */}
-           <Route path='productos' element={ <ProductosIndex /> }>
-              <Route path='' 
-                      element={ <AdminProducts /> } />
-              <Route path='crear' 
-                      element={ <CreateProducto /> } />
-              <Route path='editar' 
-                      element={ <EditProducto /> } />
-            </Route> 
-
-           {/* Rutas para el modulo "categorias" */}
-           <Route path='categorias' element={ <CategoriasIndex /> }>
-              <Route path='' 
-                      element={ <AdminCategories /> } />
-              <Route path='crear' 
-                      element={ <CreateCategoria /> } />
-           </Route>
-
-           {/* Rutas para el modulo "proveedores" */} 
-           <Route path='proveedores' element={ <ProveedoresIndex /> }>
-              <Route path='' 
-                      element={ <AdminProveedores /> } />
-              <Route path='crear' 
-                      element={ <CreateProveedor /> } />
-            </Route> 
-
-           {/* Rutas para el modulo "pacientes" */}
-           <Route path='pacientes' element={ <PacientesIndex /> }>
-              <Route path='' 
-                      element={ <AdminPacientes /> } />
-              <Route path='crear' 
-                      element={ <CreatePaciente /> } />
-            </Route> 
-
-          {/* Rutas para el modulo "almacenes" */}
-           <Route path='almacenes' element={ <AlmacenesIndex /> } > 
-              <Route path='' 
-                      element={ <AdminStores /> } />
-              <Route path=':almacen' 
-                      element={ <AdminByStore /> } />
-              <Route path='crear' 
-                      element={ <CreateStore /> } />
-           </Route>  
-          
-          {/* Rutas para el modulo "usuarios" */}
-           <Route path='usuarios' element={ <UsuariosIndex /> } >
-              <Route path='' 
-                      element={ <AdminUsers /> } />
-              <Route path='crear' 
-                      element={ <CreateUsuario /> } />
-           </Route> 
-
-        </Route>
-
-        <Route path='/*' element={ <Navigate to="/" /> } />
-
-    </Routes>
-
-  )
+	if(user.rol === "Administrador"){
+		return (
+			<Routes>
+				<Route path='/' element={ <InventarioView /> } >
+		
+				   <Route path='' element={ <InicioPage /> } /> 
+		
+				   <Route path='movimientos' element={ <MovimientosPage /> } /> 
+				   <Route path='transaccion' element={ <RealizarTransaccionPage /> } /> 
+				   
+				   {/* Rutas para el modulo "productos" */}
+				   <Route path='productos' element={ <ProductosIndex /> }>
+					  <Route path='' 
+							  element={ <AdminProducts /> } />
+					  <Route path='crear' 
+							  element={ <CreateProducto /> } />
+					  <Route path='editar' 
+							  element={ <EditProducto /> } />
+					</Route> 
+		
+				   {/* Rutas para el modulo "categorias" */}
+				   <Route path='categorias' element={ <CategoriasIndex /> }>
+					  <Route path='' 
+							  element={ <AdminCategories /> } />
+					  <Route path='crear' 
+							  element={ <CreateCategoria /> } />
+				   </Route>
+		
+				   {/* Rutas para el modulo "proveedores" */} 
+				   <Route path='proveedores' element={ <ProveedoresIndex /> }>
+					  <Route path='' 
+							  element={ <AdminProveedores /> } />
+					  <Route path='crear' 
+							  element={ <CreateProveedor /> } />
+					</Route> 
+		
+				   {/* Rutas para el modulo "pacientes" */}
+				   <Route path='pacientes' element={ <PacientesIndex /> }>
+					  <Route path='' 
+							  element={ <AdminPacientes /> } />
+					  <Route path='crear' 
+							  element={ <CreatePaciente /> } />
+					</Route> 
+		
+				  {/* Rutas para el modulo "almacenes" */}
+				   <Route path='almacenes' element={ <AlmacenesIndex /> } > 
+					  <Route path='' 
+							  element={ <AdminStores /> } />
+					  <Route path=':almacen' 
+							  element={ <AdminByStore /> } />
+					  <Route path='crear' 
+							  element={ <CreateStore /> } />
+				   </Route>  
+				  
+				  {/* Rutas para el modulo "usuarios" */}
+				   <Route path='usuarios' element={ <UsuariosIndex /> } >
+					  <Route path='' 
+							  element={ <AdminUsers /> } />
+					  <Route path='crear' 
+							  element={ <CreateUsuario /> } />
+				   </Route> 
+				</Route>
+				<Route path='/*' element={ <Navigate to="/" /> } />
+			</Routes>
+		)
+	}
+	else if(user.rol === "Colaborador"){
+		return (
+			<Routes>
+				<Route path='/' element={ <InventarioView /> } >
+		
+				   <Route path='' element={ <InicioPage /> } /> 
+		
+				   <Route path='movimientos' element={ <MovimientosPage /> } /> 
+				   <Route path='transaccion' element={ <RealizarTransaccionPage /> } /> 
+		
+				   {/* Rutas para el modulo "pacientes" */}
+				   <Route path='pacientes' element={ <PacientesIndex /> }>
+					  <Route path='' 
+							  element={ <AdminPacientes /> } />
+					  <Route path='crear' 
+							  element={ <CreatePaciente /> } />
+					</Route> 
+				</Route>
+				<Route path='/*' element={ <Navigate to="/" /> } />
+			</Routes>
+		)
+	}	
 }

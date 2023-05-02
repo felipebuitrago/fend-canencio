@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { Avatar, Box, Divider, IconButton, Typography, Tooltip, Menu, MenuItem, ListItemIcon } from '@mui/material';
 import {Logout } from '@mui/icons-material';
-import { useSelector } from 'react-redux';
+import { useAuthStore } from '../../../hooks';
 
 const AccountMenu = ({ startLogout }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-    const user = useSelector(state => state.auth.user);
+
+    const { user } = useAuthStore();//accede al nombre del usuario desde el
+    //hook personalizado que hay para acceder a tal estado, no directamente
+    //usando la funcion useSelector de redux porque para eso se crean los hooks
   
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);

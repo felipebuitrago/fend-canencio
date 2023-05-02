@@ -1,14 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  usuarios : []
-}
-
-const userSample = {
-  "_id" : "092c1cad1eca052ac4",
-  "name" : "Spiderman",
-  "email" : "sudo",
-  "rol" : "Colaborador"
+  usuarios : [],
+  usuarioSeleccionado : {name:"",rol:"",email:""}
 }
 
 export const usuariosSlice = createSlice({
@@ -16,10 +10,20 @@ export const usuariosSlice = createSlice({
   initialState,
   reducers: {
     createUsuarioStore : (state,{payload}) => {
-      state.usuarios.unshift(userSample);
+      state.usuarios.unshift(payload);
     },
     addUsuariosStore : (state,{payload}) => {
       state.usuarios = payload;
+    },
+    buscarUsuarioStore : (state, {payload}) => {
+      let position;
+      state.usuarios.map((product,index) => {
+        if(product._id === payload.id){
+          position = index;
+        }
+      })
+      
+      state.usuarioSeleccionado = {...state.usuarios[position]};
     },
     updateUsuarioStore : (state,{payload}) => {
       let position;
@@ -44,6 +48,7 @@ export const usuariosSlice = createSlice({
     },
     resetUsuariosStore : (state) => {
       state.usuarios = [];
+      state.usuarioSeleccionado = {name:"",rol:"",email:""};
     },
   },
 })
@@ -52,6 +57,7 @@ export const usuariosSlice = createSlice({
 export const { 
   createUsuarioStore,
   addUsuariosStore,
+  buscarUsuarioStore,
   updateUsuarioStore,
   deleteUsuarioStore,
   resetUsuariosStore } = usuariosSlice.actions

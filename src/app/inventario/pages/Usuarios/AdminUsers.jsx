@@ -12,10 +12,22 @@ export const AdminUsers = () => {
   // Estados para la paginación de la tabla
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  //contraseña editar
+  const [editPassword, setEditPassword] = useState(false);
+  const [password, setPassword] = useState("");
+  const handleCheckboxChange = (event) => {
+    setEditPassword(event.target.checked);
+  };
+  
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
   
   const {usuarios, 
-    startCreateUsuario, 
+    usuarioSeleccionado,
     startReadUsuarios, 
+    startBuscarUsuario,
     startUpdateUsuario, 
     startDeleteUsuario} = useUsuariosStore();
     
@@ -35,19 +47,15 @@ export const AdminUsers = () => {
   
   {/* evento de editar cierto usuario */}
   const handleUpdateClick = (event) => {
-    const userSample = {
-      "_id" : "092c1cad1eca052ac4",
-      "name" : "Spiderman",
-      "email" : "sudo",
-      "rol" : "Colaborador"
-    }
+    
     if(event.target.id!==""){
 
-      
-      startUpdateUsuario(event.target.id,userSample);
+      startBuscarUsuario(event.target.id);
+      handleOpenEditDialog();
     }
     else{
-      startUpdateUsuario(event.target.farthestViewportElement.id,userSample);
+      startBuscarUsuario(event.target.farthestViewportElement.id);
+      handleOpenEditDialog();
     }
   };   
   
@@ -55,10 +63,12 @@ export const AdminUsers = () => {
   const handleDeleteClick = (event) => {
 
     if(event.target.id!==""){
-      startDeleteUsuario(event.target.id);
+      startBuscarUsuario(event.target.id);
+      handleOpenConfirmDialog();
     }
     else{
-      startDeleteUsuario(event.target.farthestViewportElement.id);
+      startBuscarUsuario(event.target.farthestViewportElement.id);
+      handleOpenConfirmDialog();
     }
   };   
   
@@ -79,54 +89,71 @@ export const AdminUsers = () => {
     setPage(0);
   };
 
-  // Añade  estados para el modal de edición y el alert
-  const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [editUser, setEditUser] = useState(null);
-                                        
-  const handleOpenEditDialog = (user) => {
-    setEditUser(user);
-    setOpenEditDialog(true);
+  //alert confirmation
+  const [openAlert, setOpenAlert] = useState(false);
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
   };
 
-  const [editPassword, setEditPassword] = useState(false);
-  const [password, setPassword] = useState("");
-  
+  //UPDATE HANDLES AND STATES
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+                                        
+  // Abre el modal de edición
+  const handleOpenEditDialog = () => {
+    setOpenEditDialog(true);
+  };
   // Cierra el modal de edición
   const handleCloseEditDialog = () => {
     setOpenEditDialog(false);
+    setPassword("");
+    setEditPassword(false);
   };
-  const handleCheckboxChange = (event) => {
-    setEditPassword(event.target.checked);
+
+  const handleSaveEditDialog = () => {
+    setOpenEditDialog(false);
+    
+    if(editPassword && password.length >= 6){
+
+      const userSample = {
+      "_id" : usuarioSeleccionado._id,
+      "name" : document.getElementById("usuario-name-update").value,
+      "email" : document.getElementById("usuario-email-update").value,
+      "password" : password
+      }
+      startUpdateUsuario(usuarioSeleccionado._id,userSample);
+      setOpenAlert(true);
+    }else{
+      const userSample = {
+        "_id" : usuarioSeleccionado._id,
+        "name" : document.getElementById("usuario-name-update").value,
+        "email" : document.getElementById("usuario-email-update").value
+        }
+        startUpdateUsuario(usuarioSeleccionado._id,userSample);
+        setOpenAlert(true);
+    }
+    setPassword("");
+    setEditPassword(false);
   };
-  
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
-  // Añade los nuevos estados para el modal de confirmación y el alert
+
+  //ELIMINAR HANDLES AND STATES
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
-  const [openAlert, setOpenAlert] = useState(false);
-  const [userToDelete, setUserToDelete] = useState(null);
+  
   // Abre el modal de confirmación
-  const handleOpenConfirmDialog = (user) => {
-    setUserToDelete(user);
+  const handleOpenConfirmDialog = () => {
     setOpenConfirmDialog(true);
   };
   // Cierra el modal de confirmación
   const handleCloseConfirmDialog = () => {
     setOpenConfirmDialog(false);
   };
+  
   // Confirma la eliminación del usuario
   const handleConfirmDelete = () => {
-    // Aquí puedes realizar la acción de eliminar el usuario
-    console.log("Usuario eliminado:", userToDelete);
+    startDeleteUsuario(usuarioSeleccionado._id);
     setOpenConfirmDialog(false);
     setOpenAlert(true);
   };
-  // Cierra el alert
-  const handleCloseAlert = () => {
-    setOpenAlert(false);
-  };
-
+  
   return (
     <>
       <Grid container justifyContent="center" alignItems="center"sx={{ mb: 3, width: "100%" }}>
@@ -218,14 +245,16 @@ export const AdminUsers = () => {
             label="Nombre"
             fullWidth
             variant="outlined"
-            defaultValue={editUser && editUser.nombre}
+            id="usuario-name-update"
+            defaultValue={usuarioSeleccionado.name}
           />
           <TextField
             margin="dense"
             label="Correo"
             fullWidth
             variant="outlined"
-            defaultValue={editUser && editUser.correo}
+            id="usuario-email-update"
+            defaultValue={usuarioSeleccionado.email}
           />
         <FormControlLabel
           control={
@@ -251,17 +280,23 @@ export const AdminUsers = () => {
           <Button onClick={handleCloseEditDialog} color="error">
             Cancelar
           </Button>
-          <Button onClick={handleCloseEditDialog} color="success">
+          <Button disabled={editPassword && password.length<6 } onClick={handleSaveEditDialog} color="success">
             Guardar
           </Button>
         </DialogActions>
       </Dialog>
       {/* modal eliminar */}
-      <DeleteConfirmDialog open={openConfirmDialog} onClose={handleCloseConfirmDialog} onConfirm={handleConfirmDelete}
-       title={`¿Estás seguro de que deseas eliminar a ${userToDelete ? userToDelete.nombre : ""}?`}
+      <DeleteConfirmDialog 
+        open={openConfirmDialog} 
+        onClose={handleCloseConfirmDialog} 
+        onConfirm={handleConfirmDelete}
+        title={`¿Estás seguro de que deseas eliminar a ${usuarioSeleccionado.name}?`}
       />
       {/* Material Alert */}
-      <AlertSnackbar open={openAlert} onClose={handleCloseAlert} message="Acción realizada exitosamente"/>
+      <AlertSnackbar 
+        open={openAlert} 
+        onClose={handleCloseAlert} 
+        message="Acción realizada exitosamente"/>
     </>
   );
 };
