@@ -1,20 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
 import { Button, Grid, InputAdornment, Paper, TextField, Typography } from "@mui/material";
 import { StoreMallDirectoryOutlined, PinDropOutlined } from "@mui/icons-material";
-import { CustomBreadcrumbs } from "../../components/index.js";
-import { useForm, Controller } from "react-hook-form";
+import { AlertSnackbar, CustomBreadcrumbs } from "../../components";
+import { useAlmacenesStore } from "../../../../hooks";
 
 export const CreateStore = () => {
+
+  const { startCreateAlmacen } = useAlmacenesStore();
+  //alert confirmation
+  const [openAlert, setOpenAlert] = useState(false);
+  // Cierra el alert
+  const handleCloseAlert = () => {
+  setOpenAlert(false);
+};
+
   // inicialización estado del formulario react-hook-form
   const {
     control,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm({ defaultValues: { nombre: "", ubicacion: "" } });
 
-  const onSubmit = (data) => {
+  const onSubmit = () => {
     // Validación y creación del almacen
+    let name = document.getElementById("name").value;
+    let location = document.getElementById("location").value;
+
+    startCreateAlmacen(name, location);
+    
+    reset({ nombre: "", ubicacion: "" });
+    setOpenAlert(true);
   };
 
   const pathList = [
@@ -54,6 +72,7 @@ export const CreateStore = () => {
                     fullWidth
                     variant="outlined"
                     label="Nombre"
+                    id="name"
                     error={!!errors.nombre}
                     helperText={errors.nombre?.message}
                     InputProps={{
@@ -75,7 +94,7 @@ export const CreateStore = () => {
                   required: {
                     value: true,
                     message: "La ubicación es obligatoria.",
-                  },
+                  }
                 }}
                 render={({ field }) => (
                   <TextField
@@ -83,6 +102,7 @@ export const CreateStore = () => {
                     fullWidth
                     variant="outlined"
                     label="Ubicación"
+                    id="location"
                     error={!!errors.ubicacion}
                     helperText={errors.ubicacion?.message}
                     InputProps={{
@@ -118,6 +138,8 @@ export const CreateStore = () => {
           </Grid>
         </Grid>
       </Grid>
+      {/* Material Alert */}
+      <AlertSnackbar open={openAlert} onClose={handleCloseAlert} message="Acción realizada exitosamente"/>
     </>
   );
 };

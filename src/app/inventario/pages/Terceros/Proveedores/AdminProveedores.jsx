@@ -13,8 +13,9 @@ export const AdminProveedores = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const {proveedores, 
-    startCreateProveedor, 
+    proveedorSeleccionado,
     startReadProveedores, 
+    startBuscarProveedor,
     startUpdateProveedor, 
     startDeleteProveedor} = useProveedoresStore();
 
@@ -32,18 +33,15 @@ export const AdminProveedores = () => {
   
   {/* evento de editar cierto proveedor */}
   const handleUpdateClick = (event) => {
-    const proveedorSample = {
-      "_id"      : "0ca6e94dfc0b89a4e227",
-      "nombre"   : "el popo",
-      "contacto" : "31245648584"
-    }
+    
     if(event.target.id!==""){
 
-      
-      startUpdateProveedor(event.target.id,proveedorSample);
+      startBuscarProveedor(event.target.id);
+      handleOpenEditDialog();
     }
     else{
-      startUpdateProveedor(event.target.farthestViewportElement.id,proveedorSample);
+      startBuscarProveedor(event.target.farthestViewportElement.id);
+      handleOpenEditDialog();
     }
   };   
   
@@ -51,10 +49,12 @@ export const AdminProveedores = () => {
   const handleDeleteClick = (event) => {
 
     if(event.target.id!==""){
-      startDeleteProveedor(event.target.id);
+      startBuscarProveedor(event.target.id);
+      handleOpenConfirmDialog();
     }
     else{
-      startDeleteProveedor(event.target.farthestViewportElement.id);
+      startBuscarProveedor(event.target.farthestViewportElement.id);
+      handleOpenConfirmDialog();
     }
   };   
 
@@ -75,40 +75,54 @@ export const AdminProveedores = () => {
     setPage(0);
   };
 
-  const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [editProvider, setEditProvider] = useState(null);
-
-  const handleOpenEditDialog = (provider) => {
-    setEditProvider(provider);
-    setOpenEditDialog(true);
+  //alert confirmation
+  const [openAlert, setOpenAlert] = useState(false);
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
   };
 
+  //UPDATE HANDLES AND STATES
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+
+  //abrir dialog editar
+  const handleOpenEditDialog = () => {
+    setOpenEditDialog(true);
+  };
+  //cerrar dialog editar
   const handleCloseEditDialog = () => {
     setOpenEditDialog(false);
   };
 
-  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
-  const [openAlert, setOpenAlert] = useState(false);
-  const [providerToDelete, setProviderToDelete] = useState(null);
+  const handleSaveEditDialog = () => {
+    setOpenEditDialog(false);
+    const proveedorSample = {
+      "_id"      : proveedorSeleccionado._id,
+      "nombre"   : document.getElementById("proveedor-nombre-update").value,
+      "contacto" : document.getElementById("proveedor-contacto-update").value
+    }
+    startUpdateProveedor(proveedorSeleccionado._id,proveedorSample);
+    setOpenAlert(true);
+  };
 
-  const handleOpenConfirmDialog = (provider) => {
-    setProviderToDelete(provider);
+  //ELIMINAR HANDLES AND STATES
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+
+  //abrir dialog confirmar borrar
+  const handleOpenConfirmDialog = () => {
     setOpenConfirmDialog(true);
   };
 
+  //cerrar dialog confirmar borrar
   const handleCloseConfirmDialog = () => {
     setOpenConfirmDialog(false);
   };
 
   const handleConfirmDelete = () => {
-    console.log("Proveedor eliminado:", providerToDelete);
+    startDeleteProveedor(proveedorSeleccionado._id);
     setOpenConfirmDialog(false);
     setOpenAlert(true);
   };
 
-  const handleCloseAlert = () => {
-    setOpenAlert(false);
-  };
   
   return (
     <>
@@ -154,7 +168,7 @@ export const AdminProveedores = () => {
             </Grid>
           </Grid>
           
-          <SearchBar search={search} setSearch={setSearch} />
+          <SearchBar search={search} setSearch={setSearch} setPage={setPage}/>
         </Grid>
 
         <Divider sx={{ mt: 2 }} />
@@ -195,31 +209,39 @@ export const AdminProveedores = () => {
             label="Nombre"
             fullWidth
             variant="outlined"
-            defaultValue={editProvider && editProvider.nombre}
+            id="proveedor-nombre-update"
+            defaultValue={proveedorSeleccionado.nombre}
           />
           <TextField
             margin="dense"
             label="Contacto"
             fullWidth
             variant="outlined"
-            defaultValue={editProvider && editProvider.contacto}
+            id="proveedor-contacto-update"
+            defaultValue={proveedorSeleccionado.contacto}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseEditDialog} color="error">
             Cancelar
           </Button>
-          <Button onClick={handleCloseEditDialog} color="success">
+          <Button onClick={handleSaveEditDialog} color="success">
             Guardar
           </Button>
         </DialogActions>
       </Dialog>
 
-      <DeleteConfirmDialog open={openConfirmDialog} onClose={handleCloseConfirmDialog} onConfirm={handleConfirmDelete}
-        title="¿Estás seguro de que deseas eliminar este proveedor?"
+      <DeleteConfirmDialog 
+        open={openConfirmDialog} 
+        onClose={handleCloseConfirmDialog} 
+        onConfirm={handleConfirmDelete}        
+        title={`¿Estás seguro de que deseas eliminar el proveedor "${proveedorSeleccionado.nombre}"?`}
       />
 
-      <AlertSnackbar open={openAlert} onClose={handleCloseAlert} message="Acción realizada exitosamente" />
+      <AlertSnackbar
+       open={openAlert}
+       onClose={handleCloseAlert} 
+       message="Acción realizada exitosamente" />
     </>
   );
 };

@@ -1,13 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  almacenes : []
-}
-
-const almacenSample = {
-  "_id"    : "50ec99xxx9c5bb44822945",
-  "name" : "420Store",
-  "location": "Palermo"
+  almacenes : [],
+  almacenSeleccionado : {name:"",location:""}
 }
 
 export const almacenesSlice = createSlice({
@@ -15,10 +10,20 @@ export const almacenesSlice = createSlice({
   initialState,
   reducers: {
     createAlmacenStore : (state, {payload}) => {
-      state.almacenes.unshift(almacenSample);
+      state.almacenes.unshift(payload);
     },
     addAlmacenesStore : (state, {payload}) => {
       state.almacenes = payload;
+    },
+    buscarAlmacenStore : (state, {payload}) => {
+      let position;
+      state.almacenes.map((product,index) => {
+        if(product._id === payload.id){
+          position = index;
+        }
+      })
+      
+      state.almacenSeleccionado = {...state.almacenes[position]};
     },
     updateAlmacenStore : (state, {payload}) => {
       let position;
@@ -42,6 +47,7 @@ export const almacenesSlice = createSlice({
     },
     resetAlmacenesStore : (state) => {
       state.almacenes = [];
+      state.almacenSeleccionado = {name:"",location:""};
     }
   },
 })
@@ -50,6 +56,7 @@ export const almacenesSlice = createSlice({
 export const { 
   createAlmacenStore,
   addAlmacenesStore,
+  buscarAlmacenStore,
   updateAlmacenStore,
   deleteAlmacenStore,
   resetAlmacenesStore} = almacenesSlice.actions

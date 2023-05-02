@@ -3,18 +3,20 @@ import { canencioApi } from '../../api';
 
 import { createProveedorStore,
         addProveedoresStore,
+        buscarProveedorStore,
         updateProveedorStore,
         deleteProveedorStore } from '../../store/slices';
 
 export const useProveedoresStore = () => {
   
     const dispatch = useDispatch();
-    const { proveedores } = useSelector(state => state.proveedores);
+    const { proveedores, proveedorSeleccionado } = useSelector(state => state.proveedores);
 
-    const startCreateProveedor = () => {
-        //TODO: create OPERATION
+    const startCreateProveedor = async(nombre, contacto) => {
+        
+        const result = await canencioApi.post('/proveedores/new',{nombre, contacto});
 
-        dispatch(createProveedorStore());
+        dispatch(createProveedorStore(result.data.newDocument));
     }
     
     const startReadProveedores = async() => {
@@ -23,18 +25,22 @@ export const useProveedoresStore = () => {
         dispatch(addProveedoresStore(proveedoresDB.data.result));
     }
 
-    const startUpdateProveedor = (id, data) => {
+    const startBuscarProveedor = (id) => {
+        
+        dispatch(buscarProveedorStore({id}));
+    }
 
-        //TODO: UPDATE OPERATION
+    const startUpdateProveedor = async(id, data) => {
 
+        const {nombre,contacto} = data;
+        await canencioApi.put(`/proveedores/update/${id}`,{nombre,contacto});
 
         dispatch(updateProveedorStore({id, data}));
     }
     
-    const startDeleteProveedor = (id) => {
+    const startDeleteProveedor = async(id) => {
 
-        //TODO: DELETE OPERATION
-
+        await canencioApi.delete(`/proveedores/delete/${id}`);
 
         dispatch(deleteProveedorStore({id}));
     }
@@ -43,10 +49,12 @@ export const useProveedoresStore = () => {
     return {
         //propiedades
         proveedores,
+        proveedorSeleccionado,
     
         //metodos
         startCreateProveedor,
         startReadProveedores,
+        startBuscarProveedor,
         startUpdateProveedor,
         startDeleteProveedor
     }

@@ -3,18 +3,20 @@ import { canencioApi } from '../../api';
 
 import { createCategoriaStore,
         addCategoriasStore,
+        buscarCategoriaStore,
         updateCategoriaStore,
         deleteCategoriaStore } from '../../store/slices';
 
 export const useCategoriasStore = () => {
   
     const dispatch = useDispatch();
-    const { categorias } = useSelector(state => state.categorias);
+    const { categorias, categoriaSeleccionada } = useSelector(state => state.categorias);
 
-    const startCreateCategoria = () => {
-        //TODO: create OPERATION
+    const startCreateCategoria = async(name, description) => {
 
-        dispatch(createCategoriaStore());
+        const result = await canencioApi.post('/categorias/new',{name,description});
+
+        dispatch(createCategoriaStore(result.data.result));
     }
     
     const startReadCategorias = async() => {
@@ -23,18 +25,22 @@ export const useCategoriasStore = () => {
         dispatch(addCategoriasStore(categoriasDB.data.result));
     }
 
-    const startUpdateCategoria = (id, data) => {
+    const startBuscarCategoria = (id) => {
+        
+        dispatch(buscarCategoriaStore({id}));
+    }
 
-        //TODO: UPDATE OPERATION
+    const startUpdateCategoria = async(id, data) => {
 
+        const {name,description} = data;
+        await canencioApi.put(`/categorias/update/${id}`,{name,description});
 
         dispatch(updateCategoriaStore({id, data}));
     }
     
-    const startDeleteCategoria = (id) => {
+    const startDeleteCategoria = async(id) => {
 
-        //TODO: DELETE OPERATION
-
+        await canencioApi.delete(`/categorias/delete/${id}`);
 
         dispatch(deleteCategoriaStore({id}));
     }
@@ -43,10 +49,12 @@ export const useCategoriasStore = () => {
     return {
         //propiedades
         categorias,
+        categoriaSeleccionada,
     
         //metodos
         startCreateCategoria,
         startReadCategorias,
+        startBuscarCategoria,
         startUpdateCategoria,
         startDeleteCategoria
     }

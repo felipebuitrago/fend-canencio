@@ -13,8 +13,9 @@ export const AdminStores = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const {almacenes, 
-    startCreateAlmacen, 
-    startReadAlmacenes, 
+    almacenSeleccionado, 
+    startReadAlmacenes,
+    startBuscarAlmacen, 
     startUpdateAlmacen, 
     startDeleteAlmacen} = useAlmacenesStore();
 
@@ -32,18 +33,18 @@ export const AdminStores = () => {
 
   {/* evento de editar cierto almacen */}
   const handleUpdateClick = (event) => {
-    const almacenSample = {
-      "_id"    : "50ec99xxx9c5bb44822945",
-      "name" : "420Store",
-      "location": "Palermo"
-    }
+    
     if(event.target.id!==""){
 
-      
-      startUpdateAlmacen(event.target.id,almacenSample);
+      startBuscarAlmacen(event.target.id);
+      handleOpenEditDialog();
+      //startUpdateAlmacen(event.target.id,almacenSample);
     }
     else{
-      startUpdateAlmacen(event.target.farthestViewportElement.id,almacenSample);
+      
+      startBuscarAlmacen(event.target.farthestViewportElement.id);
+      handleOpenEditDialog();
+      //startUpdateAlmacen(event.target.farthestViewportElement.id,almacenSample);
     }
   };   
 
@@ -51,10 +52,14 @@ export const AdminStores = () => {
   const handleDeleteClick = (event) => {
 
     if(event.target.id!==""){
-      startDeleteAlmacen(event.target.id);
+      startBuscarAlmacen(event.target.id);
+      handleOpenConfirmDialog();
+      //startDeleteAlmacen(event.target.id);
     }
     else{
-      startDeleteAlmacen(event.target.farthestViewportElement.id);
+      startBuscarAlmacen(event.target.farthestViewportElement.id);
+      handleOpenConfirmDialog();
+      //startDeleteAlmacen(event.target.farthestViewportElement.id);
     }
   };   
 
@@ -74,12 +79,17 @@ export const AdminStores = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+  
+  //alert confirmation
+  const [openAlert, setOpenAlert] = useState(false);
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  };
 
+  //UPDATE HANDLES AND STATES
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [editStore, setEditStore] = useState(null);
 
-  const handleOpenEditDialog = (store) => {
-    setEditStore(store);
+  const handleOpenEditDialog = () => {
     setOpenEditDialog(true);
   };
 
@@ -87,27 +97,37 @@ export const AdminStores = () => {
     setOpenEditDialog(false);
   };
 
-  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
-  const [openAlert, setOpenAlert] = useState(false);
-  const [storeToDelete, setStoreToDelete] = useState(null);
+  const handleSaveEditDialog = () => {
+    setOpenEditDialog(false);
+    const almacenSample = {
+      "_id"    : almacenSeleccionado._id,
+      "name" : document.getElementById("almacen-name-update").value,
+      "location": document.getElementById("almacen-location-update").value
+    }
 
-  const handleOpenConfirmDialog = (store) => {
-    setStoreToDelete(store);
+    startUpdateAlmacen(almacenSeleccionado._id,almacenSample);
+    setOpenAlert(true);
+
+  };
+
+  //ELIMINAR HANDLES AND STATES
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+
+  //abrir dialog confirmar borrar
+  const handleOpenConfirmDialog = () => {
     setOpenConfirmDialog(true);
   };
 
+  //cerrar dialog confirmar borrar
   const handleCloseConfirmDialog = () => {
     setOpenConfirmDialog(false);
   };
 
+  //handle confirmar eliminar almacen
   const handleConfirmDelete = () => {
-    console.log("Almacén eliminado:", storeToDelete);
+    startDeleteAlmacen(almacenSeleccionado._id);
     setOpenConfirmDialog(false);
     setOpenAlert(true);
-  };
-
-  const handleCloseAlert = () => {
-    setOpenAlert(false);
   };
 
   return (
@@ -172,6 +192,8 @@ export const AdminStores = () => {
           />
         </Grid>
       </Grid>
+
+
       <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
         <DialogTitle>
           Editar Almacén
@@ -192,27 +214,30 @@ export const AdminStores = () => {
             label="Almacén"
             fullWidth
             variant="outlined"
-            defaultValue={editStore && editStore.almacen}
+            id="almacen-name-update"
+            defaultValue={almacenSeleccionado.name}
           />
           <TextField
             margin="dense"
             label="Ubicación"
             fullWidth
             variant="outlined"
-            defaultValue={editStore && editStore.ubicacion}
+            id="almacen-location-update"
+            defaultValue={almacenSeleccionado.location}
           />
         </DialogContent>
+
         <DialogActions>
           <Button onClick={handleCloseEditDialog} color="error">
             Cancelar
           </Button>
-          <Button onClick={handleCloseEditDialog} color="success">
+          <Button onClick={handleSaveEditDialog} color="success">
             Guardar
           </Button>
         </DialogActions>
       </Dialog>
       <DeleteConfirmDialog open={openConfirmDialog} onClose={handleCloseConfirmDialog} onConfirm={handleConfirmDelete}
-       title="¿Estás seguro de que deseas eliminar este almacén?"
+       title={`¿Estás seguro de que deseas eliminar el almacén "${almacenSeleccionado.name}"?`}
       />
       {/* Material Alert */}
       <AlertSnackbar open={openAlert} onClose={handleCloseAlert} message="Acción realizada exitosamente"/>

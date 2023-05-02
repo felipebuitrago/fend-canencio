@@ -1,20 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
 import { Button, Grid, InputAdornment, Paper, TextField, Typography } from "@mui/material";
 import { PersonOutline, PermPhoneMsgOutlined } from "@mui/icons-material";
-import { CustomBreadcrumbs } from "../../../components/index.js";
-import { useForm, Controller } from "react-hook-form";
+import { AlertSnackbar, CustomBreadcrumbs } from "../../../components";
+import { useProveedoresStore } from "../../../../../hooks";
 
 export const CreateProveedor = () => {
+  
+  const { startCreateProveedor } = useProveedoresStore();
+  //alert confirmation
+  const [ openAlert, setOpenAlert ] = useState(false);
+  //cierra alert
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  };
+
   // inicialización estado del formulario react-hook-form
   const {
     control,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm({ defaultValues: { nombre: "", contacto: "" } });
 
   const onSubmit = (data) => {
     // Validación y creación del proveedor
+    let nombre = document.getElementById("nombre").value;
+    let contacto = document.getElementById("contacto").value;
+
+    startCreateProveedor(nombre, contacto);
+    
+    reset({ nombre: "", contacto: "" });
+    setOpenAlert(true);
   };
 
   const pathList = [
@@ -54,6 +72,7 @@ export const CreateProveedor = () => {
                     fullWidth
                     variant="outlined"
                     label="Nombre"
+                    id="nombre"
                     error={!!errors.nombre}
                     helperText={errors.nombre?.message}
                     InputProps={{
@@ -83,6 +102,7 @@ export const CreateProveedor = () => {
                     fullWidth
                     variant="outlined"
                     label="Contacto"
+                    id="contacto"
                     error={!!errors.contacto}
                     helperText={errors.contacto?.message}
                     InputProps={{
@@ -118,6 +138,9 @@ export const CreateProveedor = () => {
           </Grid>
         </Grid>
       </Grid>
+      
+      {/* Material Alert */}
+      <AlertSnackbar open={openAlert} onClose={handleCloseAlert} message="Acción realizada exitosamente"/>
     </>
   );
 };

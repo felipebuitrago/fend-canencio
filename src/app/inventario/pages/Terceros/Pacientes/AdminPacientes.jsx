@@ -13,8 +13,9 @@ export const AdminPacientes = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const {pacientes, 
-    startCreatePaciente, 
+    pacienteSeleccionado,
     startReadPacientes, 
+    startBuscarPaciente,
     startUpdatePaciente, 
     startDeletePaciente} = usePacientesStore();
 
@@ -32,18 +33,15 @@ export const AdminPacientes = () => {
 
   {/* evento de editar cierto paciente */}
   const handleUpdateClick = (event) => {
-    const pacienteSample = {
-      "_id"    : "50ec999c5bb44822945",
-      "name" : "soto",
-      "contact": "inferno"
-    }
+    
     if(event.target.id!==""){
 
-      
-      startUpdatePaciente(event.target.id,pacienteSample);
+      startBuscarPaciente(event.target.id);
+      handleOpenEditDialog();
     }
     else{
-      startUpdatePaciente(event.target.farthestViewportElement.id,pacienteSample);
+      startBuscarPaciente(event.target.farthestViewportElement.id);
+      handleOpenEditDialog();
     }
   };   
 
@@ -51,10 +49,12 @@ export const AdminPacientes = () => {
   const handleDeleteClick = (event) => {
 
     if(event.target.id!==""){
-      startDeletePaciente(event.target.id);
+      startBuscarPaciente(event.target.id);
+      handleOpenConfirmDialog();
     }
     else{
-      startDeletePaciente(event.target.farthestViewportElement.id);
+      startBuscarPaciente(event.target.farthestViewportElement.id);
+      handleOpenConfirmDialog();
     }
   };   
 
@@ -75,39 +75,53 @@ export const AdminPacientes = () => {
     setPage(0);
   };
 
-  const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [editPatient, setEditPatient] = useState(null);
-
-  const handleOpenEditDialog = (patient) => {
-    setEditPatient(patient);
-    setOpenEditDialog(true);
+  //alert confirmation
+  const [openAlert, setOpenAlert] = useState(false);
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
   };
 
+  //UPDATE HANDLES AND STATES
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+
+  //abrir dialog editar
+  const handleOpenEditDialog = () => {
+    setOpenEditDialog(true);
+  };
+  //cerrar dialog editar
   const handleCloseEditDialog = () => {
     setOpenEditDialog(false);
   };
 
-  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
-  const [openAlert, setOpenAlert] = useState(false);
-  const [patientToDelete, setPatientToDelete] = useState(null);
+  const handleSaveEditDialog = () => {
+    setOpenEditDialog(false);
+    const pacienteSample = {
+      "_id"    : pacienteSeleccionado._id,
+      "name" : document.getElementById("paciente-name-update").value,
+      "contact": document.getElementById("paciente-contact-update").value
+    }
 
-  const handleOpenConfirmDialog = (patient) => {
-    setPatientToDelete(patient);
-    setOpenConfirmDialog(true);
+    startUpdatePaciente(pacienteSeleccionado._id,pacienteSample);
+    setOpenAlert(true);
   };
 
+  //ELIMINAR HANDLES AND STATES
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+
+  //abrir dialog confirmar borrar
+  const handleOpenConfirmDialog = () => {
+    setOpenConfirmDialog(true);
+  };
+  //cerrar dialog confirmar borrar
   const handleCloseConfirmDialog = () => {
     setOpenConfirmDialog(false);
   };
 
+  //handle confirmar eliminar paciente
   const handleConfirmDelete = () => {
-    console.log("Paciente eliminado:", patientToDelete);
+    startDeletePaciente(pacienteSeleccionado._id);
     setOpenConfirmDialog(false);
     setOpenAlert(true);
-  };
-
-  const handleCloseAlert = () => {
-    setOpenAlert(false);
   };
 
   return (
@@ -184,21 +198,23 @@ export const AdminPacientes = () => {
             label="Nombre"
             fullWidth
             variant="outlined"
-            defaultValue={editPatient && editPatient.nombre}
+            id="paciente-name-update"
+            defaultValue={pacienteSeleccionado.name}
           />
           <TextField
             margin="dense"
             label="Contacto"
             fullWidth
             variant="outlined"
-            defaultValue={editPatient && editPatient.contacto}
+            id="paciente-contact-update"
+            defaultValue={pacienteSeleccionado.contact}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseEditDialog} color="error">
             Cancelar
           </Button>
-          <Button onClick={handleCloseEditDialog} color="success">
+          <Button onClick={handleSaveEditDialog} color="success">
             Guardar
           </Button>
         </DialogActions>
@@ -207,7 +223,7 @@ export const AdminPacientes = () => {
         open={openConfirmDialog}
         onClose={handleCloseConfirmDialog}
         onConfirm={handleConfirmDelete}
-        title="¿Estás seguro de que deseas eliminar este paciente?"
+        title={`¿Estás seguro de que deseas eliminar el paciente "${pacienteSeleccionado.name}"?`}
       />
       <AlertSnackbar
         open={openAlert}
