@@ -15,17 +15,14 @@ import {
   CategoriasIndex,
   AdminCategories, /*importando todas las pages en una sola linea con index.js*/
   CreateCategoria,
-  EditCategoria,
 
   PacientesIndex,
   AdminPacientes,
-  EditPaciente,
   CreatePaciente,
   
   ProveedoresIndex,
   AdminProveedores,
   CreateProveedor,
-  EditProveedor,
 
   AlmacenesIndex,
   AdminStores,
@@ -35,7 +32,6 @@ import {
   UsuariosIndex,
   AdminUsers,
   CreateUsuario,
-  EditUsuario
 
 } from "../pages";
 
@@ -67,8 +63,6 @@ export const InventarioRouter = () => {
                       element={ <AdminCategories /> } />
               <Route path='crear' 
                       element={ <CreateCategoria /> } />
-              <Route path='editar' 
-                      element={ <EditCategoria /> } />
            </Route>
 
            {/* Rutas para el modulo "proveedores" */} 
@@ -77,8 +71,6 @@ export const InventarioRouter = () => {
                       element={ <AdminProveedores /> } />
               <Route path='crear' 
                       element={ <CreateProveedor /> } />
-              <Route path='editar' 
-                      element={ <EditProveedor /> } />
             </Route> 
 
            {/* Rutas para el modulo "pacientes" */}
@@ -87,8 +79,6 @@ export const InventarioRouter = () => {
                       element={ <AdminPacientes /> } />
               <Route path='crear' 
                       element={ <CreatePaciente /> } />
-              <Route path='editar' 
-                      element={ <EditPaciente /> } />
             </Route> 
 
           {/* Rutas para el modulo "almacenes" */}
@@ -107,8 +97,6 @@ export const InventarioRouter = () => {
                       element={ <AdminUsers /> } />
               <Route path='crear' 
                       element={ <CreateUsuario /> } />
-              <Route path='editar' 
-                      element={ <EditUsuario /> } />
            </Route> 
 
         </Route>

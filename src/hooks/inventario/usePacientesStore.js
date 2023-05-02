@@ -3,18 +3,20 @@ import { canencioApi } from '../../api';
 
 import { createPacienteStore,
         addPacientesStore,
+        buscarPacienteStore,
         updatePacienteStore,
         deletePacienteStore } from '../../store/slices';
 
 export const usePacientesStore = () => {
   
     const dispatch = useDispatch();
-    const { pacientes } = useSelector(state => state.pacientes);
+    const { pacientes, pacienteSeleccionado } = useSelector(state => state.pacientes);
 
-    const startCreatePaciente = () => {
-        //TODO: create OPERATION
+    const startCreatePaciente = async(name,contact) => {
 
-        dispatch(createPacienteStore());
+        const result = await canencioApi.post('/pacientes/new',{name,contact});
+
+        dispatch(createPacienteStore(result.data.result));
     }
     
     const startReadPacientes = async() => {
@@ -23,18 +25,22 @@ export const usePacientesStore = () => {
         dispatch(addPacientesStore(pacientesDB.data.result));
     }
 
-    const startUpdatePaciente = (id, data) => {
+    const startBuscarPaciente = (id) => {
+        
+        dispatch(buscarPacienteStore({id}));
+    }
 
-        //TODO: UPDATE OPERATION
+    const startUpdatePaciente = async(id, data) => {
 
+        const {name,contact} = data;
+        await canencioApi.put(`/pacientes/update/${id}`,{name,contact});
 
         dispatch(updatePacienteStore({id, data}));
     }
     
-    const startDeletePaciente = (id) => {
+    const startDeletePaciente = async(id) => {
 
-        //TODO: DELETE OPERATION
-
+        await canencioApi.delete(`/pacientes/delete/${id}`);
 
         dispatch(deletePacienteStore({id}));
     }
@@ -43,10 +49,12 @@ export const usePacientesStore = () => {
     return {
         //propiedades
         pacientes,
+        pacienteSeleccionado,
     
         //metodos
         startCreatePaciente,
         startReadPacientes,
+        startBuscarPaciente,
         startUpdatePaciente,
         startDeletePaciente
     }

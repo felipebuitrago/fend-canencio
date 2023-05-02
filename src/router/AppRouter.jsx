@@ -3,7 +3,8 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { AuthRouter } from '../app/auth/routes/AuthRouter';
 import { InventarioRouter } from "../app/inventario/routes/InventarioRouter";
 import { useAuthStore } from "../hooks";
-import { CircularProgress } from '@mui/material';   
+import { CircularProgress } from '@mui/material';
+  
 export const AppRouter = () => {
     
     const { status, checkAuthToken } = useAuthStore();

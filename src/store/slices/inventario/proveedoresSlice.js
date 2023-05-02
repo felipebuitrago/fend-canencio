@@ -1,13 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  proveedores : []
-}
-
-const proveedorSample = {
-  "_id"      : "0ca6e94dfc0b89a4e227",
-  "nombre"   : "el popo",
-  "contacto" : "31245648584"
+  proveedores : [],
+  proveedorSeleccionado : {nombre:"",contacto:""}
 }
 
 export const proveedoresSlice = createSlice({
@@ -15,10 +10,20 @@ export const proveedoresSlice = createSlice({
   initialState,
   reducers: {
     createProveedorStore : (state,{payload}) => {
-      state.proveedores.unshift(proveedorSample);
+      state.proveedores.unshift(payload);
     },
     addProveedoresStore : (state,{payload}) => {
       state.proveedores = payload;
+    },
+    buscarProveedorStore : (state, {payload}) => {
+      let position;
+      state.proveedores.map((product,index) => {
+        if(product._id === payload.id){
+          position = index;
+        }
+      })
+      
+      state.proveedorSeleccionado = {...state.proveedores[position]};
     },
     updateProveedorStore : (state,{payload}) => {
       let position;
@@ -43,6 +48,7 @@ export const proveedoresSlice = createSlice({
     },
     resetProveedoresStore : (state) => {
       state.proveedores = [];
+      state.proveedorSeleccionado = {nombre:"",contacto:""}
     },
   },
 })
@@ -51,6 +57,7 @@ export const proveedoresSlice = createSlice({
 export const { 
   createProveedorStore,
   addProveedoresStore,
+  buscarProveedorStore,
   updateProveedorStore,
   deleteProveedorStore,
   resetProveedoresStore} = proveedoresSlice.actions

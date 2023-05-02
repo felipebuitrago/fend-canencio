@@ -14,8 +14,9 @@ export const AdminCategories = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const {categorias,
-        startCreateCategoria,
+        categoriaSeleccionada,
         startReadCategorias,
+        startBuscarCategoria,
         startUpdateCategoria,
         startDeleteCategoria} = useCategoriasStore();
 
@@ -33,18 +34,16 @@ export const AdminCategories = () => {
 
   {/* evento de editar cierta categoria */}
   const handleUpdateClick = (event) => {
-    const categoriaSample = {
-      "_id"    : "50ec999c5bb44822945",
-      "name" : "Crononicaca",
-      "description": "la mera caca"
-    }
+    
     if(event.target.id!==""){
 
-      
-      startUpdateCategoria(event.target.id,categoriaSample);
+      startBuscarCategoria(event.target.id);
+      handleOpenEditDialog();
     }
     else{
-      startUpdateCategoria(event.target.farthestViewportElement.id,categoriaSample);
+
+      startBuscarCategoria(event.target.farthestViewportElement.id);
+      handleOpenEditDialog();
     }
   };   
 
@@ -52,10 +51,12 @@ export const AdminCategories = () => {
   const handleDeleteClick = (event) => {
 
     if(event.target.id!==""){
-      startDeleteCategoria(event.target.id);
+      startBuscarCategoria(event.target.id);
+      handleOpenConfirmDialog();
     }
     else{
-      startDeleteCategoria(event.target.farthestViewportElement.id);
+      startBuscarCategoria(event.target.farthestViewportElement.id);
+      handleOpenConfirmDialog();
     }
   };   
 
@@ -75,157 +76,173 @@ export const AdminCategories = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  
-  const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [editCategory, setEditCategory] = useState(null);
 
-  const handleOpenEditDialog = (category) => {
-    setEditCategory(category);
-    setOpenEditDialog(true);
-  };
-
-  const handleCloseEditDialog = () => {
-    setOpenEditDialog(false);
-  };
-
-  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  //alert confirmation
   const [openAlert, setOpenAlert] = useState(false);
-  const [categoryToDelete, setCategoryToDelete] = useState(null);
-
-  const handleOpenConfirmDialog = (category) => {
-    setCategoryToDelete(category);
-    setOpenConfirmDialog(true);
-  };
-
-  const handleCloseConfirmDialog = () => {
-    setOpenConfirmDialog(false);
-  };
-
-  const handleConfirmDelete = () => {
-    console.log("Categoría eliminada:", categoryToDelete);
-    setOpenConfirmDialog(false);
-    setOpenAlert(true);
-  };
-
   const handleCloseAlert = () => {
     setOpenAlert(false);
   };
 
+  //UPDATE HANDLES AND STATES
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+
+  //abrir dialog editar
+  const handleOpenEditDialog = () => {
+    setOpenEditDialog(true);
+  };
+  //cerrar dialog editar
+  const handleCloseEditDialog = () => {
+    setOpenEditDialog(false);
+  };
+
+  const handleSaveEditDialog = () => {
+    setOpenEditDialog(false);
+    const categoriaSample = {
+      "_id"    : categoriaSeleccionada._id,
+      "name" : document.getElementById("categoria-name-update").value,
+      "description": document.getElementById("categoria-description-update").value
+    }
+
+    startUpdateCategoria(categoriaSeleccionada._id,categoriaSample);
+    setOpenAlert(true);
+
+  };
+
+  //ELIMINAR HANDLES AND STATES
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  
+  //abrir dialog confirmar borrar
+  const handleOpenConfirmDialog = () => {
+    setOpenConfirmDialog(true);
+  };
+  //cerrar dialog confirmar borrar
+  const handleCloseConfirmDialog = () => {
+    setOpenConfirmDialog(false);
+  };
+
+  //handle confirmar eliminar categoria
+  const handleConfirmDelete = () => {
+    startDeleteCategoria(categoriaSeleccionada._id);
+    setOpenConfirmDialog(false);
+    setOpenAlert(true);
+  };
     
   return (
     <>
       <Grid container justifyContent="center" alignItems="center" sx={{ mb: 3, width: "100%" }}>
-          <Paper elevation={1} sx={{ p: 1, borderRadius: 1, width: "100%" }}>
-            <CustomBreadcrumbs pathList={[
-              { name: "Inventario", route: "/inventario" },
-              { name: "Categorías"},
-            ]} />
-          </Paper>
-        </Grid>
-        <Grid container direction="column">
-          <Grid container direction="row" justifyContent="space-between">
-            <Grid direction="column">
-              <Typography variant="h4" display="inline">
-                Categorías
-              </Typography>
-              <Typography variant="subtitle1" display="inline" sx={{ ml: 0.9 }}>
-                {`${rows.length} total`}
-              </Typography>
-              <Grid container sx={{ mt: 2 }} direction="column">
-                {/* <Button
+        <Paper elevation={1} sx={{ p: 1, borderRadius: 1, width: "100%" }}>
+          <CustomBreadcrumbs pathList={[
+            { name: "Inventario", route: "/inventario" },
+            { name: "Categorías"},
+          ]} />
+        </Paper>
+      </Grid>
+      <Grid container direction="column">
+        <Grid container direction="row" justifyContent="space-between">
+          <Grid direction="column">
+            <Typography variant="h4" display="inline">
+              Categorías
+            </Typography>
+            <Typography variant="subtitle1" display="inline" sx={{ ml: 0.9 }}>
+              {`${rows.length} total`}
+            </Typography>
+            <Grid container sx={{ mt: 2 }} direction="column">
+              {/* <Button
+              variant="contained"
+              fullWidth
+              color="success"
+              size="large"
+              sx={{ backgroundColor: "black", color: "white", mt: 3 }}
+              onClick={startCreateCategoria}
+              >
+                Crear categoria
+              </Button> */}
+              <ButtonLink
+                to="/categorias/crear"
                 variant="contained"
-                fullWidth
                 color="success"
-                size="large"
-                sx={{ backgroundColor: "black", color: "white", mt: 3 }}
-                onClick={startCreateCategoria}
-                >
-                  Crear categoria
-                </Button> */}
-                <ButtonLink
-                  to="/categorias/crear"
-                  variant="contained"
-                  color="success"
-                  size="medium"
-                  sx={{ backgroundColor: "black", color: "white", marginRight: 2 }}
-                  startIcon={<BookmarkAdd sx={{ color: "white" }} />}
-                >
-                  Crear Categoría
-                </ButtonLink>
-              </Grid>
+                size="medium"
+                sx={{ backgroundColor: "black", color: "white", marginRight: 2 }}
+                startIcon={<BookmarkAdd sx={{ color: "white" }} />}
+              >
+                Crear Categoría
+              </ButtonLink>
             </Grid>
-
-            <SearchBar search={search} setSearch={setSearch} setPage={setPage}/>
           </Grid>
 
-          <Divider sx={{ mt: 2 }} />
-
-          <Grid container direction="column" sx={{ mt: 2 }}>
-            <CustomTableV2
-              columns={columns}
-              filteredRows={filteredRows}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              emptyRows={emptyRows}
-              handleChangePage={handleChangePage}
-              handleChangeRowsPerPage={handleChangeRowsPerPage}
-              TablePaginationActions={TablePaginationActions}
-              updateHandleClick={handleUpdateClick}
-              deleteHandleClick={handleDeleteClick}
-            />
-          </Grid>
+          <SearchBar search={search} setSearch={setSearch} setPage={setPage}/>
         </Grid>
-    
-        <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
-          <DialogTitle>
-            Editar Categoría
-            <IconButton
-              edge="end"
-              color="inherit"
-              onClick={handleCloseEditDialog}
-              aria-label="close"
-              sx={{ position: "absolute", right: 8, top: 8 }}
-            >
-              <Close />
-            </IconButton>
-          </DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Nombre"
-              fullWidth
-              variant="outlined"
-              defaultValue={editCategory && editCategory.nombre}
-            />
-            <TextField
-              margin="dense"
-              label="Contacto"
-              fullWidth
-              variant="outlined"
-              defaultValue={editCategory && editCategory.descripcion}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseEditDialog} color="error">
-              Cancelar
-            </Button>
-            <Button onClick={handleCloseEditDialog} color="success">
-              Guardar
-            </Button>
-          </DialogActions>
-        </Dialog>
-        <DeleteConfirmDialog
-          open={openConfirmDialog}
-          onClose={handleCloseConfirmDialog}
-          onConfirm={handleConfirmDelete}
-          title="¿Estás seguro de que deseas eliminar esta categoría?"
-        />
-        <AlertSnackbar
-          open={openAlert}
-          onClose={handleCloseAlert}
-          message="Acción realizada exitosamente"
-        />
-      </>
+
+        <Divider sx={{ mt: 2 }} />
+
+        <Grid container direction="column" sx={{ mt: 2 }}>
+          <CustomTableV2
+            columns={columns}
+            filteredRows={filteredRows}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            emptyRows={emptyRows}
+            handleChangePage={handleChangePage}
+            handleChangeRowsPerPage={handleChangeRowsPerPage}
+            TablePaginationActions={TablePaginationActions}
+            updateHandleClick={handleUpdateClick}
+            deleteHandleClick={handleDeleteClick}
+          />
+        </Grid>
+      </Grid>
+  
+      <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
+        <DialogTitle>
+          Editar Categoría
+          <IconButton
+            edge="end"
+            color="inherit"
+            onClick={handleCloseEditDialog}
+            aria-label="close"
+            sx={{ position: "absolute", right: 8, top: 8 }}
+          >
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Nombre"
+            fullWidth
+            variant="outlined"
+            id="categoria-name-update"
+            defaultValue={categoriaSeleccionada.name}
+          />
+          <TextField
+            margin="dense"
+            label="Descripción"
+            fullWidth
+            variant="outlined"
+            id="categoria-description-update"
+            defaultValue={categoriaSeleccionada.description}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEditDialog} color="error">
+            Cancelar
+          </Button>
+          <Button onClick={handleSaveEditDialog} color="success">
+            Guardar
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <DeleteConfirmDialog
+        open={openConfirmDialog}
+        onClose={handleCloseConfirmDialog}
+        onConfirm={handleConfirmDelete}
+        title={`¿Estás seguro de que deseas eliminar la categoría "${categoriaSeleccionada.name}"?`}
+      />
+      <AlertSnackbar
+        open={openAlert}
+        onClose={handleCloseAlert}
+        message="Acción realizada exitosamente"
+      />
+    </>
     );
   };

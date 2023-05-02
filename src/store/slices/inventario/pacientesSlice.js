@@ -1,13 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  pacientes : []
-}
-
-const pacienteSample = {
-  "_id"    : "50ec999c5bb44822945",
-  "name" : "soto",
-  "contact": "inferno"
+  pacientes : [],
+  pacienteSeleccionado : {name:"",contact:""}
 }
 
 export const pacientesSlice = createSlice({
@@ -15,10 +10,20 @@ export const pacientesSlice = createSlice({
   initialState,
   reducers: {
     createPacienteStore : (state,{payload}) => {
-      state.pacientes.unshift(pacienteSample);
+      state.pacientes.unshift(payload);
     },
     addPacientesStore : (state,{payload}) => {
       state.pacientes = payload;
+    },
+    buscarPacienteStore : (state, {payload}) => {
+      let position;
+      state.pacientes.map((product,index) => {
+        if(product._id === payload.id){
+          position = index;
+        }
+      })
+      
+      state.pacienteSeleccionado = {...state.pacientes[position]};
     },
     updatePacienteStore : (state,{payload}) => {
       let position;
@@ -42,6 +47,7 @@ export const pacientesSlice = createSlice({
     },
     resetPacientesStore : (state,{payload}) => {
       state.pacientes = [];
+      state.pacienteSeleccionado = {name:"",contact:""}
     },
   },
 })
@@ -50,6 +56,7 @@ export const pacientesSlice = createSlice({
 export const { 
   createPacienteStore,
   addPacientesStore,
+  buscarPacienteStore,
   updatePacienteStore,
   deletePacienteStore,
   resetPacientesStore} = pacientesSlice.actions

@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  categorias : []
+  categorias : [],
+  categoriaSeleccionada : { name : "", description: "" }
 }
 
 const categoriaSample = {
@@ -15,10 +16,20 @@ export const categoriasSlice = createSlice({
   initialState,
   reducers: {
     createCategoriaStore : (state,{payload}) => {
-      state.categorias.unshift(categoriaSample);
+      state.categorias.unshift(payload);
     },
     addCategoriasStore : (state,{payload}) => {
       state.categorias = payload;
+    },
+    buscarCategoriaStore : (state, {payload}) => {
+      let position;
+      state.categorias.map((product,index) => {
+        if(product._id === payload.id){
+          position = index;
+        }
+      })
+      
+      state.categoriaSeleccionada = {...state.categorias[position]};
     },
     updateCategoriaStore : (state,{payload}) => {
       let position;
@@ -42,6 +53,7 @@ export const categoriasSlice = createSlice({
     },
     resetCategoriasStore : (state) => {
       state.categorias = [];
+      state.categoriaSeleccionada = {name:"",description:""};
     },
   },
 })
@@ -50,6 +62,7 @@ export const categoriasSlice = createSlice({
 export const { 
   createCategoriaStore,
   addCategoriasStore,
+  buscarCategoriaStore,
   updateCategoriaStore,
   deleteCategoriaStore,
   resetCategoriasStore} = categoriasSlice.actions
