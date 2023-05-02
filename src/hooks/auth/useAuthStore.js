@@ -21,7 +21,7 @@ export const useAuthStore = () => {
             const {data} = await canencioApi.post('/auth',{email,password});
             
             localStorage.setItem('token', data.token );
-            dispatch( login({ name: data.name, uid: data.uid }) );
+            dispatch( login({ name: data.name, uid: data.uid, rol: data.rol }) );
 
         } catch (error) {
             dispatch( logout('Credenciales incorrectas') );
@@ -38,7 +38,7 @@ export const useAuthStore = () => {
         try {
             const { data } = await canencioApi.get('auth/renew');
             localStorage.setItem('token', data.token );
-            dispatch( login({ name: data.name, uid: data.uid }) );
+            dispatch( login({ name: data.name, uid: data.uid, rol: data.rol }) );
         } catch (error) {
             localStorage.clear();
             dispatch( logout() );

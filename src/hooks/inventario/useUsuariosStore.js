@@ -3,18 +3,20 @@ import { canencioApi } from '../../api';
 
 import { createUsuarioStore,
         addUsuariosStore,
+        buscarUsuarioStore,
         updateUsuarioStore,
         deleteUsuarioStore } from '../../store/slices';
 
 export const useUsuariosStore = () => {
   
     const dispatch = useDispatch();
-    const { usuarios } = useSelector(state => state.usuarios);
+    const { usuarios, usuarioSeleccionado } = useSelector(state => state.usuarios);
 
-    const startCreateUsuario = () => {
-        //TODO: create OPERATION
+    const startCreateUsuario = async(name, email, password, rol) => {
+        
+        const result = await canencioApi.post('/usuarios/new',{name, email, password, rol});
 
-        dispatch(createUsuarioStore());
+        dispatch(createUsuarioStore(result.data.result));
     }
     
     const startReadUsuarios = async() => {
@@ -23,30 +25,47 @@ export const useUsuariosStore = () => {
         dispatch(addUsuariosStore(usuariosDB.data.result));
     }
 
-    const startUpdateUsuario = (id, data) => {
+    const startBuscarUsuario = (id) => {
+        
+        dispatch(buscarUsuarioStore({id}));
+    }
 
-        //TODO: UPDATE OPERATION
+    const startUpdateUsuario = async(id, nuevo) => {
 
+        const {name, email, password} = nuevo;
+        let data = {
+            _id:usuarioSeleccionado._id,
+            name:name,
+            email:email,
+            rol:usuarioSeleccionado.rol
+        }
+        if(password){
+            
+            await canencioApi.put(`/usuarios/update/${id}`,{name, email, password});
+            dispatch(updateUsuarioStore({id, data}));
+        
+        }else{
 
-        dispatch(updateUsuarioStore({id, data}));
+            await canencioApi.put(`/usuarios/update/${id}`,{name, email});
+            dispatch(updateUsuarioStore({id, data}));
+        }
     }
     
-    const startDeleteUsuario = (id) => {
+    const startDeleteUsuario = async(id) => {
 
-        //TODO: DELETE OPERATION
-
-
+        await canencioApi.delete(`/usuarios/delete/${id}`);
         dispatch(deleteUsuarioStore({id}));
     }
-
 
     return {
         //propiedades
         usuarios,
+        usuarioSeleccionado,
     
         //metodos
         startCreateUsuario,
         startReadUsuarios,
+        startBuscarUsuario,
         startUpdateUsuario,
         startDeleteUsuario
     }
