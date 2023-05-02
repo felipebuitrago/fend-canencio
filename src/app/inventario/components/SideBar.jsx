@@ -15,7 +15,7 @@ import {CustomCollapseButton} from './CustomCollapseButton'
 
 export const SideBar = ({ drawerWidth = 240 }) => {
 
-    const { startLogout } = useAuthStore();
+    const { user,startLogout } = useAuthStore();
 
     return (
       <Box
@@ -45,8 +45,121 @@ export const SideBar = ({ drawerWidth = 240 }) => {
           <List>
             <Divider />
 
-            {/*boton inicio*/}
-            <Link to=''>
+            {(user.rol === "Administrador")?(
+              <>
+                {/*boton inicio*/}
+                <Link to=''>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <HomeOutlined />
+                    </ListItemIcon>
+                    <ListItemText primary="Inicio" />
+                  </ListItemButton>
+                </ListItem>
+                </Link>
+
+                <Divider />
+
+                {/*boton inventario*/}
+                <CustomCollapseButton
+                titulo="Inventario"
+                opciones={[
+                  {
+                    link: "movimientos",
+                    prompt: "Movimientos de Inventario",
+                  },
+                  {
+                    link: "transaccion",
+                    prompt: "Realizar transacción",
+                  },
+                ]}
+                iconos={[
+                  <InventoryOutlined />,
+                  <LibraryBooksOutlined />,
+                  <LibraryAddOutlined />,
+                ]}
+                />
+
+                {/*boton Productos*/}
+                <CustomCollapseButton
+                titulo="Productos"
+                opciones={[
+                  {
+                    link: "productos",
+                    prompt: "Administración de Productos",
+                  },
+                  {
+                    link: "categorias",
+                    prompt: "Administración de categorías",
+                  },
+                ]}
+                iconos={[
+                  <DatasetOutlined />,
+                  <AccountTreeOutlined />,
+                  <CategoryOutlined />,
+                ]}
+                />
+
+                {/*boton Terceros*/}
+                <CustomCollapseButton
+                titulo="Terceros"
+                opciones={[
+                  {
+                    link: "proveedores",
+                    prompt: "Proveedores",
+                  },
+                  {
+                    link: "pacientes",
+                    prompt: "Pacientes",
+                  },
+                ]}
+                iconos={[
+                  <HubOutlined />,
+                  <ConnectWithoutContactOutlined />,
+                  <Diversity1Outlined />,
+                ]}
+                />
+
+                {/*boton Almacenes*/}
+                <CustomCollapseButton
+                titulo="Almacenes"
+                opciones={[
+                  {
+                    link: "almacenes",
+                    prompt: "Administración de almacenes",
+                  },
+                  {
+                    link: "almacenes/elemental",
+                    prompt: "Administración por almacen",
+                  },
+                ]}
+                iconos={[
+                  <StoreOutlined />,
+                  <HolidayVillageOutlined />,
+                  <StorefrontOutlined />,
+                ]}
+                />
+
+                {/*boton Usuarios*/}
+                <CustomCollapseButton
+                titulo="Usuarios"
+                opciones={[
+                  {
+                    link: "usuarios",
+                    prompt: "Administración de usuarios",
+                  },
+                ]}
+                iconos={[
+                  <SupervisorAccountOutlined />,
+                  <PersonSearchOutlined />,
+                ]}
+                />
+              </>
+            ):(
+            <>
+              {/*boton inicio*/}
+              <Link to=''>
               <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
@@ -55,12 +168,12 @@ export const SideBar = ({ drawerWidth = 240 }) => {
                   <ListItemText primary="Inicio" />
                 </ListItemButton>
               </ListItem>
-            </Link>
+              </Link>
 
-            <Divider />
+              <Divider />
 
-            {/*boton inventario*/}
-            <CustomCollapseButton
+              {/*boton inventario*/}
+              <CustomCollapseButton
               titulo="Inventario"
               opciones={[
                 {
@@ -77,36 +190,12 @@ export const SideBar = ({ drawerWidth = 240 }) => {
                 <LibraryBooksOutlined />,
                 <LibraryAddOutlined />,
               ]}
-            />
+              />
 
-            {/*boton Productos*/}
-            <CustomCollapseButton
-              titulo="Productos"
-              opciones={[
-                {
-                  link: "productos",
-                  prompt: "Administración de Productos",
-                },
-                {
-                  link: "categorias",
-                  prompt: "Administración de categorías",
-                },
-              ]}
-              iconos={[
-                <DatasetOutlined />,
-                <AccountTreeOutlined />,
-                <CategoryOutlined />,
-              ]}
-            />
-
-            {/*boton Terceros*/}
-            <CustomCollapseButton
+              {/*boton Terceros*/}
+              <CustomCollapseButton
               titulo="Terceros"
               opciones={[
-                {
-                  link: "proveedores",
-                  prompt: "Proveedores",
-                },
                 {
                   link: "pacientes",
                   prompt: "Pacientes",
@@ -114,46 +203,12 @@ export const SideBar = ({ drawerWidth = 240 }) => {
               ]}
               iconos={[
                 <HubOutlined />,
-                <ConnectWithoutContactOutlined />,
                 <Diversity1Outlined />,
               ]}
-            />
-
-            {/*boton Almacenes*/}
-            <CustomCollapseButton
-              titulo="Almacenes"
-              opciones={[
-                {
-                  link: "almacenes",
-                  prompt: "Administración de almacenes",
-                },
-                {
-                  link: "almacenes/elemental",
-                  prompt: "Administración por almacen",
-                },
-              ]}
-              iconos={[
-                <StoreOutlined />,
-                <HolidayVillageOutlined />,
-                <StorefrontOutlined />,
-              ]}
-            />
-
-            {/*boton Usuarios*/}
-            <CustomCollapseButton
-              titulo="Usuarios"
-              opciones={[
-                {
-                  link: "usuarios",
-                  prompt: "Administración de usuarios",
-                },
-              ]}
-              iconos={[
-                <SupervisorAccountOutlined />,
-                <PersonSearchOutlined />,
-              ]}
-            />
-
+              />
+            </>
+            )}
+            
             <ListItem disablePadding> {/*boton cerrar sesion*/}
               <React.Fragment>
                 <ListItemButton>
