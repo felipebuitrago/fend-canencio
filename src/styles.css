@@ -10,3 +10,7 @@ div span{
 div > svg{
     color: black;
 }
+
+svg#icon-black{
+    color: black;
+}

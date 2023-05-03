@@ -14,7 +14,7 @@ export const CreateStore = () => {
   // Cierra el alert
   const handleCloseAlert = () => {
   setOpenAlert(false);
-};
+  };
 
   // inicialización estado del formulario react-hook-form
   const {

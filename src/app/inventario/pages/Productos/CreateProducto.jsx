@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Button,
@@ -11,51 +11,62 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Box,
-  Chip,
-  OutlinedInput,
+  IconButton,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
-import { Category, Store,TypeSpecimenOutlined, FlipToFrontOutlined, SquareFootOutlined } from "@mui/icons-material";
-import { CustomBreadcrumbs, MultipleSelectChip } from "../../components";
+import { Category, Store, ConnectWithoutContactOutlined, FlipToFrontOutlined, SquareFootOutlined } from "@mui/icons-material";
 
-// Reemplaza estos datos de ejemplo con tus datos reales
-const categorias = [
-  { id: 1, nombre: "Categoría 1" },
-  { id: 2, nombre: "Categoría 2" },
-  { id: 3, nombre: "Categoría 3" },
-];
-
-const proveedores = [
-  { id: 1, nombre: "Proveedor 1" },
-  { id: 2, nombre: "Proveedor 2" },
-  { id: 3, nombre: "Proveedor 3" },
-];
-
-const almacenes = [
-  { id: 1, nombre: "Almacén 1" },
-  { id: 2, nombre: "Almacén 2" },
-  { id: 3, nombre: "Almacén 3" },
-];
+import { AlertSnackbar, CustomBreadcrumbs, MultipleSelectChip } from "../../components";
+import { useAlmacenesStore, useCategoriasStore, useProductosStore, useProveedoresStore } from '../../../../hooks'
 
 export const CreateProducto = () => {
+
+  const {categorias, startReadCategorias} = useCategoriasStore();
+  const {proveedores, startReadProveedores} = useProveedoresStore();
+  const {almacenes, startReadAlmacenes} = useAlmacenesStore();
+  const { startCreateProducto } = useProductosStore();
+
+  useEffect(()=>{
+    startReadAlmacenes();
+    startReadCategorias();
+    startReadProveedores();
+  },[])
+  
   const {
     control,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm({
     defaultValues: {
       nombre: "",
-      talla_presentacion: "",
+      presentacion: "",
       categoria: [],
       proveedor: "",
       almacen: [],
     },
   });
 
+  //alert confirmation
+  const [openAlert, setOpenAlert] = useState(false);
+  // Cierra el alert
+  const handleCloseAlert = () => {
+  setOpenAlert(false);
+  };
+
   const onSubmit = (data) => {
     // Validación y creación del producto
-    console.log(data);
+
+    const {nombre, presentacion, categoria, proveedor, almacen} = data;
+    startCreateProducto(nombre, presentacion, categoria, proveedor, almacen);
+    reset({
+      nombre: "",
+      presentacion: "",
+      categoria: [],
+      proveedor: "",
+      almacen: [],
+    });
+    setOpenAlert(true);
   };
 
   return (
@@ -63,7 +74,11 @@ export const CreateProducto = () => {
       {/* Encabezado */}
       <Grid container alignItems="center" sx={{ mb: 3, width: "100%" }}>
         <Paper elevation={1} sx={{ p: 1, borderRadius: 1, width: "100%" }}>
-          {/* Asegúrate de actualizar el componente CustomBreadcrumbs según sea necesario */}
+          <CustomBreadcrumbs pathList={[
+            { name: "Inventario", route: "/"},
+            { name: "Productos" , route: '/productos'}, 
+            { name: "Crear" , }]} 
+          />
         </Paper>
       </Grid>
       <Grid container>
@@ -104,7 +119,7 @@ export const CreateProducto = () => {
             </Grid>
             <Grid item xs={12}>
               <Controller
-                name="talla_presentacion"
+                name="presentacion"
                 control={control}
                 rules={{
                   required: {
@@ -118,8 +133,8 @@ export const CreateProducto = () => {
                     fullWidth
                     variant="outlined"
                     label="Talla/Presentación"
-                    error={!!errors.talla_presentacion}
-                    helperText={errors.talla_presentacion?.message}
+                    error={!!errors.presentacion}
+                    helperText={errors.presentacion?.message}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -148,7 +163,8 @@ export const CreateProducto = () => {
                     items={categorias}
                     value={field.value}
                     onChange={field.onChange}
-                    icon={<Category />}
+                    error={!!errors.categoria}
+                    icon={<Category id="icon-black"/>}
                   />
                 )}
               />
@@ -174,9 +190,16 @@ export const CreateProducto = () => {
                       id="proveedor-select"
                       label="Proveedor"
                       error={!!errors.proveedor}
+                      startAdornment={
+                        <InputAdornment position="start">
+                          <IconButton edge="start">
+                            <ConnectWithoutContactOutlined id="icon-black"/>
+                          </IconButton>
+                        </InputAdornment>
+                      }
                     >
                       {proveedores.map((proveedor) => (
-                        <MenuItem key={proveedor.id} value={proveedor.id}>
+                        <MenuItem key={proveedor._id} value={proveedor._id}>
                           {proveedor.nombre}
                         </MenuItem>
                       ))}
@@ -200,8 +223,10 @@ export const CreateProducto = () => {
                     label="Almacén"
                     items={almacenes}
                     value={field.value}
+                    valid={errors.almacen}
+                    error={!!errors.almacen}
                     onChange={field.onChange}
-                    icon={<Store />}
+                    icon={<Store id="icon-black"/>}
                   />
                 )}
               />
@@ -228,6 +253,10 @@ export const CreateProducto = () => {
           </Grid>
         </Grid>
       </Grid>
+    
+      {/* Material Alert */}
+      <AlertSnackbar open={openAlert} onClose={handleCloseAlert} message="Acción realizada exitosamente"/>
+    
     </>
   );
 };

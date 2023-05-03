@@ -1,42 +1,46 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { canencioApi } from '../../api';
 
-import { createProductoStore,
-        addProductosStore,
-        updateProductoStore,
+import {addProductosStore,
+        buscarProductoStore,
         deleteProductoStore } from '../../store/slices';
 
 export const useProductosStore = () => {
   
     const dispatch = useDispatch();
-    const { productos } = useSelector(state => state.productos);
+    const { productos, productoSeleccionado } = useSelector(state => state.productos);
 
-    const startCreateProducto = () => {
-        //TODO: create OPERATION
-
-        dispatch(createProductoStore());
+    const startCreateProducto = async(nombre, presentacion, categoria, proveedor, almacen) => {
+        
+        await canencioApi.post('/products/new',{nombre, presentacion, categoria, proveedor, almacen});
     }
     
     const startReadProductos = async() => {
 
         const productosDB = await canencioApi.get('/products');
-
         dispatch(addProductosStore(productosDB.data.result));
     }
 
-    const startUpdateProducto = (id, data) => {
+    const startBuscarProducto = (id) => {
+        
+        dispatch(buscarProductoStore({id}));
+    }
 
-        //TODO: UPDATE OPERATION
+    const startUpdateProducto = async(id, data) => {
 
-
-        dispatch(updateProductoStore({id, data}));
+        const {nombre, presentacion, categoria} = data;
+        if(categoria){
+            await canencioApi.put(`/products/update/${id}`,{nombre, presentacion, categoria});
+        }
+        else{
+            await canencioApi.put(`/products/update/${id}`,{nombre, presentacion});        
+        }
+        startReadProductos();
     }
     
-    const startDeleteProducto = (id) => {
+    const startDeleteProducto = async(id) => {
 
-        //TODO: DELETE OPERATION
-
-
+        await canencioApi.delete(`/products/delete/${id}`);
         dispatch(deleteProductoStore({id}));
     }
 
@@ -44,10 +48,12 @@ export const useProductosStore = () => {
     return {
         //propiedades
         productos,
+        productoSeleccionado,
     
         //metodos
         startCreateProducto,
         startReadProductos,
+        startBuscarProducto,
         startUpdateProducto,
         startDeleteProducto
     }
