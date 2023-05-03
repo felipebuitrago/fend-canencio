@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Divider, Grid, Paper, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from "@mui/material";
 import { Close, BookmarkAdd} from "@mui/icons-material";
-import { CustomBreadcrumbs, ButtonLink, TablePaginationActions, EditButton, DeleteButton, CustomTable, SearchBar, AlertSnackbar, DeleteConfirmDialog } from "../../components/index.js";
+import { CustomBreadcrumbs, ButtonLink, TablePaginationActions,  SearchBar, AlertSnackbar, DeleteConfirmDialog } from "../../components/index.js";
 import { headerCellStyle } from "../../util/utils";
 
 export const RealizarTransaccionPage = () => {

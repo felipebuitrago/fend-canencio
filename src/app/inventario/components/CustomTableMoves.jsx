@@ -9,8 +9,9 @@ import {
   TableSortLabel,
   Paper,
   TablePagination,
+  Hidden,
 } from "@mui/material";
-import { headerCellStyle } from "../util/utils";
+
 
 const columns = [
     { id: "id", label: "ID", minWidth: 50 },
@@ -92,24 +93,48 @@ const CustomTableMoves = () => {
     setPage(0);
   };
 
+
   return (
-    <Paper sx={{ width: "63%" }}>
-      <TableContainer sx={{ maxHeight: 440, maxWidth: "100%", overflowX: "auto" }}>
-        <Table stickyHeader aria-label="custom table">
+    <Paper sx={{ width: "100%", overflow: "hidden" }}>
+      <TableContainer component="div" sx={{ maxHeight: 440 }}>
+        <Table aria-label="custom table" stickyHeader>
           <TableHead>
             <TableRow>
               {columns.map((headCell) => (
                 <TableCell
                   key={headCell.id}
                   sortDirection={orderBy === headCell.id ? order : false}
-                  style={{ ...headerCellStyle, minWidth: headCell.minWidth }}
+                  sx={{
+                    backgroundColor: "black",
+                    color: "white",
+                    borderRightColor: "white",
+                    borderRightWidth: 1,
+                    borderRightStyle: "solid",
+                    minWidth: headCell.minWidth,
+                  }}
                 >
                   <TableSortLabel
                     active={orderBy === headCell.id}
                     direction={orderBy === headCell.id ? order : "asc"}
                     onClick={(event) => handleRequestSort(event, headCell.id)}
-                    style={{ ...headerCellStyle, minWidth: headCell.minWidth }}
-                    
+                    sx={{ 
+                      color: "inherit",
+                      "&:hover": {
+                        color: "white", 
+                      },
+                      "& .MuiTableSortLabel-icon": {
+                        color: "white !important", 
+                      },
+
+                      "&.MuiTableSortLabel-active": {
+                        color: "white !important",
+                      },
+
+                      "&.MuiTableSortLabel-root": {
+                        color: "white !important",
+                      },
+                  
+                    }}
                   >
                     {headCell.label}
                   </TableSortLabel>

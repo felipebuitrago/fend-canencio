@@ -200,7 +200,7 @@ const filteredRows = filteredRowsByStore.filter((product) =>
             deleteHandleClick={handleDeleteClick}
           />
         </Grid>
-        {/* fin tabla display data */}
+        
       </Grid>
     </>
   );
