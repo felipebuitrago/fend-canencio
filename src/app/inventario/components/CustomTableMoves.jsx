@@ -8,23 +8,26 @@ import {
   TableRow,
   TableSortLabel,
   Paper,
-  TablePagination,
-  Hidden,
+  TablePagination
+
 } from "@mui/material";
 
 
-const columns = [
-    { id: "id", label: "ID", minWidth: 50 },
-    { id: "fecha", label: "Fecha", minWidth: 100 },
-    { id: "tipoTransaccion", label: "Movimiento", minWidth: 150 },
-    { id: "producto", label: "Producto", minWidth: 150 },
-    { id: "tallaPresentacion", label: "Talla/Presentación", minWidth: 150 },
-    { id: "cantidad", label: "Cantidad", minWidth: 100 },
-    { id: "almacen", label: "Almacén", minWidth: 150 },
-    { id: "pacienteProveedor", label: "Paciente/Proveedor", minWidth: 150 },
-    { id: "#factura", label: "#Factura", minWidth: 100 },
-    { id: "usuario", label: "Usuario", minWidth: 150 },
-    { id: "notas", label: "Notas", minWidth: 150 },
+
+const CustomTableMoves = () => {
+
+  const columns = [
+    { id: "id", label: "ID", align: "center"},
+    { id: "fecha", label: "Fecha", align: "center" },
+    { id: "tipoTransaccion", label: "Movimiento", align: "center"},
+    { id: "producto", label: "Producto", align: "center"},
+    { id: "tallaPresentacion", label: "Talla/Presentación", align: "center"},
+    { id: "cantidad", label: "Cantidad", align: "center"},
+    { id: "almacen", label: "Almacén", align: "center"},
+    { id: "pacienteProveedor", label: "Paciente/Proveedor", align: "center"},
+    { id: "#factura", label: "#Factura", align: "center"},
+    { id: "usuario", label: "Usuario", align: "center"},
+    { id: "notas", label: "Notas", align: "center"},
   ];
   
   const createData = (id, fecha, tipoTransaccion, producto, tallaPresentacion, cantidad,almacen, pacienteProveedor, numFactura, usuario, notas) => {
@@ -72,7 +75,7 @@ const stableSort = (array, comparator) => {
   return stabilizedThis.map((el) => el[0]);
 };
 
-const CustomTableMoves = () => {
+
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("id");
   const [page, setPage] = useState(0);

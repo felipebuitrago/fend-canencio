@@ -9,7 +9,9 @@ import utc from "dayjs/plugin/utc";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import es from "dayjs/locale/es";
 
-import { CustomBreadcrumbs, CustomTableV2,  TablePaginationActions,  SearchBar, AlertSnackbar } from "../../components/index.js";
+import {  CustomBreadcrumbs, CustomTableV2, TablePaginationActions, MultipleSelectChip,  SearchBar, AlertSnackbar } from "../../components/index.js";
+import { Controller, useForm } from 'react-hook-form';
+import { useProductosStore, useCategoriasStore, usePacientesStore, useProveedoresStore, useAlmacenesStore } from '../../../../hooks'
 
 
 export const RealizarTransaccionPage = () => {
@@ -17,117 +19,118 @@ export const RealizarTransaccionPage = () => {
   dayjs.extend(localizedFormat);
   dayjs.locale(es);
 
+  // Estado para la búsqueda de usuarios
+  const [search, setSearch] = React.useState("");
+  // Estados para la paginación de la tabla
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selectedDate, setSelectedDate] = React.useState(null);
+
+  const [rows, setRows] = useState([]);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
-  // Datos de prueba
-  const categorias = ["A", "B", "C"];
-  const almacenes = ["Almacen 1", "Almacen 2", "Almacen 3"];
-  const pacientes = [
-    { label: "Paciente 1" },
-    { label: "Paciente 2" },
-    { label: "Paciente 3" },
-  ];
-  const proveedores = [
-    { label: "Proveedor 1" },
-    { label: "Proveedor 2" },
-    { label: "Proveedor 3" },
-  ];
 
-  const columns = [
-    { id: "id", label: "ID", width: 70 },
-    { id: "nombre", label: "Nombre", width: 130 },
-    { id: "categoria", label: "Categoría", width: 130 },
-    { id: "almacen", label: "Almacén", width: 130 },
-    { id: "cantidad", label: "Cantidad", width: 130 },
-    { id: "acciones", label: "Acciones", width: 130 },
-  ];
+  const {
+    productos,
+    productoSeleccionado,
+    setProductoSeleccionado,
+    startReadProductos,
+    startBuscarProducto,
+  } = useProductosStore();
 
-  const [openDialog, setOpenDialog] = React.useState(false);
 
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
-
-  const [selectedCategorias, setSelectedCategorias] = useState([]);
-
-  const [rows, setRows] = useState([]); // state to hold the table data
-  const [filteredRows, setFilteredRows] = useState([]); // state to hold the filtered table data
-  const [searchText, setSearchText] = useState(""); // state to hold the search text
-  const [page, setPage] = useState(0); // state to hold the current page number
-  const [rowsPerPage, setRowsPerPage] = useState(5); // state to hold the number of rows to display per page
-
-  const handleSearch = (text) => {
-    setSearchText(text);
-  };
-
+  const { pacientes, startReadPacientes } = usePacientesStore();
+  const { proveedores, startReadProveedores } = useProveedoresStore();
+  
   useEffect(() => {
-    // simulate API call to fetch data
-    const fetchData = async () => {
-      const data = [
-        {
-          id: 1,
-          nombre: "Item 1",
-          categoria: { name: "A" },
-          almacen: [{ name: "Almacen 1" }],
-          cantidad: 10,
-        },
-        {
-          id: 2,
-          nombre: "Item 2",
-          categoria: { name: "B" },
-          almacen: [{ name: "Almacen 2" }],
-          cantidad: 20,
-        },
-        {
-          id: 3,
-          nombre: "Item 3",
-          categoria: { name: "C" },
-          almacen: [{ name: "Almacen 3" }],
-          cantidad: 30,
-        },
-      ];
-      setRows(data);
-      setFilteredRows(data);
-    };
-
-    fetchData();
+    startReadProductos();
+    startReadPacientes();
+    startReadProveedores();
   }, []);
 
   useEffect(() => {
-    const filteredData = rows.filter((row) => {
-      const rowValues = Object.values(row).join(" ").toLowerCase();
-      return rowValues.includes(searchText.toLowerCase());
-    });
+    setRows(productos);
+  }, [productos]);
 
-    setFilteredRows(filteredData);
-    setPage(0); // reset the page number
-  }, [rows, searchText]);
 
+  const columns = [
+    { id: "id", label: "ID", align: "center" },
+    { id: "nombre", label: "Producto", align: "center"  },
+    { id: "presentacion", label: "Presentación/Talla", align: "center"},
+    { id: "categoria", label: "Categoría", align: "center" },
+    { id: "almacen", label: "Almacén", align: "center" },
+    { id: "stock", label: "Stock", align: "center" },
+    { id: "acciones-movimientos", label: "Acciones", align: "center" },
+  ];
+
+  
+    
+    {/* evento de editar cierto producto */}
+    const handleUpdateClick = (event) => {
+      
+      if(event.target.id!==""){
+
+        startBuscarProducto(event.target.id);
+        handleOpenEditDialog();
+      }
+      else{
+        startBuscarProducto(event.target.farthestViewportElement.id);
+        handleOpenEditDialog();
+      }
+    };
+    
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+
+  const handleOpenEditDialog = () => {
+    setOpenEditDialog(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setOpenEditDialog(false);
+  };
+
+  
+  const [selectedCategorias, setSelectedCategorias] = useState([]);
+
+  
+  
+  const filteredRows = rows.filter(
+    (producto) =>
+      producto.nombre.toLowerCase().includes(search.toLowerCase()) &&
+      (selectedCategorias.length === 0 ||
+        selectedCategorias.includes(producto.categoria))
+  );
+ 
+  // Calcula el número de filas vacías para rellenar la tabla
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredRows.length - page * rowsPerPage);
+
+  //handle paginacion
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
+  //handle paginas por pagina
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // reset the page number
+    setPage(0);
+  };
+  
+
+
+  //alert confirmation
+  const [openAlert, setOpenAlert] = useState(false);
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
   };
 
-  const emptyRows =
-    rowsPerPage -
-    Math.min(rowsPerPage, filteredRows.length - page * rowsPerPage);
 
   const [tipoMovimiento, setTipoMovimiento] = useState("ingreso");
   const handleTipoMovimientoChange = (event) => {
     setTipoMovimiento(event.target.value);
   };
+
 
   return (
     <>
@@ -150,48 +153,13 @@ export const RealizarTransaccionPage = () => {
         Realizar Transacción
       </Typography>
       <Grid container spacing={2} sx={{ mb: 3 }}>
+       
+       
         <Grid item xs={12} sm={6} md={4}>
-          <FormControl fullWidth>
-            <InputLabel id="categorias-label">Categoría</InputLabel>
-            <Select
-              labelId="categorias-label"
-              multiple
-              value={selectedCategorias}
-              onChange={(event) => setSelectedCategorias(event.target.value)}
-              renderValue={(selected) => (
-                <div sx={{ display: "flex", flexWrap: "wrap" }}>
-                  {selected.map((value) => (
-                    <Chip key={value} label={value} sx={{ m: 0.5 }} />
-                  ))}
-                </div>
-              )}
-            >
-              {categorias.map((category) => (
-                <MenuItem key={category} value={category}>
-                  {category}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <FormControl fullWidth>
-            <InputLabel id="almacen-label">Almacén</InputLabel>
-            <Select labelId="almacen-label">
-              {almacenes.map((almacen) => (
-                <MenuItem key={almacen} value={almacen}>
-                  {almacen}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            fullWidth
-            label="Buscar"
-            variant="outlined"
-            margin="dense"
+          <SearchBar
+            search={search}
+            setSearch={setSearch}
+            setPage={setPage}
           />
         </Grid>
       </Grid>
@@ -205,18 +173,17 @@ export const RealizarTransaccionPage = () => {
         handleChangePage={handleChangePage}
         handleChangeRowsPerPage={handleChangeRowsPerPage}
         TablePaginationActions={TablePaginationActions}
+        updateHandleClick={handleUpdateClick}
+
       />
 
-      <Button variant="contained" color="primary" onClick={handleOpenDialog}>
-        Realizar Transacción
-      </Button>
 
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
+      <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
         <DialogTitle>
           Realizar Movimiento
           <IconButton
             aria-label="close"
-            onClick={handleCloseDialog}
+            onClick={handleCloseEditDialog}
             sx={{
               position: "absolute",
               right: 8,
@@ -284,6 +251,7 @@ export const RealizarTransaccionPage = () => {
             label="Nombre"
             fullWidth
             variant="outlined"
+            value={productoSeleccionado?.nombre || ""}
             disabled
           />
           <TextField
@@ -291,11 +259,12 @@ export const RealizarTransaccionPage = () => {
             label="Talla/Presentación"
             fullWidth
             variant="outlined"
+            value={productoSeleccionado?.presentacion|| ""}
             disabled
           />
           <TextField
             margin="dense"
-            label="Cantidad"
+            label="cantidad"
             fullWidth
             variant="outlined"
             type="number"
@@ -309,7 +278,7 @@ export const RealizarTransaccionPage = () => {
           {tipoMovimiento === "ingreso" && (
             <Autocomplete
               options={pacientes}
-              getOptionLabel={(option) => option.label}
+              getOptionLabel={(option) => option.name}
               fullWidth
               renderInput={(params) => (
                 <TextField
@@ -325,7 +294,7 @@ export const RealizarTransaccionPage = () => {
           {tipoMovimiento === "egreso" && (
             <Autocomplete
               options={proveedores}
-              getOptionLabel={(option) => option.label}
+              getOptionLabel={(option) => option.nombre}
               fullWidth
               renderInput={(params) => (
                 <TextField
@@ -340,10 +309,10 @@ export const RealizarTransaccionPage = () => {
           <TextField margin="dense" label="Nota" fullWidth variant="outlined" />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="error">
+          <Button onClick={handleCloseEditDialog} color="error">
             Cancelar
           </Button>
-          <Button onClick={handleCloseDialog} color="success">
+          <Button onClick={handleCloseEditDialog} color="success">
             Inventariar
           </Button>
         </DialogActions>

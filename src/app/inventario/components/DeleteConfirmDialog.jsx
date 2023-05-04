@@ -16,3 +16,4 @@ const DeleteConfirmDialog = ({ open, onClose, onConfirm, title }) => (
 );
 
 export default DeleteConfirmDialog;
+

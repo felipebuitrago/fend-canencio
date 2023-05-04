@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Box, Button, Divider, Drawer, 
         List, ListItem, ListItemButton, ListItemIcon,
          ListItemText, Toolbar, Typography } from '@mui/material'
-import { HomeOutlined, LibraryBooksOutlined,
+import { AssignmentOutlined,SyncAltOutlined, HomeOutlined, LibraryBooksOutlined,
    InventoryOutlined, CategoryOutlined, LibraryAddOutlined, AccountTreeOutlined,
    DatasetOutlined, StoreOutlined, HubOutlined, Diversity1Outlined, 
    ConnectWithoutContactOutlined,HolidayVillageOutlined, StorefrontOutlined, 
@@ -11,7 +11,7 @@ import { HomeOutlined, LibraryBooksOutlined,
 
 import { useAuthStore } from '../../../hooks'
 
-import {CustomCollapseButton} from './CustomCollapseButton'
+import {CustomCollapseButton} from './index.js'
 
 export const SideBar = ({ drawerWidth = 240 }) => {
 
@@ -71,13 +71,13 @@ export const SideBar = ({ drawerWidth = 240 }) => {
                   },
                   {
                     link: "transaccion",
-                    prompt: "Realizar transacción",
+                    prompt: "Realizar movimientos",
                   },
                 ]}
                 iconos={[
                   <InventoryOutlined />,
-                  <LibraryBooksOutlined />,
-                  <LibraryAddOutlined />,
+                  <AssignmentOutlined />,
+                  <SyncAltOutlined/>,
                 ]}
                 />
 

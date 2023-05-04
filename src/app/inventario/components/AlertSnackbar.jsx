@@ -17,6 +17,8 @@ const StyledAlert = styled(Alert)`
 `;
 
 const AlertSnackbar = ({ open, onClose, message }) => (
+  
+    
   <Snackbar
     open={open}
     autoHideDuration={4000}

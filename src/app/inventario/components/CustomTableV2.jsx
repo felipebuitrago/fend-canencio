@@ -1,6 +1,6 @@
 import React from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Button, Paper } from "@mui/material"; 
-import { DeleteForeverOutlined, EditOutlined, MoveDownOutlined } from "@mui/icons-material";
+import { DeleteForeverOutlined, EditOutlined, MoveDownOutlined, SyncAltOutlined } from "@mui/icons-material";
 
 const CustomTableV2 = ({
   columns,
@@ -11,7 +11,7 @@ const CustomTableV2 = ({
   handleChangeRowsPerPage,
   TablePaginationActions,
   updateHandleClick,
-  deleteHandleClick,
+  deleteHandleClick
 }) => {
   
   return (
@@ -84,7 +84,6 @@ const CustomTableV2 = ({
                         </Button>   
                         </>
                     ):""}
-
                     {(column.id === "acciones-almacen")?(
                       <>
                         <Button
@@ -99,11 +98,25 @@ const CustomTableV2 = ({
                         </Button>
                       </>
                     ):""}
+
+                    {(column.id === "acciones-movimientos")?(
+                      <>
+                        <Button
+                            size="small"
+                            variant="contained"
+                            color="success"
+                            sx={{ transform: "scale(0.9)" }}
+                            id={row._id}
+                            onClick={updateHandleClick}
+                        >
+                            <SyncAltOutlined id={row._id}/>
+                        </Button>
+                      </>
+                    ):""}
                     </TableCell>
                   ))}
                 </TableRow>
               ))}
-            
             </TableBody>
           </Table>
         </TableContainer>
@@ -111,9 +124,10 @@ const CustomTableV2 = ({
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={filteredRows.length}
-          labelRowsPerPage="Filas por página"
+          labelRowsPerPage="Filas por página:"
           rowsPerPage={rowsPerPage}
           page={page}
+          labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           ActionsComponent={TablePaginationActions}
@@ -123,3 +137,4 @@ const CustomTableV2 = ({
 };
 
 export default CustomTableV2;
+
