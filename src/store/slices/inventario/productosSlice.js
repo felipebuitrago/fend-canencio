@@ -7,20 +7,9 @@ const initialState = {
     presentacion: "",
     stock: 0,
     proveedor: {},
-    almacen: {},
+    almacen: [{name:""}],
     categoria: []
   }
-}
-
-const productSample = {
-  "nombre": "",
-  "presentacion": "",
-  "stock": 0,
-  "proveedor": {},
-  "almacen": {
-    "name": "elemental"
-  },
-  "categoria": []
 }
 
 export const productosSlice = createSlice({
@@ -66,7 +55,7 @@ export const productosSlice = createSlice({
     },
     resetProductosStore : (state) => {
       state.productos = [];
-      state.productoSeleccionado = { nombre: "", presentacion: "", stock: 0, proveedor: {}, almacen: {}, categoria: [] };
+      state.productoSeleccionado = { nombre: "", presentacion: "", stock: 0, proveedor: {}, almacen: [{name:""}], categoria: [] };
     },
   },
 })

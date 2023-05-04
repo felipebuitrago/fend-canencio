@@ -1,6 +1,6 @@
 import React from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Button, Paper } from "@mui/material"; 
-import { DeleteForeverOutlined, EditOutlined } from "@mui/icons-material";
+import { DeleteForeverOutlined, EditOutlined, MoveDownOutlined } from "@mui/icons-material";
 
 const CustomTableV2 = ({
   columns,
@@ -84,15 +84,26 @@ const CustomTableV2 = ({
                         </Button>   
                         </>
                     ):""}
+
+                    {(column.id === "acciones-almacen")?(
+                      <>
+                        <Button
+                            size="small"
+                            variant="contained"
+                            color="info"
+                            sx={{ transform: "scale(0.9)" }}
+                            id={row._id}
+                            onClick={updateHandleClick}
+                        >
+                            <MoveDownOutlined id={row._id}/>
+                        </Button>
+                      </>
+                    ):""}
                     </TableCell>
                   ))}
                 </TableRow>
               ))}
-            {/* {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={columns.length} />
-              </TableRow>
-            )} */}
+            
             </TableBody>
           </Table>
         </TableContainer>
