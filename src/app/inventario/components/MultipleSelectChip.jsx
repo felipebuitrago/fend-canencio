@@ -11,7 +11,7 @@ import {
   IconButton
 } from "@mui/material";
 
-const MultipleSelectChip = ({ label, items, value, onChange, icon }) => {
+const MultipleSelectChip = ({ label, items, value, error, active, onChange, icon }) => {
   return (
     <FormControl fullWidth variant="outlined">
       <InputLabel id={`${label}-multiple-select-label`}>{label}</InputLabel>
@@ -21,6 +21,8 @@ const MultipleSelectChip = ({ label, items, value, onChange, icon }) => {
         multiple
         value={value}
         onChange={onChange}
+        error={error}
+        disabled={active}
         input={
           <OutlinedInput
             id={`${label}-select-multiple-chip`}
@@ -37,14 +39,14 @@ const MultipleSelectChip = ({ label, items, value, onChange, icon }) => {
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((val) => (
-              <Chip key={val} label={items.find((item) => item.id === val).nombre} />
+              <Chip key={val} label={items.find((item) => item._id === val).name} />
             ))}
           </Box>
         )}
       >
         {items.map((item) => (
-          <MenuItem key={item.id} value={item.id}>
-            {item.nombre}
+          <MenuItem key={item._id} value={item._id}>
+            {item.name}
           </MenuItem>
         ))}
       </Select>

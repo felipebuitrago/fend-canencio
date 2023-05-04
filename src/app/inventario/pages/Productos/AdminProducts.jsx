@@ -1,26 +1,43 @@
-import { Divider, Grid, Paper, Typography } from '@mui/material';
-import React, { useEffect } from 'react';
-import { LibraryAddOutlined } from '@mui/icons-material';
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControlLabel, Grid, IconButton, Paper, TextField, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Category, Close, LibraryAddOutlined } from '@mui/icons-material';
 
-import { useProductosStore } from '../../../../hooks'
-import { SearchBar, TablePaginationActions, CustomTableV2, CustomBreadcrumbs, ButtonLink } from '../../components';
+import { useCategoriasStore, useProductosStore } from '../../../../hooks'
+import { SearchBar, TablePaginationActions, CustomTableV2, CustomBreadcrumbs, ButtonLink, AlertSnackbar, DeleteConfirmDialog, MultipleSelectChip } from '../../components';
+import { Controller, useForm } from 'react-hook-form';
 
 export const AdminProducts = () => {
 
   // Estado para la búsqueda de usuarios
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = useState("");
   // Estados para la paginación de la tabla
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   
   const {productos, 
-    startCreateProducto, 
+    productoSeleccionado,
     startReadProductos, 
+    startBuscarProducto,
     startUpdateProducto, 
     startDeleteProducto} = useProductosStore();
+  
+  const {categorias, startReadCategorias} = useCategoriasStore();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+    reset
+  } = useForm({
+    defaultValues: {
+      categoria: [],
+    },
+  });
     
   useEffect(()=>{
     startReadProductos();
+    startReadCategorias();
   },[])
 
   const columns = [
@@ -37,52 +54,30 @@ export const AdminProducts = () => {
   
   {/* evento de editar cierto producto */}
   const handleUpdateClick = (event) => {
-    const productSample = {
-      "_id": "64443852d67e",
-      "idpersonalizado": "elemental_04",
-      "nombre": "gordas feas",
-      "presentacion": "xxxl",
-      "stock": 15,
-      "isFaja": true,
-      "proveedor": {
-          "nombre": "FAJAS LA FEA",
-          "contacto": "31245648584",
-          "cc": "123456489"
-      },
-      "registradopor": {
-          "name": "juan",
-          "email": "felipe@butrago.com"
-      },
-      "almacen": [
-          {
-              "name": "elemental"
-          }
-      ],
-      "categoria": [
-          {
-              "name": "Fajas",
-              "description": "las mejores fajas"
-          }
-      ]
-    }
+    
     if(event.target.id!==""){
 
       
-      startUpdateProducto(event.target.id,productSample);
+      startBuscarProducto(event.target.id);
+      handleOpenEditDialog();
     }
     else{
-      startUpdateProducto(event.target.farthestViewportElement.id,productSample);
-    }
+      startBuscarProducto(event.target.farthestViewportElement.id);
+      handleOpenEditDialog();
+  }
   };   
   
   {/* evento de eliminar cierto producto */}
   const handleDeleteClick = (event) => {
 
     if(event.target.id!==""){
-      startDeleteProducto(event.target.id);
+      startBuscarProducto(event.target.id);
+      handleOpenConfirmDialog();
+
     }
     else{
-      startDeleteProducto(event.target.farthestViewportElement.id);
+      startBuscarProducto(event.target.farthestViewportElement.id);
+      handleOpenConfirmDialog();
     }
   };   
   
@@ -102,7 +97,82 @@ export const AdminProducts = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  
+    
+  //alert confirmation
+  const [openAlert, setOpenAlert] = useState(false);
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+  };
+
+  //UPDATE HANDLES AND STATES
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  //categoria editar
+  const [editCategory, setEditCategory] = useState(false);
+  const handleCheckboxChange = (event) => {
+    setEditCategory(event.target.checked);
+  };
+
+  const handleOpenEditDialog = () => {
+    setOpenEditDialog(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setOpenEditDialog(false);
+    setEditCategory(false);
+    reset({
+      categoria: [],
+    })
+  };
+
+  const handleSaveEditDialog = () => {
+    setOpenEditDialog(false);
+    if(editCategory){
+
+      const productSample = {
+        "_id": productoSeleccionado._id,
+        "nombre": document.getElementById("producto-nombre-update").value,
+        "presentacion": document.getElementById("producto-presentacion-update").value,
+        "categoria": getValues("categoria")
+      }
+      startUpdateProducto(productoSeleccionado._id,productSample);  
+    
+    }else{
+      const productSample = {
+        "_id": productoSeleccionado._id,
+        "nombre": document.getElementById("producto-nombre-update").value,
+        "presentacion": document.getElementById("producto-presentacion-update").value,
+      }
+      startUpdateProducto(productoSeleccionado._id,productSample);  
+    }
+    reset({
+      categoria: [],
+    })
+    setEditCategory(false);
+    setOpenAlert(true);
+  };
+
+  //ELIMINAR HANDLES AND STATES
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+
+  //abrir dialog confirmar borrar
+  const handleOpenConfirmDialog = () => {
+    setOpenConfirmDialog(true);
+  };
+
+  //cerrar dialog confirmar borrar
+  const handleCloseConfirmDialog = () => {
+    setOpenConfirmDialog(false);
+  };
+
+  //handle confirmar eliminar producto
+  const handleConfirmDelete = () => {
+    startDeleteProducto(productoSeleccionado._id);
+    setOpenConfirmDialog(false);
+    setOpenAlert(true);
+  };
+
+
+
   return (
     <>
       {/* CustomBreadcrumbs */}
@@ -319,6 +389,87 @@ export const AdminProducts = () => {
         </Grid>
         {/* fin tabla display data */}
       </Grid>
+
+      <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
+        <DialogTitle>
+          Editar Producto
+          <IconButton
+            edge="end"
+            color="inherit"
+            onClick={handleCloseEditDialog}
+            aria-label="close"
+            sx={{ position: "absolute", right: 8, top: 8 }}
+          >
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Nombre"
+            fullWidth
+            variant="outlined"
+            id="producto-nombre-update"
+            defaultValue={productoSeleccionado.nombre}
+          />
+          <TextField
+            margin="dense"
+            label="Talla/Presentacion"
+            fullWidth
+            variant="outlined"
+            id="producto-presentacion-update"
+            defaultValue={productoSeleccionado.presentacion}
+          />
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={editCategory}
+                onChange={handleCheckboxChange}
+              />
+            }
+            label="Editar Categoria"
+          />
+          <Controller
+            name="categoria"
+            control={control}
+            
+            rules={{
+              required: {
+                value: editCategory,
+                message: "La categoría es obligatoria.",
+              },
+            }}
+            render={({ field }) => (
+              <MultipleSelectChip
+                label="Categoría"
+                items={categorias}
+                value={field.value}
+                onChange={field.onChange}
+                error={!!errors.categoria}
+                active={!editCategory}
+                icon={<Category id="icon-black"/>}
+              />
+            )}
+          />
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={handleCloseEditDialog} color="error">
+            Cancelar
+          </Button>
+          <Button onClick={handleSubmit(handleSaveEditDialog)} color="success">
+            Guardar
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <DeleteConfirmDialog open={openConfirmDialog} onClose={handleCloseConfirmDialog} onConfirm={handleConfirmDelete}
+       title={`¿Estás seguro de que deseas eliminar el almacén "${productoSeleccionado.nombre}"?`}
+      />
+      {/* Material Alert */}
+      <AlertSnackbar open={openAlert} onClose={handleCloseAlert} message="Acción realizada exitosamente"/>
+    
     </>
   );
 }

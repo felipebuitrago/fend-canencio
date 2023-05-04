@@ -1,36 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  productos:[]
+  productos : [],
+  productoSeleccionado : {
+    nombre: "",
+    presentacion: "",
+    stock: 0,
+    proveedor: {},
+    almacen: {},
+    categoria: []
+  }
 }
 
 const productSample = {
-  "_id": "64443852d67e",
-  "idpersonalizado": "elemental_04",
-  "nombre": "gordas feas",
-  "presentacion": "xxxl",
-  "stock": 15,
-  "isFaja": true,
-  "proveedor": {
-      "nombre": "FAJAS LA FEA",
-      "contacto": "31245648584",
-      "cc": "123456489"
+  "nombre": "",
+  "presentacion": "",
+  "stock": 0,
+  "proveedor": {},
+  "almacen": {
+    "name": "elemental"
   },
-  "registradopor": {
-      "name": "juan",
-      "email": "felipe@butrago.com"
-  },
-  "almacen": [
-      {
-          "name": "elemental"
-      }
-  ],
-  "categoria": [
-      {
-          "name": "Fajas",
-          "description": "las mejores fajas"
-      }
-  ]
+  "categoria": []
 }
 
 export const productosSlice = createSlice({
@@ -38,10 +28,20 @@ export const productosSlice = createSlice({
   initialState,
   reducers: {
     createProductoStore : (state,{payload}) => {
-      state.productos.unshift(productSample)
+      state.productos.unshift(payload)
     },
     addProductosStore : (state,{payload}) => {
       state.productos = payload;
+    },
+    buscarProductoStore : (state, {payload}) => {
+      let position;
+      state.productos.map((product,index) => {
+        if(product._id === payload.id){
+          position = index;
+        }
+      })
+      
+      state.productoSeleccionado = {...state.productos[position]};
     },
     updateProductoStore : (state,{payload}) => {
       let position;
@@ -66,13 +66,16 @@ export const productosSlice = createSlice({
     },
     resetProductosStore : (state) => {
       state.productos = [];
+      state.productoSeleccionado = { nombre: "", presentacion: "", stock: 0, proveedor: {}, almacen: {}, categoria: [] };
     },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { createProductoStore,
+export const { 
+   createProductoStore,
    addProductosStore,
+   buscarProductoStore,
    updateProductoStore,
    deleteProductoStore,
    resetProductosStore } = productosSlice.actions
