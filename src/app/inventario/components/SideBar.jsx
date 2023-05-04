@@ -130,7 +130,7 @@ export const SideBar = ({ drawerWidth = 240 }) => {
                     prompt: "Administración de almacenes",
                   },
                   {
-                    link: "almacenes/elemental",
+                    link: "almacenes/por-almacen",
                     prompt: "Administración por almacen",
                   },
                 ]}

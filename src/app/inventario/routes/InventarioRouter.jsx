@@ -89,7 +89,7 @@ export const InventarioRouter = () => {
 				   <Route path='almacenes' element={ <AlmacenesIndex /> } > 
 					  <Route path='' 
 							  element={ <AdminStores /> } />
-					  <Route path=':almacen' 
+					  <Route path='por-almacen' 
 							  element={ <AdminByStore /> } />
 					  <Route path='crear' 
 							  element={ <CreateStore /> } />

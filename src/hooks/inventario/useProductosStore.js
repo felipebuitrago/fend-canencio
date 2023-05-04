@@ -44,13 +44,12 @@ export const useProductosStore = () => {
         dispatch(deleteProductoStore({id}));
     }
 
-    const startTrasladarProducto = async(idProductoOrigen, nombreProductoOrigen, cantidad, stockActualOrigen, presentacion, almacenDestino) => {
+    const startTrasladarProducto = async(idProductoOrigen, nombreProductoOrigen, cantidad, stockActualOrigen, presentacion, almacenDestino, proveedorID, categoriasIDs) => {
 
         //console.log(idProductoOrigen, nombreProductoOrigen, cantidad, almacenDestino);
-        const result = await canencioApi.post(`/products/trasladar`,{idProductoOrigen, nombreProductoOrigen, cantidad, stockActualOrigen, presentacion, almacenDestino});
+        const result = await canencioApi.post(`/products/trasladar`,{idProductoOrigen, nombreProductoOrigen, cantidad, stockActualOrigen, presentacion, almacenDestino, proveedorID, categoriasIDs});
         
-        startReadProductos();
-        
+        startReadProductos(); 
     }
 
 

@@ -17,6 +17,7 @@ export const AdminByStore = () => {
   const [cantidadTrasladar, setCantidadTrasladar] = useState(0);
   
   const onChangeCantidad = (e) => {
+    e.preventDefault();
     setCantidadTrasladar(e.target.value);
   }
   
@@ -59,14 +60,9 @@ export const AdminByStore = () => {
   // Estado para el almacen seleccionado
   //const initialStore = (almacenes[0] !== undefined)?almacenes[0].name:"";
   const [selectedStore, setSelectedStore] = useState("");
-
-  useEffect(() => {
-    if (almacenes.length > 0) {
-      setSelectedStore(almacenes[0].name);
-    }
-  }, [almacenes]);
   
   const handleStoreChange = (event) => {
+    setPage(0);
     setSelectedStore(event.target.value);
   };
 
@@ -146,8 +142,15 @@ export const AdminByStore = () => {
       })
       return;
     }
-    startTrasladarProducto(productoSeleccionado._id,productoSeleccionado.nombre,cantidadTrasladar,productoSeleccionado.stock,productoSeleccionado.presentacion,data.almacen);
+    let categoriasIDs = [];
+    productoSeleccionado.categoria.map((current,index)=>{
+      categoriasIDs.push(current._id);
+    })
+    let proveedorID = productoSeleccionado.proveedor._id;
+    
+    startTrasladarProducto(productoSeleccionado._id,productoSeleccionado.nombre,cantidadTrasladar,productoSeleccionado.stock,productoSeleccionado.presentacion,data.almacen, proveedorID, categoriasIDs);
 
+    //resets
     setCantidadTrasladar(0);
     reset({
       almacen: "",
