@@ -29,6 +29,12 @@ export const AdminByStore = () => {
     startReadAlmacenes();
   }, []);
 
+  useEffect(() => {
+    if (almacenes.length > 0) {
+      setSelectedStore(almacenes[0].name);
+    }
+  }, [almacenes]);
+  
   const handleStoreChange = (event) => {
     setSelectedStore(event.target.value);
   };
@@ -200,7 +206,6 @@ const filteredRows = filteredRowsByStore.filter((product) =>
             deleteHandleClick={handleDeleteClick}
           />
         </Grid>
-        
       </Grid>
     </>
   );
