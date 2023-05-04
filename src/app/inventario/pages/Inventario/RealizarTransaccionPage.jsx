@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Grid, IconButton, Typography, Paper, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button, MenuItem, FormControl, InputLabel, Select, Chip, Autocomplete, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
+import { Grid, Divider, IconButton, Typography, Paper, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button, MenuItem, FormControl, InputLabel, Select, Chip, Autocomplete, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Close } from "@mui/icons-material";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -15,6 +15,7 @@ import { useProductosStore, useCategoriasStore, usePacientesStore, useProveedore
 
 
 export const RealizarTransaccionPage = () => {
+  // Configuración de la fecha
   dayjs.extend(utc);
   dayjs.extend(localizedFormat);
   dayjs.locale(es);
@@ -32,7 +33,6 @@ export const RealizarTransaccionPage = () => {
     setSelectedDate(date);
   };
 
-
   const {
     productos,
     productoSeleccionado,
@@ -40,11 +40,11 @@ export const RealizarTransaccionPage = () => {
     startReadProductos,
     startBuscarProducto,
   } = useProductosStore();
-
-
+  
   const { pacientes, startReadPacientes } = usePacientesStore();
   const { proveedores, startReadProveedores } = useProveedoresStore();
-  
+
+  // Estado para el diálogo de edición (movimientos inventariar)
   useEffect(() => {
     startReadProductos();
     startReadPacientes();
@@ -55,33 +55,30 @@ export const RealizarTransaccionPage = () => {
     setRows(productos);
   }, [productos]);
 
-
   const columns = [
     { id: "id", label: "ID", align: "center" },
-    { id: "nombre", label: "Producto", align: "center"  },
-    { id: "presentacion", label: "Presentación/Talla", align: "center"},
+    { id: "nombre", label: "Producto", align: "center" },
+    { id: "presentacion", label: "Presentación/Talla", align: "center" },
     { id: "categoria", label: "Categoría", align: "center" },
     { id: "almacen", label: "Almacén", align: "center" },
     { id: "stock", label: "Stock", align: "center" },
     { id: "acciones-movimientos", label: "Acciones", align: "center" },
   ];
 
-  
-    
-    {/* evento de editar cierto producto */}
-    const handleUpdateClick = (event) => {
-      
-      if(event.target.id!==""){
+  {
+    /* evento de editar cierto producto */
+  }
+  const handleUpdateClick = (event) => {
+    if (event.target.id !== "") {
+      startBuscarProducto(event.target.id);
+      handleOpenEditDialog();
+    } else {
+      startBuscarProducto(event.target.farthestViewportElement.id);
+      handleOpenEditDialog();
+    }
+  };
 
-        startBuscarProducto(event.target.id);
-        handleOpenEditDialog();
-      }
-      else{
-        startBuscarProducto(event.target.farthestViewportElement.id);
-        handleOpenEditDialog();
-      }
-    };
-    
+  // Estado para el diálogo de edición (movimientos inventariar)
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
   const handleOpenEditDialog = () => {
@@ -91,21 +88,22 @@ export const RealizarTransaccionPage = () => {
   const handleCloseEditDialog = () => {
     setOpenEditDialog(false);
   };
-
   
+  // Estado para las categorías seleccionadas
   const [selectedCategorias, setSelectedCategorias] = useState([]);
 
-  
-  
+  // Filtra los productos por nombre y categoría (categoria se eliminó por el momento)
   const filteredRows = rows.filter(
     (producto) =>
       producto.nombre.toLowerCase().includes(search.toLowerCase()) &&
       (selectedCategorias.length === 0 ||
         selectedCategorias.includes(producto.categoria))
-  );
- 
+  ); 
+
   // Calcula el número de filas vacías para rellenar la tabla
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredRows.length - page * rowsPerPage);
+  const emptyRows =
+    rowsPerPage -
+    Math.min(rowsPerPage, filteredRows.length - page * rowsPerPage);
 
   //handle paginacion
   const handleChangePage = (event, newPage) => {
@@ -116,54 +114,57 @@ export const RealizarTransaccionPage = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  
-
 
   //alert confirmation
   const [openAlert, setOpenAlert] = useState(false);
   const handleCloseAlert = () => {
     setOpenAlert(false);
   };
-
-
+  
+  //handle tipo de movimiento(egrso o ingreso)
   const [tipoMovimiento, setTipoMovimiento] = useState("ingreso");
   const handleTipoMovimientoChange = (event) => {
     setTipoMovimiento(event.target.value);
-  };
-
+  }; 
 
   return (
     <>
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        sx={{ mb: 3, width: "100%" }}
-      >
+      <Grid container  justifyContent="center"  alignItems="center" sx={{ mb: 3, width: "100%" }}>
         <Paper elevation={1} sx={{ p: 1, borderRadius: 1, width: "100%" }}>
           <CustomBreadcrumbs
             pathList={[
               { name: "Inventario", route: "/inventario" },
-              { name: "Realizar Transacción" },
+              { name: "Realizar movimientos" },
             ]}
           />
         </Paper>
       </Grid>
-      <Typography variant="h4" gutterBottom>
-        Realizar Transacción
-      </Typography>
-      <Grid container spacing={2} sx={{ mb: 3 }}>
-       
-       
-        <Grid item xs={12} sm={6} md={4}>
-          <SearchBar
-            search={search}
-            setSearch={setSearch}
-            setPage={setPage}
-          />
-        </Grid>
-      </Grid>
+      <Grid container direction="column">
+          {/* barra superior, btn crear y busqueda */}
+          <Grid container direction="row" justifyContent="space-between">
+            {/* L. Titulo Pagina y btn crear */}
+            <Grid direction="column">
+              <Typography variant="h4" display="inline">
+                Realizar movimientos
+              </Typography>
 
+            </Grid>
+
+            {/* R. componentes de busqueda */}
+            <Grid direction="column" display="flex">
+              <SearchBar search={search} setSearch={setSearch} setPage={setPage} />
+            </Grid>
+          </Grid>
+          
+        
+          <Divider sx={{ mt: 2 }} />
+
+          
+     
+
+      
+
+  
       <CustomTableV2
         columns={columns}
         filteredRows={filteredRows}
@@ -174,10 +175,10 @@ export const RealizarTransaccionPage = () => {
         handleChangeRowsPerPage={handleChangeRowsPerPage}
         TablePaginationActions={TablePaginationActions}
         updateHandleClick={handleUpdateClick}
-
       />
 
-
+      </Grid>
+      {/*Dialogo para hacer movimientos de productos en inventario*/}
       <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
         <DialogTitle>
           Realizar Movimiento
@@ -259,7 +260,7 @@ export const RealizarTransaccionPage = () => {
             label="Talla/Presentación"
             fullWidth
             variant="outlined"
-            value={productoSeleccionado?.presentacion|| ""}
+            value={productoSeleccionado?.presentacion || ""}
             disabled
           />
           <TextField
@@ -274,7 +275,7 @@ export const RealizarTransaccionPage = () => {
                 event.target.value = 1;
               }
             }}
-            />
+          />
           {tipoMovimiento === "ingreso" && (
             <Autocomplete
               options={pacientes}
