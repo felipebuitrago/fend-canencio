@@ -5,7 +5,7 @@ import { Collapse, Divider,
         ListItemIcon, ListItemText } from '@mui/material'
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
-export const CustomCollapseButton = ({titulo,opciones,iconos}) => {
+const CustomCollapseButton = ({titulo,opciones,iconos}) => {
 
     const [open, setOpenInventory] = React.useState(false);
     const handleClick = () => {
@@ -43,3 +43,6 @@ export const CustomCollapseButton = ({titulo,opciones,iconos}) => {
     </>
   );
 }
+
+export default CustomCollapseButton;
+

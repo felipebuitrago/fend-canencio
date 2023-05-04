@@ -18,6 +18,6 @@ const CustomBreadcrumbs = ({ pathList }) => {
       })}
     </Breadcrumbs>
   );
-};
+}
 
 export default CustomBreadcrumbs;

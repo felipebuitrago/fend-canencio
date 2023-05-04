@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 
 const MultipleSelectChip = ({ label, items, value, error, active, onChange, icon }) => {
+  
   return (
     <FormControl fullWidth variant="outlined">
       <InputLabel id={`${label}-multiple-select-label`}>{label}</InputLabel>
@@ -53,4 +54,6 @@ const MultipleSelectChip = ({ label, items, value, error, active, onChange, icon
     </FormControl>
   );
 };
+
 export default MultipleSelectChip;
+

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Divider, Grid, Paper, Typography, Select, MenuItem, FormControl, InputLabel, Dialog, DialogTitle, IconButton, DialogContent, TextField, DialogActions, Button, FormHelperText } from '@mui/material';
-import { SearchBar, TablePaginationActions, CustomTableV2, CustomBreadcrumbs, AlertSnackbar } from '../../components';
+import { SearchBar,AlmacenSelect, TablePaginationActions, CustomTableV2, CustomBreadcrumbs, AlertSnackbar } from '../../components';
 import { Close } from '@mui/icons-material';
 
 import { useProductosStore, useAlmacenesStore } from '../../../../hooks'
@@ -59,7 +59,13 @@ export const AdminByStore = () => {
   
   // Estado para el almacen seleccionado
   //const initialStore = (almacenes[0] !== undefined)?almacenes[0].name:"";
-  const [selectedStore, setSelectedStore] = useState("");
+  // const [selectedStore, setSelectedStore] = useState("");
+
+  // useEffect(() => {
+  //   if (almacenes.length > 0) {
+  //     setSelectedStore(almacenes[0].name);
+  //   }
+  // }, [almacenes]);
   
   const handleStoreChange = (event) => {
     setPage(0);
@@ -91,16 +97,16 @@ export const AdminByStore = () => {
       handleOpenEditDialog();
     }
   };   
-   
+  
   //filtrar por almacen seleccionado y por busqueda de nombre
-  const filteredRowsByStore = rows.filter((product) =>
+  const filteredRowsByStore = rows.filter((producto) =>
   selectedStore
-    ? product.almacen.some((store) => store.name === selectedStore)
+    ? producto.almacen.some((store) => store.name === selectedStore)
     : true
   );
 
-  const filteredRows = filteredRowsByStore.filter((product) =>
-    product.nombre.toLowerCase().includes(search.toLowerCase())
+  const filteredRows = filteredRowsByStore.filter((producto) =>
+    producto.nombre.toLowerCase().includes(search.toLowerCase())
   );
     
   // Calcula el número de filas vacías para rellenar la tabla
@@ -186,23 +192,12 @@ export const AdminByStore = () => {
         <Grid container direction="row" justifyContent="space-between">
           {/* L. Titulo Pagina y btn crear */}
           <Grid direction="column">
-          <FormControl fullWidth>
-            <InputLabel id="store-select-label">Almacen</InputLabel>
-            <Select
-              labelId="store-select-label"
-              id="store-select"
-              value={selectedStore}
-              label="Almacen"
-              onChange={handleStoreChange}
-            >
-              {/* Mapear la lista de almacenes para crear las opciones del Select */}
-              {almacenes.map((store) => ( // Usar almacenes en lugar de stores
-                <MenuItem key={store.id} value={store.name}>
-                  {store.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <AlmacenSelect
+              almacenes={almacenes}
+              selectedStore={selectedStore}
+              handleStoreChange={handleStoreChange}
+          />
+
             <Typography variant="h6" display="inline">
                 Productos
               </Typography>
@@ -214,7 +209,7 @@ export const AdminByStore = () => {
                 {`${filteredRowsByStore.length} total`}
             </Typography>
           
-           
+          
           </Grid>
 
           {/* R. componentes de busqueda */}
