@@ -1,34 +1,43 @@
 import React, { useState } from 'react';
-import { Avatar, Box, Divider, IconButton, Typography, Tooltip, Menu, MenuItem, ListItemIcon } from '@mui/material';
-import {Logout } from '@mui/icons-material';
+import { Avatar,Button, Box, Divider, Dialog, DialogActions, DialogContent, DialogTitle,  IconButton, Typography, Tooltip, Menu, MenuItem, ListItemIcon } from '@mui/material';
+
+import {Logout, Close } from '@mui/icons-material';
 import { useAuthStore } from '../../../hooks';
 
 const AccountMenu = ({ startLogout }) => {
-    const [anchorEl, setAnchorEl] = useState(null);
-    const open = Boolean(anchorEl);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
 
-    const { user } = useAuthStore();//accede al nombre del usuario desde el
-    //hook personalizado que hay para acceder a tal estado, no directamente
-    //usando la funcion useSelector de redux porque para eso se crean los hooks
-  
-    const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-  
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
-  
-    const handleLogout = () => {
-      startLogout();
-      handleClose();
-    };
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const { user } = useAuthStore();
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    startLogout();
+    handleClose();
+  };
+
+  const handleAvatarClick = () => {
+    setDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
   
     return (
       <>
         <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
           <Typography variant="h5">{user.name}</Typography>
-          <Tooltip title="Configuración de cuenta">
+          <Tooltip title="Usuario - Cerrar sesión" arrow>
             <IconButton
               onClick={handleClick}
               size="small"
@@ -76,7 +85,7 @@ const AccountMenu = ({ startLogout }) => {
           transformOrigin={{ horizontal: 'right', vertical: 'top' }}
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
-          <MenuItem onClick={handleClose}>
+          <MenuItem onClick={handleAvatarClick}>
             <Avatar /> Perfil
           </MenuItem>	
           <Divider />
@@ -87,8 +96,39 @@ const AccountMenu = ({ startLogout }) => {
             Cerrar sesión
           </MenuItem>
         </Menu>
-      </>
+      
+      <Dialog open={dialogOpen} onClose={handleDialogClose} >
+        <DialogTitle>
+        <IconButton
+            aria-label="close"
+            onClick={handleDialogClose}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <Close />
+          </IconButton>
+
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center'  }}>
+            <Avatar sx={{ mb: 2 }} />
+            <Typography variant="subtitle1" component="h2">
+               {user.name}
+            </Typography>
+            <Typography variant="subtitle1"> {user.rol}</Typography>
+          </Box>
+        </DialogContent>
+       
+      </Dialog>
+    </>
+  
     );
   };
 
 export default AccountMenu;
+
+

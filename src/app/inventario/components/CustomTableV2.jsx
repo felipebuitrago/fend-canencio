@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Button, Paper } from "@mui/material"; 
+import { Table, Tooltip, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, Button, Paper, Zoom } from "@mui/material"; 
 import { DeleteForeverOutlined, EditOutlined, MoveDownOutlined, SyncAltOutlined } from "@mui/icons-material";
 
 const CustomTableV2 = ({
@@ -62,55 +62,64 @@ const CustomTableV2 = ({
 
                     {(column.id === "acciones")?(
                         <>
-                        <Button
-                            size="small"
-                            variant="contained"
-                            color="info"
-                            sx={{ transform: "scale(0.9)" }}
-                            id={row._id}
-                            onClick={updateHandleClick}
-                        >
-                            <EditOutlined id={row._id}/>
-                        </Button>
-                        <Button
-                            size="small"
-                            variant="contained"
-                            color="error"
-                            sx={{ transform: "scale(0.9)" }}
-                            id={row._id}
-                            onClick={deleteHandleClick}
-                        >
-                            <DeleteForeverOutlined id={row._id}/>
-                        </Button>   
+                        <Tooltip TransitionComponent={Zoom} title="Editar" placement="bottom" arrow>
+                          <Button
+                              size="small"
+                              variant="contained"
+                              color="info"
+                              sx={{ transform: "scale(0.9)" }}
+                              id={row._id}
+                              onClick={updateHandleClick}
+                          >
+                              <EditOutlined id={row._id}/>
+                          </Button>
+                        </Tooltip>
+                        <Tooltip TransitionComponent={Zoom} title="Eliminar"  placement="bottom" arrow>
+                          <Button
+                              size="small"
+                              variant="contained"
+                              color="error"
+                              sx={{ transform: "scale(0.9)" }}
+                              id={row._id}
+                              onClick={deleteHandleClick}
+                          >
+                              <DeleteForeverOutlined id={row._id}/>
+                          </Button> 
+                        </Tooltip>          
                         </>
                     ):""}
                     {(column.id === "acciones-almacen")?(
                       <>
-                        <Button
-                            size="small"
-                            variant="contained"
-                            color="info"
-                            sx={{ transform: "scale(0.9)" }}
-                            id={row._id}
-                            onClick={updateHandleClick}
-                        >
-                            <MoveDownOutlined id={row._id}/>
-                        </Button>
+                        <Tooltip TransitionComponent={Zoom} title="Trasladar" arrow>
+                          <Button
+                              size="small"
+                              variant="contained"
+                              color="info"
+                              sx={{ transform: "scale(0.9)" }}
+                              id={row._id}
+                              onClick={updateHandleClick}
+                          >
+                              <MoveDownOutlined id={row._id}/>
+                          </Button>
+
+                        </Tooltip>
                       </>
                     ):""}
 
                     {(column.id === "acciones-movimientos")?(
                       <>
-                        <Button
-                            size="small"
-                            variant="contained"
-                            color="success"
-                            sx={{ transform: "scale(0.9)" }}
-                            id={row._id}
-                            onClick={updateHandleClick}
-                        >
-                            <SyncAltOutlined id={row._id}/>
-                        </Button>
+                        <Tooltip TransitionComponent={Zoom} title="Inventariar" arrow>
+                          <Button
+                              size="small"
+                              variant="contained"
+                              color="success"
+                              sx={{ transform: "scale(0.9)" }}
+                              id={row._id}
+                              onClick={updateHandleClick}
+                          >
+                              <SyncAltOutlined id={row._id}/>
+                          </Button>
+                        </Tooltip>
                       </>
                     ):""}
                     </TableCell>

@@ -41,12 +41,14 @@ export const RealizarTransaccionPage = () => {
     startBuscarProducto,
   } = useProductosStore();
   
+  const { almacen, startReadAlmacenes } = useAlmacenesStore();
   const { pacientes, startReadPacientes } = usePacientesStore();
   const { proveedores, startReadProveedores } = useProveedoresStore();
 
   // Estado para el diálogo de edición (movimientos inventariar)
   useEffect(() => {
     startReadProductos();
+    startReadAlmacenes();
     startReadPacientes();
     startReadProveedores();
   }, []);
@@ -147,35 +149,25 @@ export const RealizarTransaccionPage = () => {
               <Typography variant="h4" display="inline">
                 Realizar movimientos
               </Typography>
-
             </Grid>
-
-            {/* R. componentes de busqueda */}
+            {/*componentes de busqueda */}
             <Grid direction="column" display="flex">
               <SearchBar search={search} setSearch={setSearch} setPage={setPage} />
             </Grid>
           </Grid>
-          
-        
-          <Divider sx={{ mt: 2 }} />
-
-          
-     
-
-      
-
-  
-      <CustomTableV2
-        columns={columns}
-        filteredRows={filteredRows}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        emptyRows={emptyRows}
-        handleChangePage={handleChangePage}
-        handleChangeRowsPerPage={handleChangeRowsPerPage}
-        TablePaginationActions={TablePaginationActions}
-        updateHandleClick={handleUpdateClick}
-      />
+        <Divider sx={{ mt: 2 }} />
+        {/* Tabla de productos */}
+        <CustomTableV2
+          columns={columns}
+          filteredRows={filteredRows}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          emptyRows={emptyRows}
+          handleChangePage={handleChangePage}
+          handleChangeRowsPerPage={handleChangeRowsPerPage}
+          TablePaginationActions={TablePaginationActions}
+          updateHandleClick={handleUpdateClick}
+        />
 
       </Grid>
       {/*Dialogo para hacer movimientos de productos en inventario*/}
@@ -263,6 +255,15 @@ export const RealizarTransaccionPage = () => {
             value={productoSeleccionado?.presentacion || ""}
             disabled
           />
+          <TextField
+            margin="dense"
+            label="almacen"
+            fullWidth
+            variant="outlined"
+            value={productoSeleccionado?.almacen?.name|| ""}
+            disabled
+          />
+
           <TextField
             margin="dense"
             label="cantidad"
