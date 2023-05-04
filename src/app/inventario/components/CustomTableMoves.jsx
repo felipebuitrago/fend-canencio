@@ -16,7 +16,7 @@ import {
 const columns = [
     { id: "id", label: "ID", minWidth: 50 },
     { id: "fecha", label: "Fecha", minWidth: 100 },
-    { id: "tipoTransaccion", label: "Tipo de transacción", minWidth: 150 },
+    { id: "tipoTransaccion", label: "Movimiento", minWidth: 150 },
     { id: "producto", label: "Producto", minWidth: 150 },
     { id: "tallaPresentacion", label: "Talla/Presentación", minWidth: 150 },
     { id: "cantidad", label: "Cantidad", minWidth: 100 },
@@ -95,7 +95,7 @@ const CustomTableMoves = () => {
 
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
+    <Paper sx={{ overflow: "hidden" }}>
       <TableContainer component="div" sx={{ maxHeight: 440 }}>
         <Table aria-label="custom table" stickyHeader>
           <TableHead>
@@ -104,6 +104,7 @@ const CustomTableMoves = () => {
                 <TableCell
                   key={headCell.id}
                   sortDirection={orderBy === headCell.id ? order : false}
+                  align="center"
                   sx={{
                     backgroundColor: "black",
                     color: "white",
@@ -151,7 +152,7 @@ const CustomTableMoves = () => {
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell key={column.id} align="center">
                           {value}
                         </TableCell>
                       );
@@ -163,11 +164,13 @@ const CustomTableMoves = () => {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[5, 10, 25, 50]}
         component="div"
         count={rows.length}
+        labelRowsPerPage="Filas por página"
         rowsPerPage={rowsPerPage}
         page={page}
+        labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />

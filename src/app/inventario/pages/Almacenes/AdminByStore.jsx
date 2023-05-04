@@ -60,6 +60,12 @@ export const AdminByStore = () => {
   //const initialStore = (almacenes[0] !== undefined)?almacenes[0].name:"";
   const [selectedStore, setSelectedStore] = useState("");
 
+  useEffect(() => {
+    if (almacenes.length > 0) {
+      setSelectedStore(almacenes[0].name);
+    }
+  }, [almacenes]);
+  
   const handleStoreChange = (event) => {
     setSelectedStore(event.target.value);
   };
@@ -231,7 +237,6 @@ export const AdminByStore = () => {
             updateHandleClick={handleUpdateClick}
           />
         </Grid>
-        
       </Grid>
 
       <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
