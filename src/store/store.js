@@ -7,7 +7,8 @@ import {
     pacientesSlice,
     productosSlice,
     proveedoresSlice,
-    usuariosSlice } from './slices';
+    usuariosSlice,
+    movimientosSlice } from './slices';
 
 export const store = configureStore({
 
@@ -19,6 +20,7 @@ export const store = configureStore({
         pacientes  : pacientesSlice.reducer,
         productos  : productosSlice.reducer,
         proveedores: proveedoresSlice.reducer,
-        usuarios   : usuariosSlice.reducer
+        usuarios   : usuariosSlice.reducer,
+        movimientos: movimientosSlice.reducer
     },
 })

@@ -1,10 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Divider, Grid, Paper, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from "@mui/material";
 import { Close, BookmarkAdd} from "@mui/icons-material";
 import { CustomBreadcrumbs, ButtonLink, TablePaginationActions, CustomTableMoves } from "../../components/index.js";
 
+import { useMovimientosStore } from "../../../../hooks";
 
 export const MovimientosPage = () => {
+
+  const { movimientos, startReadMovimientos } = useMovimientosStore();
+
+  useEffect(()=>{
+    startReadMovimientos();
+  },[])
+
   return (
     <>
    

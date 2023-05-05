@@ -41,13 +41,11 @@ export const RealizarTransaccionPage = () => {
   } = useProductosStore();
   
   const { pacientes, startReadPacientes } = usePacientesStore();
-  const { proveedores, startReadProveedores } = useProveedoresStore();
 
   // Estado para el diálogo de edición (movimientos inventariar)
   useEffect(() => {
     startReadProductos();
     startReadPacientes();
-    startReadProveedores();
   }, []);
 
   useEffect(() => { // ¿?
@@ -129,20 +127,21 @@ export const RealizarTransaccionPage = () => {
 
   const handleSaveMoveDialog = () => {
     
+    const nota = (document.getElementById("nota-move-input").value.length < 1)?" ":document.getElementById("nota-move-input").value;
+    
     if(tipoMovimiento === "egreso"){
-
-      const proveedor = document.getElementById("proveedor-move-input").value;
-      const nota = document.getElementById("nota-move-input").value;
-
-      alert(cantidad + " | " + proveedor + " | " + nota + " | " + dayjs(selectedDate).format("DD/MM/YYYY") + " | " + productoSeleccionado.nombre + " | " + productoSeleccionado.presentacion + " | " + productoSeleccionado.stock + " | " + productoSeleccionado.almacen[0].name)
+      
+      const paciente = document.getElementById("paciente-move-input").value;
+      if (paciente.length < 1) {
+        alert("Paciente es requerido");
+        return;
+      }
+      alert((parseInt(cantidad)) + " | " + paciente + " | " + nota + " | " + dayjs(selectedDate).format("DD/MM/YYYY") + " | " + productoSeleccionado.nombre + " | " + productoSeleccionado.presentacion + " | " + productoSeleccionado.stock + " | " + productoSeleccionado.almacen[0].name)
       //iria aca startCreateMovimiento -> no existe aun
     }
     else if(tipoMovimiento === "ingreso"){
       
-      const paciente = document.getElementById("paciente-move-input").value;
-      const nota = document.getElementById("nota-move-input").value;
-
-      alert(cantidad + " | " + paciente + " | " + nota + " | " + dayjs(selectedDate).format("DD/MM/YYYY") + " | " + productoSeleccionado.nombre + " | " + productoSeleccionado.presentacion + " | " + productoSeleccionado.stock + " | " + productoSeleccionado.almacen[0].name)
+      alert((parseInt(cantidad)) + " | " + productoSeleccionado.proveedor.nombre + " | " + nota + " | " + dayjs(selectedDate).format("DD/MM/YYYY") + " | " + productoSeleccionado.nombre + " | " + productoSeleccionado.presentacion + " | " + productoSeleccionado.stock + " | " + productoSeleccionado.almacen[0].name)
       //iria aca startCreateMovimiento -> no existe aun
 
     }
@@ -323,7 +322,7 @@ export const RealizarTransaccionPage = () => {
             }}
           />
 
-          {tipoMovimiento === "ingreso" && (
+          {tipoMovimiento === "egreso" && (
             <Autocomplete
               options={pacientes}
               getOptionLabel={(option) => option.name}
@@ -340,6 +339,7 @@ export const RealizarTransaccionPage = () => {
             />
           )}
 
+          {/* 
           {tipoMovimiento === "egreso" && (
             <Autocomplete
               options={proveedores}
@@ -356,6 +356,7 @@ export const RealizarTransaccionPage = () => {
               )}
             />
           )}
+          */}
 
           <TextField 
             margin="dense" 
@@ -371,7 +372,8 @@ export const RealizarTransaccionPage = () => {
             Cancelar
           </Button>
           <Button 
-            disabled={(cantidad>0 && cantidad<=productoSeleccionado.stock && selectedDate!==null)?false :true }
+            disabled={(((cantidad>0 && cantidad<=productoSeleccionado.stock) || (tipoMovimiento
+              ==="ingreso" && cantidad >=1)) && selectedDate!==null)?false :true }
             onClick={handleSaveMoveDialog} 
             color="success">
             Inventariar

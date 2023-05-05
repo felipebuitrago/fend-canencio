@@ -6,7 +6,8 @@ import { checking, login, logout, clearErrorMessage,
      resetAlmacenesStore,
      resetPacientesStore,
      resetProveedoresStore,
-     resetUsuariosStore} from '../../store/slices';
+     resetUsuariosStore,
+     resetMovimientosStore} from '../../store/slices';
 
 export const useAuthStore = () => {
   
@@ -54,6 +55,7 @@ export const useAuthStore = () => {
         dispatch(resetProductosStore());
         dispatch(resetProveedoresStore());
         dispatch(resetUsuariosStore());
+        dispatch(resetMovimientosStore());
         dispatch(logout());
     }
 

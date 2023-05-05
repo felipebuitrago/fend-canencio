@@ -10,3 +10,4 @@ export * from './inventario/useCategoriasStore';
 export * from './inventario/useAlmacenesStore';
 export * from './inventario/usePacientesStore';
 export * from './inventario/useUsuariosStore';
+export * from './inventario/useMovimientosStore';
