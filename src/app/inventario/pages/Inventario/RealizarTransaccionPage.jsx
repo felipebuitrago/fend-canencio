@@ -11,7 +11,7 @@ import es from "dayjs/locale/es";
 
 import {  CustomBreadcrumbs, CustomTableV2, TablePaginationActions, MultipleSelectChip,  SearchBar, AlertSnackbar } from "../../components/index.js";
 import { Controller, useForm } from 'react-hook-form';
-import { useProductosStore, useCategoriasStore, usePacientesStore, useProveedoresStore, useAlmacenesStore } from '../../../../hooks'
+import { useProductosStore, usePacientesStore, useMovimientosStore } from '../../../../hooks'
 
 
 export const RealizarTransaccionPage = () => {
@@ -39,6 +39,10 @@ export const RealizarTransaccionPage = () => {
     startReadProductos,
     startBuscarProducto,
   } = useProductosStore();
+
+  const {
+    startCreateMovimiento
+  } = useMovimientosStore();
   
   const { pacientes, startReadPacientes } = usePacientesStore();
 
@@ -136,14 +140,32 @@ export const RealizarTransaccionPage = () => {
         alert("Paciente es requerido");
         return;
       }
-      alert((parseInt(cantidad)) + " | " + paciente + " | " + nota + " | " + dayjs(selectedDate).format("DD/MM/YYYY") + " | " + productoSeleccionado.nombre + " | " + productoSeleccionado.presentacion + " | " + productoSeleccionado.stock + " | " + productoSeleccionado.almacen[0].name)
-      //iria aca startCreateMovimiento -> no existe aun
+     
+      startCreateMovimiento("Egreso", 
+        productoSeleccionado.nombre, 
+        productoSeleccionado.presentacion, 
+        productoSeleccionado.almacen[0].name, 
+        paciente, 
+        dayjs(selectedDate).format("DD/MM/YYYY"), 
+        (parseInt(cantidad)), 
+        nota,
+        productoSeleccionado._id,
+        (parseInt(productoSeleccionado.stock) - parseInt(cantidad))
+      );
     }
     else if(tipoMovimiento === "ingreso"){
-      
-      alert((parseInt(cantidad)) + " | " + productoSeleccionado.proveedor.nombre + " | " + nota + " | " + dayjs(selectedDate).format("DD/MM/YYYY") + " | " + productoSeleccionado.nombre + " | " + productoSeleccionado.presentacion + " | " + productoSeleccionado.stock + " | " + productoSeleccionado.almacen[0].name)
-      //iria aca startCreateMovimiento -> no existe aun
-
+  
+      startCreateMovimiento("Ingreso", 
+        productoSeleccionado.nombre, 
+        productoSeleccionado.presentacion, 
+        productoSeleccionado.almacen[0].name, 
+        productoSeleccionado.proveedor.nombre, 
+        dayjs(selectedDate).format("DD/MM/YYYY"), 
+        (parseInt(cantidad)), 
+        nota,
+        productoSeleccionado._id,
+        (parseInt(productoSeleccionado.stock) + parseInt(cantidad))
+      );
     }
     setSelectedDate(null);
     setCantidad(0);
