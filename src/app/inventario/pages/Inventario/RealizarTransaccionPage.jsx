@@ -36,25 +36,22 @@ export const RealizarTransaccionPage = () => {
   const {
     productos,
     productoSeleccionado,
-    setProductoSeleccionado,
     startReadProductos,
     startBuscarProducto,
   } = useProductosStore();
   
-  const { almacen, startReadAlmacenes } = useAlmacenesStore();
   const { pacientes, startReadPacientes } = usePacientesStore();
   const { proveedores, startReadProveedores } = useProveedoresStore();
 
   // Estado para el diálogo de edición (movimientos inventariar)
   useEffect(() => {
     startReadProductos();
-    startReadAlmacenes();
     startReadPacientes();
     startReadProveedores();
   }, []);
 
-  useEffect(() => {
-    setRows(productos);
+  useEffect(() => { // ¿?
+    setRows(productos);  // Is this another way to do SearchBar.jsx? 
   }, [productos]);
 
   const columns = [
@@ -88,18 +85,16 @@ export const RealizarTransaccionPage = () => {
   };
 
   const handleCloseEditDialog = () => {
+    setSelectedDate(null);
+    setCantidad(0);
     setOpenEditDialog(false);
   };
   
-  // Estado para las categorías seleccionadas
-  const [selectedCategorias, setSelectedCategorias] = useState([]);
 
   // Filtra los productos por nombre y categoría (categoria se eliminó por el momento)
   const filteredRows = rows.filter(
     (producto) =>
-      producto.nombre.toLowerCase().includes(search.toLowerCase()) &&
-      (selectedCategorias.length === 0 ||
-        selectedCategorias.includes(producto.categoria))
+      producto.nombre.toLowerCase().includes(search.toLowerCase()) 
   ); 
 
   // Calcula el número de filas vacías para rellenar la tabla
@@ -128,6 +123,34 @@ export const RealizarTransaccionPage = () => {
   const handleTipoMovimientoChange = (event) => {
     setTipoMovimiento(event.target.value);
   }; 
+
+  //cantidad a ingresar/egresar
+  const [cantidad, setCantidad] = useState(0);
+
+  const handleSaveMoveDialog = () => {
+    
+    if(tipoMovimiento === "egreso"){
+
+      const proveedor = document.getElementById("proveedor-move-input").value;
+      const nota = document.getElementById("nota-move-input").value;
+
+      alert(cantidad + " | " + proveedor + " | " + nota + " | " + dayjs(selectedDate).format("DD/MM/YYYY") + " | " + productoSeleccionado.nombre + " | " + productoSeleccionado.presentacion + " | " + productoSeleccionado.stock + " | " + productoSeleccionado.almacen[0].name)
+      //iria aca startCreateMovimiento -> no existe aun
+    }
+    else if(tipoMovimiento === "ingreso"){
+      
+      const paciente = document.getElementById("paciente-move-input").value;
+      const nota = document.getElementById("nota-move-input").value;
+
+      alert(cantidad + " | " + paciente + " | " + nota + " | " + dayjs(selectedDate).format("DD/MM/YYYY") + " | " + productoSeleccionado.nombre + " | " + productoSeleccionado.presentacion + " | " + productoSeleccionado.stock + " | " + productoSeleccionado.almacen[0].name)
+      //iria aca startCreateMovimiento -> no existe aun
+
+    }
+    setSelectedDate(null);
+    setCantidad(0);
+    setOpenEditDialog(false);
+    setOpenAlert(true);
+  }
 
   return (
     <>
@@ -168,8 +191,8 @@ export const RealizarTransaccionPage = () => {
           TablePaginationActions={TablePaginationActions}
           updateHandleClick={handleUpdateClick}
         />
-
       </Grid>
+
       {/*Dialogo para hacer movimientos de productos en inventario*/}
       <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
         <DialogTitle>
@@ -187,9 +210,11 @@ export const RealizarTransaccionPage = () => {
             <Close />
           </IconButton>
         </DialogTitle>
+
         <DialogContent>
           <FormControl component="fieldset">
             <FormLabel component="legend">Tipo de movimiento</FormLabel>
+            
             <Grid container alignItems="center" spacing={2}>
               <Grid item xs={12} sm={6}>
                 <RadioGroup
@@ -212,6 +237,7 @@ export const RealizarTransaccionPage = () => {
                   />
                 </RadioGroup>
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <LocalizationProvider dateAdapter={AdapterDayjs} locale={es}>
                   <DatePicker
@@ -241,7 +267,7 @@ export const RealizarTransaccionPage = () => {
           <TextField
             autoFocus
             margin="dense"
-            label="Nombre"
+            label="Producto"
             fullWidth
             variant="outlined"
             value={productoSeleccionado?.nombre || ""}
@@ -255,33 +281,54 @@ export const RealizarTransaccionPage = () => {
             value={productoSeleccionado?.presentacion || ""}
             disabled
           />
-          <TextField
-            margin="dense"
-            label="almacen"
-            fullWidth
-            variant="outlined"
-            value={productoSeleccionado?.almacen?.name|| ""}
-            disabled
-          />
 
+          <Grid container alignItems="center" spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                margin="dense"
+                label="Almacen"
+                fullWidth
+                variant="outlined"
+                value={productoSeleccionado?.almacen[0]?.name|| ""}
+                disabled
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+
+              <TextField
+                margin="dense"
+                label="Stock"
+                fullWidth
+                variant="outlined"
+                disabled
+                value={productoSeleccionado?.stock|| ""}
+              />
+            </Grid>
+
+          </Grid>
+          
           <TextField
             margin="dense"
-            label="cantidad"
+            label="Cantidad"
             fullWidth
             variant="outlined"
             type="number"
-            inputProps={{ min: 1 }}
+            value={cantidad}
             onChange={(event) => {
-              if (event.target.value < 1) {
+              if (event.target.value < 0) {
                 event.target.value = 1;
               }
+              setCantidad(event.target.value);
             }}
           />
+
           {tipoMovimiento === "ingreso" && (
             <Autocomplete
               options={pacientes}
               getOptionLabel={(option) => option.name}
               fullWidth
+              id="paciente-move-input"
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -298,6 +345,7 @@ export const RealizarTransaccionPage = () => {
               options={proveedores}
               getOptionLabel={(option) => option.nombre}
               fullWidth
+              id="proveedor-move-input"
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -308,17 +356,32 @@ export const RealizarTransaccionPage = () => {
               )}
             />
           )}
-          <TextField margin="dense" label="Nota" fullWidth variant="outlined" />
+
+          <TextField 
+            margin="dense" 
+            label="Nota" 
+            id="nota-move-input"
+            fullWidth 
+            variant="outlined" 
+          />
         </DialogContent>
+
         <DialogActions>
           <Button onClick={handleCloseEditDialog} color="error">
             Cancelar
           </Button>
-          <Button onClick={handleCloseEditDialog} color="success">
+          <Button 
+            disabled={(cantidad>0 && cantidad<=productoSeleccionado.stock && selectedDate!==null)?false :true }
+            onClick={handleSaveMoveDialog} 
+            color="success">
             Inventariar
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Material Alert */}
+      <AlertSnackbar open={openAlert} onClose={handleCloseAlert} message="Acción realizada exitosamente"/>
+    
     </>
   );
 };

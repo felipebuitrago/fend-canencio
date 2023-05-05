@@ -16,9 +16,12 @@ export const AdminByStore = () => {
   
   const [cantidadTrasladar, setCantidadTrasladar] = useState(0);
   
-  const onChangeCantidad = (e) => {
-    e.preventDefault();
-    setCantidadTrasladar(e.target.value);
+  const onChangeCantidad = (event) => {
+    event.preventDefault();
+    if (event.target.value < 0) {
+      event.target.value = 1;
+    }
+    setCantidadTrasladar(event.target.value);
   }
   
   //alert confirmation
@@ -307,7 +310,8 @@ export const AdminByStore = () => {
             fullWidth
             variant="outlined"
             value={cantidadTrasladar}
-            onChange={onChangeCantidad}/>
+            onChange={onChangeCantidad}
+          />
 
           <FormHelperText sx={{mb:1}}>
             Destino 
