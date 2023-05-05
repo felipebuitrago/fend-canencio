@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Divider, Grid, Paper, Typography, Select, MenuItem, FormControl, InputLabel, Dialog, DialogTitle, IconButton, DialogContent, TextField, DialogActions, Button, FormHelperText } from '@mui/material';
-import { SearchBar,AlmacenSelect, TablePaginationActions, CustomTableV2, CustomBreadcrumbs, AlertSnackbar } from '../../components';
+import { SearchBar, TablePaginationActions, CustomTableV2, CustomBreadcrumbs, AlertSnackbar } from '../../components';
 import { Close } from '@mui/icons-material';
 
 import { useProductosStore, useAlmacenesStore } from '../../../../hooks'
@@ -59,7 +59,7 @@ export const AdminByStore = () => {
   
   // Estado para el almacen seleccionado
   //const initialStore = (almacenes[0] !== undefined)?almacenes[0].name:"";
-  // const [selectedStore, setSelectedStore] = useState("");
+  const [selectedStore, setSelectedStore] = useState("");
 
   // useEffect(() => {
   //   if (almacenes.length > 0) {
@@ -192,11 +192,23 @@ export const AdminByStore = () => {
         <Grid container direction="row" justifyContent="space-between">
           {/* L. Titulo Pagina y btn crear */}
           <Grid direction="column">
-          <AlmacenSelect
-              almacenes={almacenes}
-              selectedStore={selectedStore}
-              handleStoreChange={handleStoreChange}
-          />
+            <FormControl fullWidth>
+              <InputLabel id="store-select-label">Almacen</InputLabel>
+              <Select
+                labelId="store-select-label"
+                id="store-select"
+                value={selectedStore}
+                label="Almacen"
+                onChange={handleStoreChange}
+              >
+                {/* Mapear la lista de almacenes para crear las opciones del Select */}
+                {almacenes.map((store) => ( // Usar almacenes en lugar de stores
+                  <MenuItem key={store.id} value={store.name}>
+                    {store.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
             <Typography variant="h6" display="inline">
                 Productos
