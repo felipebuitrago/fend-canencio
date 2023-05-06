@@ -145,7 +145,6 @@ export const AdminByStore = () => {
     
     if(data.almacen === productoSeleccionado.almacen[0]._id){
       alert("Debe seleccionar un almacen diferente al origen");
-      setCantidadTrasladar(0);
       reset({
         almacen: "",
       })
@@ -286,23 +285,28 @@ export const AdminByStore = () => {
           <FormHelperText>
             Origen
           </FormHelperText>
-          <TextField
-            margin="dense"
-            label="Almacen"
-            fullWidth
-            disabled={true}
-            variant="outlined"
-            defaultValue={productoSeleccionado.almacen[0].name}
-          />
-          <TextField 
-            type='number'
-            margin="dense"
-            label="Stock"
-            fullWidth
-            variant="outlined"
-            disabled={true}
-            value={productoSeleccionado.stock} 
-          />
+          <Grid container alignItems="center" spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+              margin="dense"
+              label="Almacen"
+              fullWidth
+              disabled={true}
+              variant="outlined"
+              defaultValue={productoSeleccionado.almacen[0].name}
+            />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField 
+                margin="dense"
+                label="Stock"
+                fullWidth
+                variant="outlined"
+                disabled={true}
+                value={productoSeleccionado.stock} 
+              />
+            </Grid>
+          </Grid>
           <TextField 
             type='number'
             margin="dense"
