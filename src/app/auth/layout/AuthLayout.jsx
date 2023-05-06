@@ -11,6 +11,11 @@ export const AuthLayout = ({ children, title = '' }) => {
       justifyContent="center" /*añadir theme, y en el main.jsx*/
       sx={{ minHeight: '97vh', backgroundColor: 'black'}}
     >
+      <img src="/tapa-login-inventario.png" 
+           alt="Login Logo" 
+           style={{ width: '25%', height: 'auto', marginBottom: '16px', marginTop: '-47px', }} 
+      />
+     
       <Grid item
        className='box-shadow'
        xs={ 3 }

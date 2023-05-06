@@ -4,19 +4,19 @@ import { CustomBreadcrumbs, ButtonLink, TablePaginationActions } from "../../com
 import { useMovimientosStore } from "../../../../hooks";
 
 export const MovimientosPage = () => {
-  
+
   const columns = [
     { id: "id", label: "ID", align: "center" },
     { id: "fecha", label: "Fecha", align: "center" },
-    { id: "tipoTransaccion", label: "Movimiento", align: "center" },
+    { id: "tipo_transaccion", label: "Movimiento", align: "center" },
     { id: "producto", label: "Producto", align: "center" },
-    { id: "tallaPresentacion", label: "Talla/Presentación", align: "center" },
+    { id: "presentacion", label: "Talla/Presentación", align: "center" },
     { id: "cantidad", label: "Cantidad", align: "center" },
     { id: "almacen", label: "Almacén", align: "center" },
-    { id: "pacienteProveedor", label: "Paciente/Proveedor", align: "center" },
-    { id: "#factura", label: "#Factura", align: "center" },
-    { id: "usuario", label: "Usuario", align: "center" },
-    { id: "notas", label: "Notas", align: "center" },
+    { id: "paciente_proveedor", label: "Paciente/Proveedor", align: "center" },
+    { id: "factura", label: "#Factura", align: "center" },
+    { id: "registrado_por", label: "Usuario", align: "center" },
+    { id: "nota", label: "Notas", align: "center" },
   ];
 
   
@@ -175,7 +175,7 @@ export const MovimientosPage = () => {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25, 50]}
+            rowsPerPageOptions={[5, 10, 25, 50, 100, 1000]}
             component="div"
             count={rows.length}
             labelRowsPerPage="Filas por página"
