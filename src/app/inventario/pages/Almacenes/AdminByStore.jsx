@@ -155,8 +155,19 @@ export const AdminByStore = () => {
       categoriasIDs.push(current._id);
     })
     let proveedorID = productoSeleccionado.proveedor._id;
-    
-    startTrasladarProducto(productoSeleccionado._id,productoSeleccionado.nombre,cantidadTrasladar,productoSeleccionado.stock,productoSeleccionado.presentacion,data.almacen, proveedorID, categoriasIDs);
+
+    startTrasladarProducto(productoSeleccionado._id,
+      productoSeleccionado.nombre,
+      cantidadTrasladar,
+      productoSeleccionado.stock,
+      productoSeleccionado.presentacion,
+      data.almacen, 
+      proveedorID, 
+      categoriasIDs, 
+      productoSeleccionado.almacen[0].name, 
+      productoSeleccionado.proveedor.nombre,
+      document.getElementById("almacen-select").innerHTML
+      );
 
     //resets
     setCantidadTrasladar(0);
