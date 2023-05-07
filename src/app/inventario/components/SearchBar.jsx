@@ -19,7 +19,7 @@ const SearchBar = ({ search, setSearch, setPage }) => {
           onChange={handleSearchChange}
           InputProps={{
             endAdornment: (
-              <InputAdornment variant="outlined" position="end">
+              <InputAdornment position="end">
                 <IconButton ><Search /> </IconButton>
                
               </InputAdornment>
