@@ -3,7 +3,6 @@ export * from './auth/useAuthStore';
 
 export * from './useForm'
 
-export * from './inventario/useInventarioStore';
 export * from './inventario/useProductosStore';
 export * from './inventario/useProveedoresStore';
 export * from './inventario/useCategoriasStore';

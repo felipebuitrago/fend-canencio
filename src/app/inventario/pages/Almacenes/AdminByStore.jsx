@@ -238,7 +238,7 @@ export const AdminByStore = () => {
           </Grid>
 
           {/* R. componentes de busqueda */}
-          <Grid direction="column" display="flex">
+          <Grid direction="column" display="flex" sx={{mt:-1.5}}>
             <SearchBar search={search} setSearch={setSearch} setPage={setPage} />
           </Grid>
         </Grid>

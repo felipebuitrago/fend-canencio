@@ -18,9 +18,9 @@ export const useMovimientosStore = () => {
         dispatch(addMovimientosStore(movimientos.data.result));
     }
 
-    const startCreateMovimiento = async(tipoMovimiento, producto, presentacion, almacen, tercero, fecha, cantidad, nota, idProducto, nuevoStock) => {
+    const startCreateMovimiento = async(tipoMovimiento, producto, presentacion, almacen, tercero, fecha, cantidad, factura, nota, idProducto, nuevoStock) => {
 
-        await canencioApi.post('/inventario/new',{tipoMovimiento, producto, presentacion, almacen, tercero, fecha, cantidad, nota, idProducto, nuevoStock});
+        await canencioApi.post('/inventario/new',{tipoMovimiento, producto, presentacion, almacen, tercero, fecha, cantidad, factura, nota, idProducto, nuevoStock});
         startReadProductos();
     }
 

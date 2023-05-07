@@ -131,7 +131,8 @@ export const RealizarTransaccionPage = () => {
 
   const handleSaveMoveDialog = () => {
     
-    const nota = (document.getElementById("nota-move-input").value.length < 1)?" ":document.getElementById("nota-move-input").value;
+    const factura = (document.getElementById("factura-move-input").value.length < 1)?" ":document.getElementById("factura-move-input").value;
+    const nota    = (document.getElementById("nota-move-input").value.length < 1)?" ":document.getElementById("nota-move-input").value;
     
     if(tipoMovimiento === "egreso"){
       
@@ -148,6 +149,7 @@ export const RealizarTransaccionPage = () => {
         paciente, 
         dayjs(selectedDate).format("DD/MM/YYYY"), 
         (parseInt(cantidad)), 
+        factura,
         nota,
         productoSeleccionado._id,
         (parseInt(productoSeleccionado.stock) - parseInt(cantidad))
@@ -162,6 +164,7 @@ export const RealizarTransaccionPage = () => {
         productoSeleccionado.proveedor.nombre, 
         dayjs(selectedDate).format("DD/MM/YYYY"), 
         (parseInt(cantidad)), 
+        factura,
         nota,
         productoSeleccionado._id,
         (parseInt(productoSeleccionado.stock) + parseInt(cantidad))
@@ -195,7 +198,7 @@ export const RealizarTransaccionPage = () => {
               </Typography>
             </Grid>
             {/*componentes de busqueda */}
-            <Grid direction="column" display="flex">
+            <Grid direction="column" display="flex" sx={{mt:-3,mb:1}}>
               <SearchBar search={search} setSearch={setSearch} setPage={setPage} />
             </Grid>
           </Grid>
@@ -379,7 +382,13 @@ export const RealizarTransaccionPage = () => {
             />
           )}
           */}
-
+          <TextField 
+            margin="dense" 
+            label="Factura" 
+            id="factura-move-input"
+            fullWidth 
+            variant="outlined" 
+          />
           <TextField 
             margin="dense" 
             label="Nota" 

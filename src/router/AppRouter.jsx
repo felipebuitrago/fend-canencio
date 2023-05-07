@@ -8,7 +8,6 @@ import { CircularProgress } from '@mui/material';
 export const AppRouter = () => {
     
     const { status, checkAuthToken } = useAuthStore();
-    // const authStatus = 'not-authenticated'; // 'authenticated'; // 'not-authenticated';
 
      useEffect(() => {
          checkAuthToken();
@@ -35,40 +34,5 @@ export const AppRouter = () => {
                 <Route path="/*" element= { <InventarioRouter /> } />
             </Routes>
         )
-    }
-
-    
-
-    // return( 
-
-    //     <Routes>
-    //         {
-    //             ( status === 'not-authenticated')  
-    //                 ?( <Route path="/auth/*" element= { <AuthRouter /> } /> )
-    //                 :(<Route path="/*" element= { <InventarioRouter /> } />)
-    //         }
-    //         <Route path="/*" element={ <Navigate to="/auth" /> }  />
-
-    //     </Routes>
-    //)
-
-// <Routes>
-// {
-//     ( status === 'not-authenticated')  
-//         ?(
-//             <>
-//                 <Route path="/auth/*" element= { <AuthRouter /> } />
-//                 <Route path="/*" element={ <Navigate to="/auth" /> }  />
-//             </>
-//         )
-//         :(
-//             <>
-//                 <Route path="/inventario/*" element= { <InventarioRouter /> } />
-
-//                 <Route path="/*" element={ <Navigate to="/" /> }  />
-//             </>
-//         )
-// }
-// </Routes>
-    
+    }    
 }
