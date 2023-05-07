@@ -157,14 +157,20 @@ export const MovimientosPage = () => {
               <TableBody>
                 {stableSort(rows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
+                  .map((row,i) => {
                     return (
                       <TableRow hover tabIndex={-1} key={row.id}>
                         {columns.map((column) => {
                           const value = row[column.id];
                           return (
                             <TableCell key={column.id} align="center">
-                              {value}
+                              {(column.id !== "id")? value : ""}
+
+                              {(column.id === "id" && i === 0 && page === 0)?i+1:""}
+                              {(column.id === "id" && i === 0 && page !== 0)?(i+1)*(rowsPerPage*page+1):""}
+                              {(column.id === "id" && i !== 0 && page === 0)?(i+1)*(page+1):""}
+                              {(column.id === "id" && i !== 0 && page !== 0)?(rowsPerPage*page+1)+i:""}
+
                             </TableCell>
                           );
                         })}

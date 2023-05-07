@@ -16,11 +16,13 @@ export const useMovimientosStore = () => {
 
         const movimientos = await canencioApi.get('/inventario');
         dispatch(addMovimientosStore(movimientos.data.result));
+        localStorage.setItem('token', movimientos.data.newToken);
     }
 
     const startCreateMovimiento = async(tipoMovimiento, producto, presentacion, almacen, tercero, fecha, cantidad, factura, nota, idProducto, nuevoStock) => {
 
-        await canencioApi.post('/inventario/new',{tipoMovimiento, producto, presentacion, almacen, tercero, fecha, cantidad, factura, nota, idProducto, nuevoStock});
+        const result = await canencioApi.post('/inventario/new',{tipoMovimiento, producto, presentacion, almacen, tercero, fecha, cantidad, factura, nota, idProducto, nuevoStock});
+        localStorage.setItem('token', result.data.newToken);
         startReadProductos();
     }
 
