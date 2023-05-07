@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Login } from "@mui/icons-material";
-import { Button, Grid, FormControl, InputLabel, OutlinedInput, Snackbar, Alert, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import { Login, MailOutlined, PasswordOutlined } from "@mui/icons-material";
+import { Button, Grid, FormControl,InputAdornment,FormHelperText, InputLabel, OutlinedInput, Snackbar, Alert, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import { styled, keyframes } from "@mui/system";
 import { AuthLayout } from "../layout/AuthLayout";
+import { useForm } from 'react-hook-form';
 import { useAuthStore } from "../../../hooks";
 
 const slideIn = keyframes`
@@ -26,6 +27,11 @@ const loginFormFields = {
 
 export const LoginView = () => {
   const { startLogin, errorMessage } = useAuthStore();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const [formValues, setFormValues] = useState(loginFormFields);
   const { usuario, password } = formValues;
@@ -45,10 +51,14 @@ export const LoginView = () => {
       [name]: value,
     }));
   };
+  const loginSubmit = (data) => {
+    startLogin({ email: data.usuario, password: data.password });
+  };
 
-  const loginSubmit = (event) => {
-    event.preventDefault();
-    startLogin({ email: usuario, password: password });
+  const isEmail = (email) => {
+    const re =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
   };
 
   const [openDialog, setOpenDialog] = useState(false);
@@ -62,60 +72,83 @@ export const LoginView = () => {
   };
 
   return (
-    
     <AuthLayout title="Inicia Sesión">
-      <form onSubmit={loginSubmit}>
+      <form onSubmit={handleSubmit(loginSubmit)}>
         <Grid container>
           <Grid item xs={12} sx={{ mt: 2 }}>
-            <FormControl fullWidth variant="outlined">
+            <FormControl fullWidth variant="outlined" error={errors.usuario}>
               <InputLabel htmlFor="usuario">Correo</InputLabel>
               <OutlinedInput
                 id="usuario"
                 label="Usuario"
                 type="text"
                 name="usuario"
-                value={usuario}
-                onChange={onInputChange}
+                {...register("usuario", {
+                  required: "El campo de correo es requerido",
+                  validate: (value) =>
+                    isEmail(value) || "Ingrese un correo electrónico válido",
+                })}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <MailOutlined />
+                  </InputAdornment>
+                }
               />
+              {errors.usuario && (
+                <FormHelperText>{errors.usuario.message}</FormHelperText>
+              )}
             </FormControl>
           </Grid>
 
           <Grid item xs={12} sx={{ mt: 2 }}>
-            <FormControl fullWidth variant="outlined">
+            <FormControl fullWidth variant="outlined" error={errors.password}>
               <InputLabel htmlFor="password">Contraseña</InputLabel>
               <OutlinedInput
                 id="password"
                 label="Contraseña"
                 type="password"
                 name="password"
-                value={password}
-                onChange={onInputChange}
+                {...register("password", {
+                  required: "El campo de contraseña es requerido",
+                })}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <PasswordOutlined />
+                  </InputAdornment>
+                }
               />
+              {errors.password && (
+                <FormHelperText>{errors.password.message}</FormHelperText>
+              )}
             </FormControl>
           </Grid>
 
           <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
             <Grid item xs={12} sm={12}>
-              <Button type="submit" variant="contained" color="success" fullWidth>
+              <Button
+                type="submit"
+                variant="contained"
+                color="success"
+                fullWidth
+              >
                 Iniciar Sesión
                 <Login sx={{ pl: 1 }} />
               </Button>
-
             </Grid>
             <Grid container justifyContent="center" sx={{ mt: 1 }}>
-        <Typography
-          variant="subtitle2"
-          color="text.secondary"
-          component="button"
-          onClick={(event) => {
-            event.preventDefault();
-            handleDialogOpen();
-          }}
-          sx={{ cursor: "pointer" }}
-        >
-          ¿Has olvidado las credenciales de acceso?
-        </Typography>
-      </Grid>
+              <Typography
+                variant="subtitle2"
+                color="text.secondary"
+                component="button"
+                onClick={(event) => {
+                  event.preventDefault();
+                  handleDialogOpen();
+                }}
+                sx={{ cursor: "pointer" }}
+              >
+                ¿Has olvidado las credenciales de acceso?
+              </Typography>
+            </Grid>
           </Grid>
         </Grid>
       </form>
@@ -124,9 +157,13 @@ export const LoginView = () => {
         open={openSnackbar}
         autoHideDuration={6000}
         onClose={() => setOpenSnackbar(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }} 
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <StyledAlert onClose={() => setOpenSnackbar(false)} severity="error" sx={{ width: "100%" }}>
+        <StyledAlert
+          onClose={() => setOpenSnackbar(false)}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
           Error en la autenticación del usuario
         </StyledAlert>
       </Snackbar>
@@ -137,10 +174,14 @@ export const LoginView = () => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Credenciales de acceso olvidadas"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          {"Credenciales de acceso olvidadas"}
+        </DialogTitle>
         <DialogContent>
           <Typography id="alert-dialog-description">
-          Si ha olvidado su usuario, correo electrónico o contraseña, por favor, póngase en contacto con un administrador para recibir asistencia.
+            Si ha olvidado su usuario, correo electrónico o contraseña, por
+            favor, póngase en contacto con un administrador para recibir
+            asistencia.
           </Typography>
         </DialogContent>
         <DialogActions>
