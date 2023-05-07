@@ -1,9 +1,9 @@
+import { useForm } from 'react-hook-form';
 import { useEffect, useState } from "react";
 import { Login, MailOutlined, PasswordOutlined } from "@mui/icons-material";
 import { Button, Grid, FormControl,InputAdornment,FormHelperText, InputLabel, OutlinedInput, Snackbar, Alert, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import { styled, keyframes } from "@mui/system";
 import { AuthLayout } from "../layout/AuthLayout";
-import { useForm } from 'react-hook-form';
 import { useAuthStore } from "../../../hooks";
 
 const slideIn = keyframes`
@@ -76,7 +76,7 @@ export const LoginView = () => {
       <form onSubmit={handleSubmit(loginSubmit)}>
         <Grid container>
           <Grid item xs={12} sx={{ mt: 2 }}>
-            <FormControl fullWidth variant="outlined" error={errors.usuario}>
+          <FormControl fullWidth variant="outlined" error={!!errors.usuario}>
               <InputLabel htmlFor="usuario">Correo</InputLabel>
               <OutlinedInput
                 id="usuario"
@@ -84,7 +84,7 @@ export const LoginView = () => {
                 type="text"
                 name="usuario"
                 {...register("usuario", {
-                  required: "El campo de correo es requerido",
+                  required: "El correo electrónico es requerido, por favor ingrese su correo",
                   validate: (value) =>
                     isEmail(value) || "Ingrese un correo electrónico válido",
                 })}
@@ -101,7 +101,7 @@ export const LoginView = () => {
           </Grid>
 
           <Grid item xs={12} sx={{ mt: 2 }}>
-            <FormControl fullWidth variant="outlined" error={errors.password}>
+          <FormControl fullWidth variant="outlined" error={!!errors.password}>
               <InputLabel htmlFor="password">Contraseña</InputLabel>
               <OutlinedInput
                 id="password"
@@ -109,7 +109,7 @@ export const LoginView = () => {
                 type="password"
                 name="password"
                 {...register("password", {
-                  required: "El campo de contraseña es requerido",
+                  required: "La contraseña es requerida, por favor ingrese su contraseña",
                 })}
                 startAdornment={
                   <InputAdornment position="start">
