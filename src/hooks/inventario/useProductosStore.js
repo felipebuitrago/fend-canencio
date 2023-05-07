@@ -12,13 +12,15 @@ export const useProductosStore = () => {
 
     const startCreateProducto = async(nombre, presentacion, categoria, proveedor, almacen) => {
         
-        await canencioApi.post('/products/new',{nombre, presentacion, categoria, proveedor, almacen});
+        const result = await canencioApi.post('/products/new',{nombre, presentacion, categoria, proveedor, almacen});
+        localStorage.setItem('token', result.data.newToken);
     }
     
     const startReadProductos = async() => {
 
-        const productosDB = await canencioApi.get('/products');
-        dispatch(addProductosStore(productosDB.data.result));
+        const result = await canencioApi.get('/products');
+        dispatch(addProductosStore(result.data.result));
+        localStorage.setItem('token', result.data.newToken);
     }
 
     const startBuscarProducto = (id) => {
@@ -30,18 +32,21 @@ export const useProductosStore = () => {
 
         const {nombre, presentacion, categoria} = data;
         if(categoria){
-            await canencioApi.put(`/products/update/${id}`,{nombre, presentacion, categoria});
+            const result = await canencioApi.put(`/products/update/${id}`,{nombre, presentacion, categoria});
+            localStorage.setItem('token', result.data.newToken);
         }
         else{
-            await canencioApi.put(`/products/update/${id}`,{nombre, presentacion});        
+            const result = await canencioApi.put(`/products/update/${id}`,{nombre, presentacion});        
+            localStorage.setItem('token', result.data.newToken);
         }
         startReadProductos();
     }
     
     const startDeleteProducto = async(id) => {
 
-        await canencioApi.delete(`/products/delete/${id}`);
+        const result = await canencioApi.delete(`/products/delete/${id}`);
         dispatch(deleteProductoStore({id}));
+        localStorage.setItem('token', result.data.newToken);
     }
 
     const startTrasladarProducto = async(idProductoOrigen, nombreProductoOrigen, cantidad, stockActualOrigen, presentacion, almacenDestino, proveedorID, categoriasIDs, almacenOrigenLiteral, tercero, almacenDestinoLiteral) => {
@@ -59,6 +64,7 @@ export const useProductosStore = () => {
             tercero, 
             almacenDestinoLiteral
         });
+        localStorage.setItem('token', result.data.newToken);
         startReadProductos(); 
     }
 

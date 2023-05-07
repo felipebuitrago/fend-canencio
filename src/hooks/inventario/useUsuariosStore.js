@@ -21,8 +21,9 @@ export const useUsuariosStore = () => {
     
     const startReadUsuarios = async() => {
 
-        const usuariosDB = await canencioApi.get('/usuarios');
-        dispatch(addUsuariosStore(usuariosDB.data.result));
+        const result = await canencioApi.get('/usuarios');
+        dispatch(addUsuariosStore(result.data.result));
+        localStorage.setItem('token', result.data.newToken);
     }
 
     const startBuscarUsuario = (id) => {
@@ -41,20 +42,23 @@ export const useUsuariosStore = () => {
         }
         if(password){
             
-            await canencioApi.put(`/usuarios/update/${id}`,{name, email, password});
+            const result = await canencioApi.put(`/usuarios/update/${id}`,{name, email, password});
             dispatch(updateUsuarioStore({id, data}));
+            localStorage.setItem('token', result.data.newToken);
         
         }else{
 
-            await canencioApi.put(`/usuarios/update/${id}`,{name, email});
+            const result = await canencioApi.put(`/usuarios/update/${id}`,{name, email});
             dispatch(updateUsuarioStore({id, data}));
+            localStorage.setItem('token', result.data.newToken);
         }
     }
     
     const startDeleteUsuario = async(id) => {
 
-        await canencioApi.delete(`/usuarios/delete/${id}`);
+        const result = await canencioApi.delete(`/usuarios/delete/${id}`);
         dispatch(deleteUsuarioStore({id}));
+        localStorage.setItem('token', result.data.newToken);
     }
 
     return {

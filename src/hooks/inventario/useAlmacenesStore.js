@@ -17,6 +17,7 @@ export const useAlmacenesStore = () => {
         const result = await canencioApi.post('/almacenes/new',{name,location});
 
         dispatch(createAlmacenStore(result.data.result));
+        localStorage.setItem('token', result.data.newToken);
     }
 
     const startBuscarAlmacen = (id) => {
@@ -26,24 +27,27 @@ export const useAlmacenesStore = () => {
 
     const startReadAlmacenes = async() => {
 
-        const almacenesDB = await canencioApi.get('/almacenes');
+        const result = await canencioApi.get('/almacenes');
 
-        dispatch(addAlmacenesStore(almacenesDB.data.result));
+        dispatch(addAlmacenesStore(result.data.result));
+        localStorage.setItem('token', result.data.newToken);
     }
 
     const startUpdateAlmacen = async(id, data) => {
 
         const {name,location} = data;
-        await canencioApi.put(`/almacenes/update/${id}`,{name,location});
+        const result = await canencioApi.put(`/almacenes/update/${id}`,{name,location});
 
         dispatch(updateAlmacenStore({id, data}));
+        localStorage.setItem('token', result.data.newToken);
     }
     
     const startDeleteAlmacen = async(id) => {
 
-        await canencioApi.delete(`/almacenes/delete/${id}`);
+        const result = await canencioApi.delete(`/almacenes/delete/${id}`);
 
         dispatch(deleteAlmacenStore({id}));
+        localStorage.setItem('token', result.data.newToken);
     }
 
     return {

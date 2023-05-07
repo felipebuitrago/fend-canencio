@@ -17,12 +17,14 @@ export const useCategoriasStore = () => {
         const result = await canencioApi.post('/categorias/new',{name,description});
 
         dispatch(createCategoriaStore(result.data.result));
+        localStorage.setItem('token', result.data.newToken);
     }
     
     const startReadCategorias = async() => {
 
-        const categoriasDB = await canencioApi.get('/categorias');
-        dispatch(addCategoriasStore(categoriasDB.data.result));
+        const result = await canencioApi.get('/categorias');
+        dispatch(addCategoriasStore(result.data.result));
+        localStorage.setItem('token', result.data.newToken);
     }
 
     const startBuscarCategoria = (id) => {
@@ -33,16 +35,18 @@ export const useCategoriasStore = () => {
     const startUpdateCategoria = async(id, data) => {
 
         const {name,description} = data;
-        await canencioApi.put(`/categorias/update/${id}`,{name,description});
+        const result = await canencioApi.put(`/categorias/update/${id}`,{name,description});
 
         dispatch(updateCategoriaStore({id, data}));
+        localStorage.setItem('token', result.data.newToken);
     }
     
     const startDeleteCategoria = async(id) => {
 
-        await canencioApi.delete(`/categorias/delete/${id}`);
+        const result = await canencioApi.delete(`/categorias/delete/${id}`);
 
         dispatch(deleteCategoriaStore({id}));
+        localStorage.setItem('token', result.data.newToken);
     }
 
 

@@ -68,7 +68,7 @@ export const LoginView = () => {
         <Grid container>
           <Grid item xs={12} sx={{ mt: 2 }}>
             <FormControl fullWidth variant="outlined">
-              <InputLabel htmlFor="usuario">Usuario</InputLabel>
+              <InputLabel htmlFor="usuario">Correo</InputLabel>
               <OutlinedInput
                 id="usuario"
                 label="Usuario"

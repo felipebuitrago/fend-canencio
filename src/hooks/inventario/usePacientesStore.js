@@ -17,12 +17,14 @@ export const usePacientesStore = () => {
         const result = await canencioApi.post('/pacientes/new',{name,contact});
 
         dispatch(createPacienteStore(result.data.result));
+        localStorage.setItem('token', result.data.newToken);
     }
     
     const startReadPacientes = async() => {
 
-        const pacientesDB = await canencioApi.get('/pacientes');
-        dispatch(addPacientesStore(pacientesDB.data.result));
+        const result = await canencioApi.get('/pacientes');
+        dispatch(addPacientesStore(result.data.result));
+        localStorage.setItem('token', result.data.newToken);
     }
 
     const startBuscarPaciente = (id) => {
@@ -33,16 +35,18 @@ export const usePacientesStore = () => {
     const startUpdatePaciente = async(id, data) => {
 
         const {name,contact} = data;
-        await canencioApi.put(`/pacientes/update/${id}`,{name,contact});
+        const result = await canencioApi.put(`/pacientes/update/${id}`,{name,contact});
 
         dispatch(updatePacienteStore({id, data}));
+        localStorage.setItem('token', result.data.newToken);
     }
     
     const startDeletePaciente = async(id) => {
 
-        await canencioApi.delete(`/pacientes/delete/${id}`);
+        const result = await canencioApi.delete(`/pacientes/delete/${id}`);
 
         dispatch(deletePacienteStore({id}));
+        localStorage.setItem('token', result.data.newToken);
     }
 
 
