@@ -9,6 +9,7 @@ import { useAlmacenesStore, useCategoriasStore, useProductosStore, useProveedore
 
 export const CreateProducto = () => {
 
+  const { productos, startReadProductos } = useProductosStore();
   const {categorias, startReadCategorias} = useCategoriasStore();
   const {proveedores, startReadProveedores} = useProveedoresStore();
   const {almacenes, startReadAlmacenes} = useAlmacenesStore();
@@ -18,6 +19,7 @@ export const CreateProducto = () => {
     startReadAlmacenes();
     startReadCategorias();
     startReadProveedores();
+    startReadProductos();
   },[])
   
   const {
@@ -35,13 +37,14 @@ export const CreateProducto = () => {
     },
   });
 
+  const [alert, setAlert] = useState({ open: false, severity: "", message: "" });  
   //alert confirmation
   const [openAlert, setOpenAlert] = useState(false);
-  // Cierra el alert
   const handleCloseAlert = () => {
-  setOpenAlert(false);
+    setAlert({ ...alert, open: false });
   };
-
+ 
+  {/* 
   const onSubmit = (data) => {
     // Validación y creación del producto
 
@@ -56,7 +59,47 @@ export const CreateProducto = () => {
     });
     setOpenAlert(true);
   };
+ */}
 
+ const onSubmit = (data) => {
+  // Validación y creación del producto
+  const { nombre, presentacion, categoria, proveedor, almacen } = data;
+
+  const productoExistente = productos.find((p) => {
+    const almacenIdsP = p.almacen.map((a) => a._id).sort();
+    const almacenIds = almacen.sort();
+    
+    return (
+      p.nombre.toLowerCase() === nombre.toLowerCase() &&
+      p.presentacion.toLowerCase() === presentacion.toLowerCase() &&
+      JSON.stringify(almacenIdsP) === JSON.stringify(almacenIds)
+    );
+  });
+
+  if (productoExistente) {
+  
+    setAlert({
+      open: true,
+      severity: "warning",
+      message: "El producto en la presentación/talla y almacén ya está registrado.",
+    });
+
+  } else {
+    startCreateProducto(nombre, presentacion, categoria, proveedor, almacen);
+    reset({
+      nombre: "",
+      presentacion: "",
+      categoria: [],
+      proveedor: "",
+      almacen: [],
+    });
+    setAlert({
+      open: true,
+      severity: "success",
+      message: "Acción realizada exitosamente",
+    });
+  }
+};
   return (
     <>
       {/* Encabezado */}
@@ -243,7 +286,7 @@ export const CreateProducto = () => {
       </Grid>
     
       {/* Material Alert */}
-      <AlertSnackbar open={openAlert} onClose={handleCloseAlert} message="Acción realizada exitosamente"/>
+      <AlertSnackbar open={alert.open} onClose={handleCloseAlert} message={alert.message} severity={alert.severity} />
     
     </>
   );
