@@ -124,7 +124,7 @@ export const CreateProducto = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "La talla/presentación es obligatoria.",
+                    message: "La Presentación/talla es obligatoria.",
                   },
                 }}
                 render={({ field }) => (
@@ -132,7 +132,7 @@ export const CreateProducto = () => {
                     {...field}
                     fullWidth
                     variant="outlined"
-                    label="Talla/Presentación"
+                    label="Presentación/Talla"
                     error={!!errors.presentacion}
                     helperText={errors.presentacion?.message}
                     InputProps={{

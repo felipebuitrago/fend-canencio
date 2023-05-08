@@ -67,7 +67,7 @@ export const SideBar = ({ drawerWidth = 240 }) => {
                 opciones={[
                   {
                     link: "movimientos",
-                    prompt: "Movimientos de Inventario",
+                    prompt: "Movimientos de inventario",
                   },
                   {
                     link: "transaccion",
@@ -87,7 +87,7 @@ export const SideBar = ({ drawerWidth = 240 }) => {
                 opciones={[
                   {
                     link: "productos",
-                    prompt: "Administración de Productos",
+                    prompt: "Administración de productos",
                   },
                   {
                     link: "categorias",
@@ -131,7 +131,7 @@ export const SideBar = ({ drawerWidth = 240 }) => {
                   },
                   {
                     link: "almacenes/por-almacen",
-                    prompt: "Administración por almacen",
+                    prompt: "Administración por almacén",
                   },
                 ]}
                 iconos={[
@@ -217,7 +217,7 @@ export const SideBar = ({ drawerWidth = 240 }) => {
                     variant="contained"
                     fullWidth
                     color="success"
-                    sx={{ backgroundColor: "black", color: "white", mt: 2, borderRadius: 20 }}
+                    sx={{ backgroundColor: "black", color: "white", mt: 2, borderRadius: 2.5 }}
                     startIcon={<LogoutOutlined sx={{ color: "white" }} />}
                   >
                     Cerrar sesión

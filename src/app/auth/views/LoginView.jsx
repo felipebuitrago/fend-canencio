@@ -130,6 +130,7 @@ export const LoginView = () => {
                 variant="contained"
                 color="success"
                 fullWidth
+                sx = {{borderRadius: 2.5}}
               >
                 Iniciar Sesión
                 <Login sx={{ pl: 1 }} />

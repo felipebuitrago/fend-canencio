@@ -67,7 +67,7 @@ const CustomTableV2 = ({
                               size="small"
                               variant="contained"
                               color="info"
-                              sx={{ transform: "scale(0.9)" }}
+                              sx={{ transform: "scale(0.9)", borderRadius: 1.8 }}
                               id={row._id}
                               onClick={updateHandleClick}
                           >
@@ -79,7 +79,7 @@ const CustomTableV2 = ({
                               size="small"
                               variant="contained"
                               color="error"
-                              sx={{ transform: "scale(0.9)" }}
+                              sx={{ transform: "scale(0.9)", borderRadius: 1.8 }}
                               id={row._id}
                               onClick={deleteHandleClick}
                           >
@@ -95,7 +95,7 @@ const CustomTableV2 = ({
                               size="small"
                               variant="contained"
                               color="info"
-                              sx={{ transform: "scale(0.9)" }}
+                              sx={{ transform: "scale(0.9)", borderRadius: 1.8 }}
                               id={row._id}
                               onClick={updateHandleClick}
                           >
@@ -113,7 +113,7 @@ const CustomTableV2 = ({
                               size="small"
                               variant="contained"
                               color="success"
-                              sx={{ transform: "scale(0.9)" }}
+                              sx={{ transform: "scale(0.9)", borderRadius: 1.8 }}
                               id={row._id}
                               onClick={updateHandleClick}
                           >

@@ -10,7 +10,7 @@ export const MovimientosPage = () => {
     { id: "fecha", label: "Fecha", align: "center" },
     { id: "tipo_transaccion", label: "Movimiento", align: "center" },
     { id: "producto", label: "Producto", align: "center" },
-    { id: "presentacion", label: "Talla/Presentación", align: "center" },
+    { id: "presentacion", label: "Presentación/Talla", align: "center" },
     { id: "cantidad", label: "Cantidad", align: "center" },
     { id: "almacen", label: "Almacén", align: "center" },
     { id: "paciente_proveedor", label: "Paciente/Proveedor", align: "center" },

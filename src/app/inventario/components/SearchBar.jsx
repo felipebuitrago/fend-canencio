@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, TextField, InputAdornment, IconButton } from '@mui/material';
+import { Grid, TextField, InputAdornment, IconButton, Tooltip, Zoom } from '@mui/material';
 import { Search } from '@mui/icons-material';
 
 const SearchBar = ({ search, setSearch, setPage }) => {
@@ -20,14 +20,13 @@ const SearchBar = ({ search, setSearch, setPage }) => {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton ><Search /> </IconButton>
-               
+                <Tooltip TransitionComponent={Zoom} title="Búsqueda por nombre" arrow>
+                  <IconButton > <Search /> </IconButton>
+                </Tooltip>
               </InputAdornment>
             ),
           }}
         ></TextField>
-         
-        
       </Grid>
     </Grid>
   );

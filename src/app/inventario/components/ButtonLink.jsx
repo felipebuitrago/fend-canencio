@@ -5,7 +5,13 @@ import { Button } from "@mui/material";
 const ButtonLink = ({ to, variant, children, color, size, sx, startIcon }) => {
   return (
     <Link to={to} style={{ textDecoration: "none" }}>
-      <Button variant={variant}color={color} size={size} sx={sx} startIcon={startIcon}>
+      <Button 
+        variant={variant}
+        color={color} 
+        size={size} 
+        sx={{ borderRadius: 2, ...sx }} 
+        startIcon={startIcon}
+        >
         {children}
       </Button>
     </Link>
