@@ -1,35 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Divider, Grid, Paper, Typography, Select, MenuItem, FormControl, InputLabel, Dialog, DialogTitle, IconButton, DialogContent, TextField, DialogActions, Button, FormHelperText } from '@mui/material';
+import { Divider, Grid, Paper, Typography, Select, MenuItem, Tooltip, FormControl, InputLabel, Dialog, DialogTitle, IconButton, DialogContent, TextField, DialogActions, Button, FormHelperText, Zoom } from '@mui/material';
 import { SearchBar, TablePaginationActions, CustomTableV2, CustomBreadcrumbs, AlertSnackbar } from '../../components';
-import { Close } from '@mui/icons-material';
+import { Close, FilterAltOff, FilterAlt } from '@mui/icons-material';
 
-import { useProductosStore, useAlmacenesStore } from '../../../../hooks'
+import { useProductosStore, useAlmacenesStore, useCategoriasStore } from '../../../../hooks'
 
 export const AdminByStore = () => {
-  
   // Estado para la búsqueda de usuarios
   const [search, setSearch] = useState("");
   // Estados para la paginación de la tabla
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  
+
   const [cantidadTrasladar, setCantidadTrasladar] = useState(0);
-  
+
+  const { almacenes, startReadAlmacenes } = useAlmacenesStore();
+  const { categorias, startReadCategorias } = useCategoriasStore();
+
   const onChangeCantidad = (event) => {
     event.preventDefault();
     if (event.target.value < 0) {
       event.target.value = 1;
     }
     setCantidadTrasladar(event.target.value);
-  }
-  
+  };
+
   //alert confirmation
   const [openAlert, setOpenAlert] = useState(false);
   const handleCloseAlert = () => {
     setOpenAlert(false);
   };
-  
+
   const {
     productos,
     productoSeleccionado,
@@ -37,39 +39,41 @@ export const AdminByStore = () => {
     startBuscarProducto,
     startTrasladarProducto,
   } = useProductosStore();
-  
-  const {
-    almacenes,
-    startReadAlmacenes, 
-  } = useAlmacenesStore(); 
-  
+
+
   useEffect(() => {
     startReadProductos();
     startReadAlmacenes();
+    startReadCategorias();
   }, []);
-  
+
   const {
     control,
     handleSubmit,
     formState: { errors },
     getValues,
-    reset
+    reset,
   } = useForm({
     defaultValues: {
       almacen: "",
     },
   });
-  
+
   // Estado para el almacen seleccionado
   //const initialStore = (almacenes[0] !== undefined)?almacenes[0].name:"";
-  const [selectedStore, setSelectedStore] = useState("");
+  const [selectedStore, setSelectedStore] = useState(almacenes.length > 0 ? almacenes[0].name : "");
+  // Estados de funciones de filtros de categorias e icono filtro
+  const [showCategoryFilter, setShowCategoryFilter] = useState("");
+  const [filterIcon, setFilterIcon] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("");
 
-  // useEffect(() => {
-  //   if (almacenes.length > 0) {
-  //     setSelectedStore(almacenes[0].name);
-  //   }
-  // }, [almacenes]);
-  
+  const handleCategoryChange = (event) => {
+    setPage(0);
+    setSelectedCategory(event.target.value);
+  };
+
+ 
+
   const handleStoreChange = (event) => {
     setPage(0);
     setSelectedStore(event.target.value);
@@ -86,35 +90,37 @@ export const AdminByStore = () => {
   ];
 
   const rows = productos;
-  
-  {/* evento de editar cierto producto */}
-  const handleUpdateClick = (event) => {
-    
-    if(event.target.id!==""){
 
+  {
+    /* evento de editar cierto producto */
+  }
+  const handleUpdateClick = (event) => {
+    if (event.target.id !== "") {
       startBuscarProducto(event.target.id);
       handleOpenEditDialog();
-    }
-    else{
+    } else {
       startBuscarProducto(event.target.farthestViewportElement.id);
       handleOpenEditDialog();
     }
-  };   
-  
-  //filtrar por almacen seleccionado y por busqueda de nombre
+  };
   const filteredRowsByStore = rows.filter((producto) =>
-  selectedStore
-    ? producto.almacen.some((store) => store.name === selectedStore)
-    : true
+    selectedStore
+      ? producto.almacen.some((store) => store.name === selectedStore)
+      : true
   );
-
-  const filteredRows = filteredRowsByStore.filter((producto) =>
+  //filtrar por almacen seleccionado y por busqueda de nombre
+  const filteredRowsByCategory = filteredRowsByStore.filter((producto) =>
+    selectedCategory
+      ? producto.categoria.some((category) => category.name === selectedCategory)
+      : true
+  );
+  //filtrar por almacen seleccionado, categoria seleccionada y por busqueda de nombre
+  const filteredRows = filteredRowsByCategory.filter((producto) =>
     producto.nombre.toLowerCase().includes(search.toLowerCase())
   );
-    
   // Calcula el número de filas vacías para rellenar la tabla
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredRows.length - page * rowsPerPage);
-  
+
   //handle paginacion
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -127,53 +133,49 @@ export const AdminByStore = () => {
 
   //STATES AND HANDLES DE EDITAR/TRASLADAR DE ALMACEN
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  
+
   const handleOpenEditDialog = () => {
     setOpenEditDialog(true);
   };
-  
+
   const handleCloseEditDialog = () => {
     setCantidadTrasladar(0);
     setOpenEditDialog(false);
     reset({
       almacen: "",
-    })
+    });
   };
-  
+
   //trasladar
   const handleSaveEditDialog = (data) => {
-    
-    if(data.almacen === productoSeleccionado.almacen[0]._id){
+    if (data.almacen === productoSeleccionado.almacen[0]._id) {
       alert("Debe seleccionar un almacen diferente al origen");
-      reset({
-        almacen: "",
-      })
+      reset({ almacen: "", });
       return;
     }
     let categoriasIDs = [];
-    productoSeleccionado.categoria.map((current,index)=>{
+    productoSeleccionado.categoria.map((current, index) => {
       categoriasIDs.push(current._id);
-    })
+    });
     let proveedorID = productoSeleccionado.proveedor._id;
 
-    startTrasladarProducto(productoSeleccionado._id,
+    startTrasladarProducto(
+      productoSeleccionado._id,
       productoSeleccionado.nombre,
       cantidadTrasladar,
       productoSeleccionado.stock,
       productoSeleccionado.presentacion,
-      data.almacen, 
-      proveedorID, 
-      categoriasIDs, 
-      productoSeleccionado.almacen[0].name, 
+      data.almacen,
+      proveedorID,
+      categoriasIDs,
+      productoSeleccionado.almacen[0].name,
       productoSeleccionado.proveedor.nombre,
       document.getElementById("almacen-select").innerHTML
-      );
+    );
 
     //resets
     setCantidadTrasladar(0);
-    reset({
-      almacen: "",
-    })
+    reset({ almacen: "", });
     setOpenEditDialog(false);
     setOpenAlert(true);
   };
@@ -181,70 +183,95 @@ export const AdminByStore = () => {
   return (
     <>
       {/* CustomBreadcrumbs */}
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        sx={{ mb: 3, width: "100%" }}
-      >
-        <Paper
-          elevation={1}
-          sx={{ p: 1, borderRadius: 1, width: "100%" }}
-        >
+      <Grid container justifyContent="center" alignItems="center" sx={{ mb: 3, width: "100%" }}>
+        <Paper elevation={1} sx={{ p: 1, borderRadius: 1, width: "100%" }}>
           <CustomBreadcrumbs
             pathList={[
               { name: "Inventario", route: "/inventario" },
-              { name: "Administración por almacen" },
+              { name: "Administración por almacén" },
             ]}
           />
         </Paper>
       </Grid>
       {/* main grid */}
       <Grid container direction="column">
-        {/* barra superior, btn crear y busqueda */}
-        <Grid container direction="row" justifyContent="space-between">
-          {/* L. Titulo Pagina y btn crear */}
-          <Grid direction="column">
-            <FormControl fullWidth>
-              <InputLabel id="store-select-label">Almacen</InputLabel>
-              <Select
-                labelId="store-select-label"
-                id="store-select"
-                value={selectedStore}
-                label="Almacen"
-                onChange={handleStoreChange}
+        {/* Almacén y botón de filtro */}
+        <Grid container direction="row" justifyContent="space-between" alignItems="start"sx={{ mt: 1 }}>
+          <FormControl sx={{ minWidth: "22%" }}>
+            <InputLabel id="store-select-label">Almacén</InputLabel>
+            <Select
+              labelId="store-select-label"
+              id="store-select"
+              value={selectedStore}
+              label="Almacen"
+              onChange={handleStoreChange}
+            >
+              {/* Mapear la lista de almacenes para crear las opciones del Select */}
+              {almacenes.map((store) => (
+                <MenuItem key={store.id} value={store.name}>
+                  {store.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Tooltip TransitionComponent={Zoom}  title="Filtrar por Categoría" arrow>
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={() => {
+                setShowCategoryFilter(!showCategoryFilter);
+                setFilterIcon(!filterIcon);
+                setSelectedCategory("");
+              }}
+              aria-label="filter"
+              sx={{ mr: showCategoryFilter ? "-52%" : "0%" }}
+            >
+              {filterIcon ? <FilterAlt /> : <FilterAltOff />}
+            </IconButton>
+          </Tooltip>
+          {showCategoryFilter && (
+            <FormControl sx={{ minWidth: "22%" }}>
+              <InputLabel
+                id="category-select-label"
+                sx={{ fontSize: "0.8rem" }}
               >
-                {/* Mapear la lista de almacenes para crear las opciones del Select */}
-                {almacenes.map((store) => ( // Usar almacenes en lugar de stores
-                  <MenuItem key={store.id} value={store.name}>
-                    {store.name}
+                Categoría
+              </InputLabel>
+              <Select
+                labelId="category-select-label"
+                id="category-select"
+                value={selectedCategory}
+                label="Categoría"
+                onChange={handleCategoryChange}
+                sx={{ fontSize: "0.8rem", height: "3.0rem" }}
+              >
+                {/* Mapear la lista de categorías para crear las opciones del Select */}
+                {categorias.map((category) => (
+                  <MenuItem key={category.id} value={category.name}>
+                    {category.name}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
+          )}
+        </Grid>
 
-            <Typography variant="h6" display="inline">
-                Productos
-              </Typography>
-              <Typography
-                variant="subtitle1"
-                display="inline"
-                sx={{ ml: 0.9 }}
-              >
-                {`${filteredRowsByStore.length} total`}
+        <Grid container direction="row" justifyContent="space-between" alignItems="center">
+          <Grid>
+            <Typography variant="h5" display="inline">
+              Productos
             </Typography>
-          
-          
+            <Typography variant="subtitle1" display="inline" sx={{ ml: 0.9 }}>
+              {`${filteredRowsByCategory.length} total`}
+            </Typography>
           </Grid>
 
-          {/* R. componentes de busqueda */}
           <Grid direction="column" display="flex" sx={{mt:-1.5}}>
-            <SearchBar search={search} setSearch={setSearch} setPage={setPage} />
+            <SearchBar search={search} setSearch={setSearch} setPage={setPage}/>
           </Grid>
         </Grid>
-        {/* fin barra superior */}
 
-        <Divider sx={{ mt: 2 }} />
+        <Divider sx={{ mt: 1 }} />
 
         {/* tabla display data */}
         <Grid container direction="column" sx={{ mt: 2 }}>
@@ -287,39 +314,37 @@ export const AdminByStore = () => {
           />
           <TextField
             margin="dense"
-            label="Talla/Presentacion"
+            label="Presentación/Talla"
             fullWidth
             disabled={true}
             variant="outlined"
             defaultValue={productoSeleccionado.presentacion}
           />
-          <FormHelperText>
-            Origen
-          </FormHelperText>
+          <FormHelperText> Origen: </FormHelperText>
           <Grid container alignItems="center" spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
-              margin="dense"
-              label="Almacen"
-              fullWidth
-              disabled={true}
-              variant="outlined"
-              defaultValue={productoSeleccionado.almacen[0].name}
-            />
+                margin="dense"
+                label="Almacén"
+                fullWidth
+                disabled={true}
+                variant="outlined"
+                defaultValue={productoSeleccionado.almacen[0].name}
+              />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField 
+              <TextField
                 margin="dense"
                 label="Stock"
                 fullWidth
                 variant="outlined"
                 disabled={true}
-                value={productoSeleccionado.stock} 
+                value={productoSeleccionado.stock}
               />
             </Grid>
           </Grid>
-          <TextField 
-            type='number'
+          <TextField
+            type="number"
             margin="dense"
             label="Cantidad"
             fullWidth
@@ -328,42 +353,39 @@ export const AdminByStore = () => {
             onChange={onChangeCantidad}
           />
 
-          <FormHelperText sx={{mb:1}}>
-            Destino 
-          </FormHelperText>
+          <FormHelperText sx={{ mb: 1 }}> Destino: </FormHelperText>
           <Controller
-              name="almacen"
-              control={control}
-              rules={{
-                required: {
-                  value: true,
-                  message: "El almacen es obligatorio.",
-                },
-              }}
-              render={({ field }) => (
-                
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel id="almacen-label">
-                    Almacen
-                  </InputLabel>
-                  <Select
-                    {...field}
-                    labelId="almacen-label"
-                    id="almacen-select"
-                    label="Almacen"
-                    error={!!errors.almacen}
-                  >
-                    {almacenes.map((almacen) => (
-                      <MenuItem key={almacen._id} value={almacen._id} >
+            name="almacen"
+            control={control}
+            rules={{
+              required: {
+                value: true,
+                message: "El almacen es obligatorio.",
+              },
+            }}
+            render={({ field }) => (
+              <FormControl fullWidth variant="outlined">
+                <InputLabel id="almacen-label"> Almacen </InputLabel>
+                <Select
+                  {...field}
+                  labelId="almacen-label"
+                  id="almacen-select"
+                  label="Almacen"
+                  error={!!errors.almacen}
+                >
+                  {almacenes
+                    .filter((almacen) => almacen.name !== selectedStore)
+                    .map((almacen) => (
+                      <MenuItem key={almacen._id} value={almacen._id}>
                         {almacen.name}
                       </MenuItem>
                     ))}
-                  </Select>
-                </FormControl>
-              )}
-            />
+                </Select>
+              </FormControl>
+            )}
+          />
           <FormHelperText>
-            Si en el Almacen Destino el producto no existe, éste será creado e iniciado con la cantidad trasladada. Si por el contrario el producto existe, la cantidad trasladada será sumada al stock de éste (Para esta funcion los productos deben tener el mismo nombre).  
+           *Si el producto no existe en el almacén de destino, se creará automáticamente con la cantidad trasladada. En caso de que el producto ya exista, la cantidad trasladada se sumará al stock existente (para que esto sea posible, ambos productos deben tener el mismo nombre).
           </FormHelperText>
         </DialogContent>
 
@@ -371,10 +393,13 @@ export const AdminByStore = () => {
           <Button onClick={handleCloseEditDialog} color="error">
             Cancelar
           </Button>
-          <Button 
-            disabled={(cantidadTrasladar>0 && cantidadTrasladar<=productoSeleccionado.stock)?false :true }
-            onClick={handleSubmit(handleSaveEditDialog)} 
-            color="success">
+          <Button
+            disabled={
+              cantidadTrasladar > 0 && cantidadTrasladar <= productoSeleccionado.stock ? false : true
+            }
+            onClick={handleSubmit(handleSaveEditDialog)}
+            color="success"
+          >
             Guardar
           </Button>
         </DialogActions>
@@ -382,7 +407,6 @@ export const AdminByStore = () => {
 
       {/* Material Alert */}
       <AlertSnackbar open={openAlert} onClose={handleCloseAlert} message="Acción realizada exitosamente"/>
-    
     </>
   );
 };
