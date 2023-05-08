@@ -41,7 +41,6 @@ export const SideBar = ({ drawerWidth = 240 }) => {
           </Toolbar>
           <Divider />
 
-          
           <List>
             <Divider />
 

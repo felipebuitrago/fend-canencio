@@ -38,7 +38,7 @@ export const CreatePaciente = () => {
   const pathList = [
     { name: "Inventario", route: "/" },
     { name: "Pacientes", route: "/pacientes" },
-    { name: "Crear" },
+    { name: "Crear paciente" },
   ];
 
   return (
@@ -63,7 +63,7 @@ export const CreatePaciente = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "El nombre es obligatorio.",
+                    message: "El nombre del paciente es obligatorio.",
                   },
                 }}
                 render={({ field }) => (
@@ -93,7 +93,7 @@ export const CreatePaciente = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "El contacto es obligatorio.",
+                    message: "El contacto del paciente es obligatorio.",
                   },
                 }}
                 render={({ field }) => (

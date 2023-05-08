@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Avatar,Button, Box, Divider, Dialog, DialogActions, DialogContent, DialogTitle,  IconButton, Typography, Tooltip, Menu, MenuItem, ListItemIcon } from '@mui/material';
+import { Avatar, Box, Divider, Dialog, DialogContent, DialogTitle,  IconButton, Typography, Tooltip, Menu, MenuItem, ListItemIcon } from '@mui/material';
 
 import {Logout, Close } from '@mui/icons-material';
 import { useAuthStore } from '../../../hooks';

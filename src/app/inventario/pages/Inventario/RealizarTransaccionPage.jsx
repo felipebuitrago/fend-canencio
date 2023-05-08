@@ -9,7 +9,7 @@ import utc from "dayjs/plugin/utc";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import es from "dayjs/locale/es";
 
-import {  CustomBreadcrumbs, CustomTableV2, TablePaginationActions, MultipleSelectChip,  SearchBar, AlertSnackbar } from "../../components/index.js";
+import {  CustomBreadcrumbs, CustomTableV2, TablePaginationActions,  SearchBar, AlertSnackbar } from "../../components/index.js";
 import { Controller, useForm } from 'react-hook-form';
 import { useProductosStore, usePacientesStore, useMovimientosStore } from '../../../../hooks'
 

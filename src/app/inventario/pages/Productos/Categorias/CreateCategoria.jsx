@@ -38,7 +38,7 @@ export const CreateCategoria = () => {
   const pathList = [
     { name: "Inventario", route: "/" },
     { name: "Categorías", route: "/categorias" },
-    { name: "Crear" },
+    { name: "Crear categoría" },
   ];
 
 
@@ -64,7 +64,7 @@ export const CreateCategoria = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "El nombre es obligatorio.",
+                    message: "El nombre de la categoría es obligatorio.",
                   },
                 }}
                 render={({ field }) => (
@@ -94,7 +94,7 @@ export const CreateCategoria = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "La descripción es obligatoria.",
+                    message: "La descripción de la categoría es obligatoria.",
                   },
                 }}
                 render={({ field }) => (

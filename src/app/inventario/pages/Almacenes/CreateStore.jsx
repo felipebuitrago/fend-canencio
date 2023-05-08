@@ -38,7 +38,7 @@ export const CreateStore = () => {
   const pathList = [
     { name: "Inventario", route: "/" },
     { name: "Almacenes", route: "/almacenes" },
-    { name: "Crear" },
+    { name: "Crear almacén" },
   ];
 
   return (
@@ -63,7 +63,7 @@ export const CreateStore = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "El nombre es obligatorio.",
+                    message: "El nombre del almacén es obligatorio.",
                   },
                 }}
                 render={({ field }) => (
@@ -93,7 +93,7 @@ export const CreateStore = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "La ubicación es obligatoria.",
+                    message: "La ubicación del almacén es obligatoria.",
                   }
                 }}
                 render={({ field }) => (

@@ -1,18 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  Button,
-  Grid,
-  InputAdornment,
-  Paper,
-  TextField,
-  Typography,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  IconButton,
-} from "@mui/material";
+import { Button, Grid, InputAdornment, Paper, TextField, Typography, FormControl, InputLabel, MenuItem, Select, IconButton } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { Category, Store, ConnectWithoutContactOutlined, FlipToFrontOutlined, SquareFootOutlined } from "@mui/icons-material";
 
@@ -77,7 +65,7 @@ export const CreateProducto = () => {
           <CustomBreadcrumbs pathList={[
             { name: "Inventario", route: "/"},
             { name: "Productos" , route: '/productos'}, 
-            { name: "Crear" , }]} 
+            { name: "Crear producto" , }]} 
           />
         </Paper>
       </Grid>
@@ -95,7 +83,7 @@ export const CreateProducto = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "El nombre es obligatorio.",
+                    message: "El nombre del producto es obligatorio.",
                   },
                 }}
                 render={({ field }) => (
@@ -124,7 +112,7 @@ export const CreateProducto = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "La Presentación/talla es obligatoria.",
+                    message: "La Presentación/talla del producto es obligatoria.",
                   },
                 }}
                 render={({ field }) => (
@@ -154,7 +142,7 @@ export const CreateProducto = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "La categoría es obligatoria.",
+                    message: "Seleccione al menos una categoría de producto, es obligatorio.",
                   },
                 }}
                 render={({ field }) => (
@@ -176,7 +164,7 @@ export const CreateProducto = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "El proveedor es obligatorio.",
+                    message: "El proveedor del producto es obligatorio.",
                   },
                 }}
                 render={({ field }) => (
@@ -215,7 +203,7 @@ export const CreateProducto = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "El almacén es obligatorio.",
+                    message: "Seleccione al menos un almacén donde crear el producto, es obligatorio.",
                   },
                 }}
                 render={({ field }) => (

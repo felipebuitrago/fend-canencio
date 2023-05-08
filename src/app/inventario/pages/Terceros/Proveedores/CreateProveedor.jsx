@@ -38,7 +38,7 @@ export const CreateProveedor = () => {
   const pathList = [
     { name: "Inventario", route: "/" },
     { name: "Proveedores", route: "/proveedores" },
-    { name: "Crear" },
+    { name: "Crear proveedor" },
   ];
 
   return (
@@ -63,7 +63,7 @@ export const CreateProveedor = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "El nombre es obligatorio.",
+                    message: "El nombre del proveedor es obligatorio.",
                   },
                 }}
                 render={({ field }) => (
@@ -93,7 +93,7 @@ export const CreateProveedor = () => {
                 rules={{
                   required: {
                     value: true,
-                    message: "El contacto es obligatorio.",
+                    message: "El contacto del proveedor es obligatorio.",
                   },
                 }}
                 render={({ field }) => (

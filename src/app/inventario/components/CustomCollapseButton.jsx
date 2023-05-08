@@ -1,8 +1,6 @@
 import  React from "react";
 import { Link } from "react-router-dom";
-import { Collapse, Divider,  
-        List, ListItemButton, 
-        ListItemIcon, ListItemText } from '@mui/material'
+import { Collapse, Divider, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
 const CustomCollapseButton = ({titulo,opciones,iconos}) => {

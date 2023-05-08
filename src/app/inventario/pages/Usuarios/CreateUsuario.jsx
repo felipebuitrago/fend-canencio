@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form"; //npm install react-hook-form
 import { Link } from "react-router-dom";
-import { Button, FormControl, FormControlLabel, FormLabel, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, Paper, Radio, RadioGroup, TextField, Typography, FormHelperText } from "@mui/material";
-import { Visibility as VisibilityIcon, VisibilityOff as VisibilityOffIcon, MailOutline as MailOutlineIcon, PersonOutline as PersonOutlineIcon } from "@mui/icons-material";
+import { Button, FormControl, FormControlLabel, FormLabel, Grid, InputAdornment, InputLabel, OutlinedInput, Paper, Radio, RadioGroup, TextField, Typography, FormHelperText } from "@mui/material";
+import { MailOutline as MailOutlineIcon, PersonOutline as PersonOutlineIcon, PasswordOutlined as PasswordIcon } from "@mui/icons-material";
 import { AlertSnackbar, CustomBreadcrumbs } from "../../components";
 import { useUsuariosStore } from "../../../../hooks";
 
@@ -32,11 +32,9 @@ export const CreateUsuario = () => {
     setValue("rol", ""); 
   }, [setValue]);
 
-  // estado para mostrar contraseña
-  const [showPassword, setShowPassword] = useState(false);
+  
   // función para mostrar contraseña
-  const handleClickShowPassword = () => { setShowPassword(!showPassword); };
-
+  
   const onSubmit = () => {
     // Validación y creación del usuario
     let name     = document.getElementById("name").value;
@@ -52,7 +50,7 @@ export const CreateUsuario = () => {
   const pathList = [
     { name: "Inventario", route: "/" },
     { name: "Usuarios", route: "/usuarios" },
-    { name: "Crear" },
+    { name: "Crear usuario" },
   ];
 
   return (
@@ -76,7 +74,7 @@ export const CreateUsuario = () => {
                 control={control}
                 rules={{
                   required: {
-                    value: true, message: "El nombre es obligatorio.",
+                    value: true, message: "El nombre de usuario es obligatorio.",
                   },
                 }}
                 render={({ field }) => (
@@ -103,10 +101,10 @@ export const CreateUsuario = () => {
                 control={control}
                 rules={{
                   required: {
-                    value: true, message: "El correo es obligatorio.",
+                    value: true, message: "El correo electrónico es obligatorio.",
                   },
                   pattern: {
-                    value: /^\S+@\S+\.\S+$/, message: "Ingrese un correo válido.",
+                    value: /^\S+@\S+\.\S+$/, message: "Ingrese un correo electrónico válido.",
                   },
                 }}
                 render={({ field }) => (
@@ -114,7 +112,7 @@ export const CreateUsuario = () => {
                     {...field}
                     fullWidth
                     variant="outlined"
-                    label="Correo"
+                    label="Correo electrónico"
                     id="email"
                     error={!!errors.correo}
                     helperText={errors.correo?.message}
@@ -145,26 +143,14 @@ export const CreateUsuario = () => {
                       <InputLabel htmlFor="password">Contraseña</InputLabel>
                       <OutlinedInput
                         {...field}
-                        type={showPassword ? "text" : "password"}
+                        type="password"
                         label="Contraseña"
                         id="password"
                         error={!!errors.contraseña}
                         startAdornment={
-                          <InputAdornment position="start">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              onClick={handleClickShowPassword}
-                              edge="start"
-                            >
-                              {showPassword ? (
-                                <VisibilityIcon />
-                              ) : (
-                                <VisibilityOffIcon />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
+                          <InputAdornment position="start">  <PasswordIcon/> </InputAdornment>
                         }
-                    />
+                      />
                     {!!errors.contraseña && (
                       <FormHelperText error>
                         {errors.contraseña.message}
@@ -179,8 +165,8 @@ export const CreateUsuario = () => {
                 name="rol"
                 control={control}
                 rules={{
-                  required: { value: true, message: "Seleccione un rol." },
-                }}
+                  required: { value: true, message: "Por favor, debe seleccionar un rol de usuario." },
+                }}  
                 render={({ field }) => (
                   <FormControl component="fieldset" error={!!errors.rol}>
                     <FormLabel component="legend">Rol</FormLabel>

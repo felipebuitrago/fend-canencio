@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Divider, Grid, Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel, TablePagination } from "@mui/material";
-import { CustomBreadcrumbs, ButtonLink, TablePaginationActions } from "../../components/index.js";
+import { CustomBreadcrumbs } from "../../components/index.js";
 import { useMovimientosStore } from "../../../../hooks";
 
 export const MovimientosPage = () => {
