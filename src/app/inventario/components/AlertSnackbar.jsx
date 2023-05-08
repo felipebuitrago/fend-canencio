@@ -16,16 +16,14 @@ const StyledAlert = styled(Alert)`
   animation: ${slideIn} 0.5s ease-out;
 `;
 
-const AlertSnackbar = ({ open, onClose, message }) => (
-  
-    
+const AlertSnackbar = ({ open, onClose, message, severity }) => (
   <Snackbar
     open={open}
     autoHideDuration={4000}
     onClose={onClose}
     anchorOrigin={{ vertical: "top", horizontal: "center" }}
   >
-    <StyledAlert onClose={onClose} severity="success">
+    <StyledAlert onClose={onClose} severity={severity}>
       {message}
     </StyledAlert>
   </Snackbar>
