@@ -10,7 +10,6 @@ import {
   ProductosIndex,
   AdminProducts,
   CreateProducto,
-  EditProducto,
  
   CategoriasIndex,
   AdminCategories, /*importando todas las pages en una sola linea con index.js*/
@@ -57,8 +56,6 @@ export const InventarioRouter = () => {
 							  element={ <AdminProducts /> } />
 					  <Route path='crear' 
 							  element={ <CreateProducto /> } />
-					  <Route path='editar' 
-							  element={ <EditProducto /> } />
 					</Route> 
 		
 				   {/* Rutas para el modulo "categorias" */}

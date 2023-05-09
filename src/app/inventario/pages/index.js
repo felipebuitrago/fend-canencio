@@ -16,7 +16,6 @@ export * from './Productos/Categorias/CreateCategoria'
 export * from './Productos/ProductosIndex'
 export * from './Productos/AdminProducts'
 export * from './Productos/CreateProducto'
-export * from './Productos/EditProducto'
 
 export * from './Terceros/Pacientes/PacientesIndex'
 export * from './Terceros/Pacientes/AdminPacientes'
