@@ -264,25 +264,25 @@ export const RealizarTransaccionPage = () => {
 
               <Grid item xs={12} sm={6}>
                 <LocalizationProvider dateAdapter={AdapterDayjs} locale={es}>
-                  <DatePicker
-                    label="Fecha"
-                    value={selectedDate}
-                    onChange={handleDateChange}
-                    fullWidth
-                    inputFormat="DD/MM/YYYY"
-                    renderInput={(props) => (
-                      <TextField
-                        {...props}
-                        variant="outlined"
-                        margin="dense"
-                        value={
-                          selectedDate
-                            ? dayjs(selectedDate).format("DD/MM/YYYY")
-                            : ""
-                        }
-                      />
-                    )}
-                  />
+                    <DatePicker
+                      label="Fecha"
+                      value={selectedDate}
+                      onChange={handleDateChange}
+                      fullWidth
+                      format="DD/MM/YYYY"
+                      TextFieldComponent={(props) => (
+                        <TextField
+                          {...props}
+                          variant="outlined"
+                          margin="dense"
+                          value={
+                            selectedDate
+                              ? dayjs(selectedDate).format("DD/MM/YYYY")
+                              : ""
+                          }
+                        />
+                      )}
+                    />
                 </LocalizationProvider>
               </Grid>
             </Grid>
