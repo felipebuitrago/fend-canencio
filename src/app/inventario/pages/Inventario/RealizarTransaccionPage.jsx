@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Divider, IconButton, Typography, Paper, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button, MenuItem, FormControl, InputLabel, Select, Chip, Autocomplete, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
+import { Grid, Divider, IconButton, Typography, Paper, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button,  FormControl, Autocomplete, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Close } from "@mui/icons-material";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -8,9 +8,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import es from "dayjs/locale/es";
-
 import {  CustomBreadcrumbs, CustomTableV2, TablePaginationActions,  SearchBar, AlertSnackbar } from "../../components/index.js";
-import { Controller, useForm } from 'react-hook-form';
 import { useProductosStore, usePacientesStore, useMovimientosStore } from '../../../../hooks'
 
 
@@ -21,11 +19,11 @@ export const RealizarTransaccionPage = () => {
   dayjs.locale(es);
 
   // Estado para la búsqueda de usuarios
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = useState("");
   // Estados para la paginación de la tabla
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [selectedDate, setSelectedDate] = React.useState(null);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
 
   const [rows, setRows] = useState([]);
 
@@ -87,7 +85,7 @@ export const RealizarTransaccionPage = () => {
   };
 
   const handleCloseEditDialog = () => {
-    setSelectedDate(null);
+    setSelectedDate(dayjs());
     setCantidad(0);
     setOpenEditDialog(false);
   };
@@ -95,14 +93,11 @@ export const RealizarTransaccionPage = () => {
 
   // Filtra los productos por nombre y categoría (categoria se eliminó por el momento)
   const filteredRows = rows.filter(
-    (producto) =>
-      producto.nombre.toLowerCase().includes(search.toLowerCase()) 
+    (producto) => producto.nombre.toLowerCase().includes(search.toLowerCase()) 
   ); 
 
   // Calcula el número de filas vacías para rellenar la tabla
-  const emptyRows =
-    rowsPerPage -
-    Math.min(rowsPerPage, filteredRows.length - page * rowsPerPage);
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredRows.length - page * rowsPerPage);
 
   //handle paginacion
   const handleChangePage = (event, newPage) => {
@@ -403,8 +398,9 @@ export const RealizarTransaccionPage = () => {
             Cancelar
           </Button>
           <Button 
-            disabled={(((cantidad>0 && cantidad<=productoSeleccionado.stock) || (tipoMovimiento
-              ==="ingreso" && cantidad >=1)) && selectedDate!==null)?false :true }
+            disabled={
+             (((cantidad>0 && cantidad<=productoSeleccionado.stock) || (tipoMovimiento ==="ingreso" && cantidad >=1)) && selectedDate!==null)?false :true 
+            }
             onClick={handleSaveMoveDialog} 
             color="success">
             Inventariar
