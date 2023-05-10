@@ -127,7 +127,7 @@ export const RealizarTransaccionPage = () => {
   const handleSaveMoveDialog = () => {
     
     const factura = (document.getElementById("factura-move-input").value.length < 1)?" ":document.getElementById("factura-move-input").value;
-    const nota    = (document.getElementById("nota-move-input").value.length < 1)?" ":document.getElementById("nota-move-input").value;
+    const nota = (document.getElementById("nota-move-input").value.length < 1)?" ":document.getElementById("nota-move-input").value;
     
     if(tipoMovimiento === "egreso"){
       
@@ -170,7 +170,15 @@ export const RealizarTransaccionPage = () => {
     setOpenEditDialog(false);
     setOpenAlert(true);
   }
-
+  //Experimental dialog confirmación
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const handleOpenConfirmDialog = () => {
+    setOpenConfirmDialog(true);
+  };
+  const handleCloseConfirmDialog = () => {
+    setOpenConfirmDialog(false);
+  };
+  
   return (
     <>
       <Grid container  justifyContent="center"  alignItems="center" sx={{ mb: 3, width: "100%" }}>
@@ -401,9 +409,30 @@ export const RealizarTransaccionPage = () => {
             disabled={
              (((cantidad>0 && cantidad<=productoSeleccionado.stock) || (tipoMovimiento ==="ingreso" && cantidad >=1)) && selectedDate!==null)?false :true 
             }
-            onClick={handleSaveMoveDialog} 
+            onClick={handleOpenConfirmDialog} 
             color="success">
             Inventariar
+          </Button>
+        </DialogActions>
+      </Dialog>
+      
+      <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>
+        <DialogTitle>Confirmar movimiento</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            ¿Estás seguro de realizar {tipoMovimiento} de {cantidad} {productoSeleccionado?.nombre} {productoSeleccionado?.presentacion} del almacén {productoSeleccionado?.almacen[0]?.name}?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmDialog} color="error">
+            Cancelar
+          </Button>
+          <Button onClick={() => {
+           handleSaveMoveDialog();
+            handleCloseConfirmDialog();
+         
+          }} color="success">
+            Confirmar
           </Button>
         </DialogActions>
       </Dialog>
