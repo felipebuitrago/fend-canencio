@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar, esES } from '@mui/x-data-grid';
 import { Divider, Grid, Paper, Typography } from "@mui/material";
-import { CustomBreadcrumbs } from "../../components/index.js";
+import { CustomBreadcrumbs, ExcelExportButton } from "../../components/index.js";
 import { useMovimientosStore } from "../../../../hooks";
 
 
@@ -19,6 +19,7 @@ export const MovimientosPage = () => {
         { field: "factura", headerName: "#Factura", align: "center", headerAlign: 'center' },
         { field: "registrado_por", headerName: "Usuario", align: "center", headerAlign: 'center' },
         { field: "nota", headerName: "Notas", align: "center", headerAlign: 'center', width: 200 },
+        
     ];
 
   const { movimientos, startReadMovimientos } = useMovimientosStore();
@@ -51,6 +52,7 @@ export const MovimientosPage = () => {
                 ]}
               />
             </Paper>
+           
           </Grid>
           {/* main grid */}
           <Grid container direction="column">
@@ -61,8 +63,7 @@ export const MovimientosPage = () => {
                 </Typography>
               </Grid>
             </Grid>
-          <Divider sx={{ mt: 1 }} />
-        
+          <Divider sx={{ mt: 1.5 }} />   
           <DataGrid
             rows={rows}
             columns={columns}
@@ -72,7 +73,29 @@ export const MovimientosPage = () => {
             onPageSizeChange={handlePageSizeChange}
             localeText={esES.components.MuiDataGrid.defaultProps.localeText}
             components={{
-              Toolbar: GridToolbar,
+              Toolbar: () => (
+                <Grid container  alignItems="center">
+                  <GridToolbar />
+                  <ExcelExportButton
+                    rows={rows}
+                    columns={[
+                      { header: 'Fecha', key: 'fecha' },
+                      { header: 'Movimiento', key: 'tipo_transaccion' },
+                      { header: 'Producto', key: 'producto' },
+                      { header: 'Presentación/Talla', key: 'presentacion' },
+                      { header: 'Cantidad', key: 'cantidad' },
+                      { header: 'Almacén', key: 'almacen' },
+                      { header: 'Paciente/Proveedor', key: 'paciente_proveedor' },
+                      { header: '#Factura', key: 'factura' },
+                      { header: 'Usuario', key: 'registrado_por' },
+                      { header: 'Notas', key: 'nota' },
+                    ]}
+                    sheetName="Movimientos"
+                    fileName="Movimientos"
+                    sx = {{transform: 'scale(0.7)'}}
+                  />
+                </Grid>
+              ),
             }}
             sx={{
               '.MuiDataGrid-columnHeader': {
@@ -89,9 +112,9 @@ export const MovimientosPage = () => {
               '.MuiDataGrid-columnHeader .MuiDataGrid-menuIconButton': {
                 color: 'white',
               },
-              
             }}
           />
+
         </Grid>
       </>
   );

@@ -13,6 +13,6 @@ export { default  as ButtonLink } from "../components/ButtonLink.jsx";
 export { default as MultipleSelectChip } from "../components/MultipleSelectChip.jsx";
 export { default as AccountMenu } from "../components/AccountMenu.jsx";
 export { default as CustomCollapseButton } from "../components/CustomCollapseButton.jsx";
-
+export { default as ExcelExportButton } from "../components/ExcelExportButton.jsx"
 
 
