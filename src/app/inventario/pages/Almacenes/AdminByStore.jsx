@@ -269,7 +269,7 @@ export const AdminByStore = () => {
               columns={[
                 { header: "Nombre", key: "nombre" },
                 { header: "Presentación/Talla", key: "presentacion" },
-                { header: "Proveedor", key: "proveedor.nombre[0]" },
+                { header: "Proveedor", key: "proveedor" },
                 { header: "Categorías", key: "categoria" },
                 { header: "Stock", key: "stock" },
               ]}
