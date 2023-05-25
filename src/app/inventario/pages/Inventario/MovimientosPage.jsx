@@ -4,7 +4,6 @@ import { Divider, Grid, Paper, Typography } from "@mui/material";
 import { CustomBreadcrumbs, ExcelExportButton } from "../../components/index.js";
 import { useMovimientosStore } from "../../../../hooks";
 
-
 export const MovimientosPage = () => {
   
   const columns = [
@@ -92,7 +91,8 @@ export const MovimientosPage = () => {
                     ]}
                     sheetName="Movimientos"
                     fileName="Movimientos"
-                    sx = {{transform: 'scale(0.7)'}}
+                    outlined={true}
+                    fontSize="small"
                   />
                 </Grid>
               ),
