@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Divider, Grid, Paper, Typography, Select, MenuItem, Tooltip, FormControl, InputLabel, Dialog, DialogTitle, IconButton, DialogContent, TextField, DialogActions, Button, FormHelperText, Zoom } from '@mui/material';
-import { SearchBar, TablePaginationActions, CustomTableV2, CustomBreadcrumbs, AlertSnackbar } from '../../components';
+import { ExcelExportButton, SearchBar, TablePaginationActions, CustomTableV2, CustomBreadcrumbs, AlertSnackbar } from '../../components';
 import { Close, FilterAltOff, FilterAlt } from '@mui/icons-material';
 
 import { useProductosStore, useAlmacenesStore, useCategoriasStore } from '../../../../hooks'
@@ -264,15 +264,27 @@ export const AdminByStore = () => {
             <Typography variant="subtitle1" display="inline" sx={{ ml: 0.9 }}>
               {`${filteredRowsByCategory.length} total`}
             </Typography>
+            <ExcelExportButton
+              rows={rows}
+              columns={[
+                { header: "Nombre", key: "nombre" },
+                { header: "Presentación/Talla", key: "presentacion" },
+                { header: "Proveedor", key: "proveedor.nombre[0]" },
+                { header: "Categorías", key: "categoria" },
+                { header: "Stock", key: "stock" },
+              ]}
+              sheetName={selectedStore}
+              fileName="Productos"
+              outlined={true}
+              fontSize="small"
+            />
           </Grid>
 
           <Grid direction="column" display="flex" sx={{mt:-1.5}}>
             <SearchBar search={search} setSearch={setSearch} setPage={setPage}/>
           </Grid>
         </Grid>
-
-        <Divider sx={{ mt: 1 }} />
-
+        <Divider sx={{ mt: 0.5 }} />
         {/* tabla display data */}
         <Grid container direction="column" sx={{ mt: 2 }}>
           <CustomTableV2
